@@ -4,6 +4,7 @@ import uglify from 'gulp-uglify';
 import sourcemaps from 'gulp-sourcemaps';
 import notify from 'gulp-notify';
 import minCss from 'gulp-clean-css';
+import eslint from 'gulp-eslint';
 import babelify from 'babelify';
 import browserify from 'browserify';
 import watchify from 'watchify';
@@ -17,6 +18,7 @@ const paths = {
   srcCommonStyle: 'app/assets/style/common.css',
   srcSingleStyle: 'app/js/**/*.css',
   srcImages: 'app/assets/images',
+  srcLint: 'app/**/*.js',
   distJs: 'dist/js',
   distStyle: 'dist/assets/style',
   distImages: 'dist/assets/images',
@@ -71,10 +73,10 @@ gulp.task('browserify', () => {
 
 gulp.task('comstyles', () => {
   return gulp.src(paths.srcCommonStyle)
-    .pipe(minCss())
     .pipe(autoprefixer({
       browsers: ['not ie <= 8']
     }))
+    .pipe(minCss())
     .pipe(concat('qanda.css'))
     .pipe(gulp.dest(paths.distStyle))
     .pipe(reload({stream: true}));
@@ -94,12 +96,19 @@ gulp.task('html', () => {
     .pipe(reload({stream: true}));
 });
 
+gulp.task('lint', () => {
+  gulp.src(paths.srcLint)
+    .pipe(eslint())
+    .pipe(eslint.format());
+});
+
 gulp.task('watchTask', () => {
   gulp.watch(paths.srcCommonStyle, ['comstyles']);
   gulp.watch(paths.srcSingleStyle, ['sinstyles']);
+  gulp.watch(paths.srcJsx, ['lint']);
   gulp.watch('index.html', ['html']);
 });
 
-gulp.task('serve', ['browserSync', 'watchify', 'comstyles', 'sinstyles', 'watchTask']);
+gulp.task('serve', ['browserSync', 'watchify', 'comstyles', 'sinstyles', 'lint','watchTask']);
 
 gulp.task('build', ['browserify', 'comstyles', 'sinstyles']);
