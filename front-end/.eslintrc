@@ -10,7 +10,7 @@
   "env": {
     "browser": true,
     "es6": true,
-    "node": true,
+    "node": false,
     "mocha": true
   },
   "rules": {
@@ -23,6 +23,7 @@
       "smart"
     ],
     "keyword-spacing": 1,
-    "no-console": 1
+    "no-console": 1,
+    "no-var": 1
   }
 }
