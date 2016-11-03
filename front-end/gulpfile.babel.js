@@ -11,18 +11,24 @@ import watchify from 'watchify';
 import source from 'vinyl-source-stream';
 import buffer from 'vinyl-buffer';
 import autoprefixer from 'gulp-autoprefixer';
-import browserSync, { reload } from 'browser-sync';
+import browserSync, {reload} from 'browser-sync';
+import del from 'del';
+import runSequence from 'run-sequence';
+import browserifyShim from 'browserify-shim';
 
 const paths = {
   srcJsx: 'app/index.js',
   srcCommonStyle: 'app/assets/style/common.css',
-  srcSingleStyle: 'app/js/**/*.css',
+  srcSingleStyle: 'app/**/*.css',
   srcImages: 'app/assets/images',
   srcLint: 'app/**/*.js',
   distJs: 'dist/js',
   distStyle: 'dist/assets/style',
   distImages: 'dist/assets/images',
-  bundle: 'bundle.js'
+  bundle: 'bundle.js',
+  indexHTML: 'index.html',
+  reactCDN: 'https://unpkg.com/react@15/dist/react.min.js',
+  reactDomCDN: 'https://unpkg.com/react-dom@15/dist/react-dom.min.js'
 };
 
 const customOpts = {
@@ -44,7 +50,8 @@ gulp.task('watchify', () => {
   let bundler = watchify(browserify(opts));
 
   function rebundle() {
-    return bundler.bundle()
+    return bundler
+      .bundle()
       .on('error', notify.onError())
       .pipe(source(paths.bundle))
       .pipe(buffer())
@@ -62,6 +69,11 @@ gulp.task('watchify', () => {
 gulp.task('browserify', () => {
   browserify(paths.srcJsx, {debug: true})
     .transform(babelify)
+    .transform(browserifyShim, {
+      shim: {
+        "react": "global:React"
+      }
+    })
     .bundle()
     .pipe(source(paths.bundle))
     .pipe(buffer())
@@ -79,15 +91,6 @@ gulp.task('comstyles', () => {
     .pipe(minCss())
     .pipe(concat('qanda.css'))
     .pipe(gulp.dest(paths.distStyle))
-    .pipe(reload({stream: true}));
-});
-
-gulp.task('sinstyles', () => {
-  return gulp.src(paths.srcSingleStyle)
-    .pipe(autoprefixer({
-      browsers: ['not ie <= 8']
-    }))
-    .pipe(minCss())
     .pipe(reload({stream: true}));
 });
 
@@ -109,6 +112,24 @@ gulp.task('watchTask', () => {
   gulp.watch('index.html', ['html']);
 });
 
-gulp.task('serve', ['browserSync', 'watchify', 'comstyles', 'sinstyles', 'lint','watchTask']);
+gulp.task('clean', () => {
+  return del([
+    paths.distJs,
+    paths.distStyle
+  ])
+});
 
-gulp.task('build', ['browserify', 'comstyles', 'sinstyles']);
+gulp.task('serve', cb => {
+  runSequence(
+    'clean',
+    ['browserSync','watchify','comstyles', 'lint', 'watchTask'],
+    cb);
+});
+
+gulp.task('build', cb => {
+  process.env.NODE_ENV = 'production';
+  runSequence(
+    'clean',
+    ['browserify', 'comstyles'],
+    cb);
+});

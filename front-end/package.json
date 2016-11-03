@@ -12,7 +12,9 @@
     "gulp": "^3.9.1",
     "gulp-concat": "^2.6.0",
     "material-ui": "^0.16.1",
+    "rc-tween-one": "^0.10.1",
     "react": "^15.3.2",
+    "react-addons-transition-group": "^15.3.2",
     "react-dom": "^15.3.2",
     "react-router": "^3.0.0",
     "react-tap-event-plugin": "^1.0.0",
@@ -25,6 +27,8 @@
     "babelify": "^7.3.0",
     "browser-sync": "^2.17.5",
     "browserify": "^13.1.1",
+    "browserify-shim": "^3.8.12",
+    "del": "^2.2.2",
     "eslint-plugin-react": "^6.4.1",
     "gulp-autoprefixer": "^3.1.1",
     "gulp-babel": "^6.1.2",
@@ -36,7 +40,12 @@
     "gulp-react": "^3.1.0",
     "gulp-sourcemaps": "^2.2.0",
     "gulp-uglify": "^2.0.0",
+    "run-sequence": "^1.2.2",
+    "vinyl-paths": "^2.1.0",
     "vinyl-source-stream": "^1.1.0",
     "watchify": "^3.7.0"
+  },
+  "browserify-shim": {
+    "react": "global:React"
   }
 }

@@ -1,4 +1,6 @@
 import React from 'react';
+import FloatActionButtonWithChd from './component/floatingActionButton';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 export default class App extends React.Component {
 
@@ -8,7 +10,13 @@ export default class App extends React.Component {
 
   render() {
     return (
-      <h1>Hello world</h1>
+      <div>
+        <MuiThemeProvider>
+          <FloatActionButtonWithChd/>
+        </MuiThemeProvider>
+        {this.props.children}
+      </div>
+
     )
   }
 }
