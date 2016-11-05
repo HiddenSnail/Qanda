@@ -27,8 +27,6 @@ const paths = {
   distImages: 'dist/assets/images',
   bundle: 'bundle.js',
   indexHTML: 'index.html',
-  reactCDN: 'https://unpkg.com/react@15/dist/react.min.js',
-  reactDomCDN: 'https://unpkg.com/react-dom@15/dist/react-dom.min.js'
 };
 
 const customOpts = {
@@ -95,7 +93,7 @@ gulp.task('comstyles', () => {
 });
 
 gulp.task('html', () => {
-  return gulp.src('index.html')
+  return gulp.src(paths.indexHTML)
     .pipe(reload({stream: true}));
 });
 
@@ -107,9 +105,8 @@ gulp.task('lint', () => {
 
 gulp.task('watchTask', () => {
   gulp.watch(paths.srcCommonStyle, ['comstyles']);
-  gulp.watch(paths.srcSingleStyle, ['sinstyles']);
   gulp.watch(paths.srcJsx, ['lint']);
-  gulp.watch('index.html', ['html']);
+  gulp.watch(paths.indexHTML, ['html']);
 });
 
 gulp.task('clean', () => {
