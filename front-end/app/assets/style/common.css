@@ -173,12 +173,20 @@
     justify-content: space-between;
 }
 
+.jus-cen {
+    justify-content: center;
+}
+
 .alself-end {
     align-self: flex-end;
 }
 
 .b-c-white {
     background-color: #FFFFFF;
+}
+
+.b-c-grey {
+    background-color: #9B9B9B;
 }
 
 a,
@@ -897,6 +905,18 @@ a:active {
     visibility: hidden;
 }
 
-.flex_display {
+.flex-display {
     display: flex;
+}
+
+.pos-abs {
+    position: absolute;
+}
+
+.pos-rel {
+    position: relative;
+}
+
+.pos-fix {
+    position: fixed;
 }

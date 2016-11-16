@@ -135,9 +135,6 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-// let TweenOneGroup = TweenOne.TweenOneGroup;
-
-
 var FloatActionButtonWithChd = function (_React$Component) {
   _inherits(FloatActionButtonWithChd, _React$Component);
 
@@ -222,6 +219,10 @@ var _FloatingActionButton = require('material-ui/FloatingActionButton');
 
 var _FloatingActionButton2 = _interopRequireDefault(_FloatingActionButton);
 
+var _Paper = require('material-ui/Paper');
+
+var _Paper2 = _interopRequireDefault(_Paper);
+
 var _rcTweenOne = require('rc-tween-one');
 
 var _rcTweenOne2 = _interopRequireDefault(_rcTweenOne);
@@ -267,22 +268,19 @@ var IcButtonWithMsg = function (_React$Component) {
           delay = _props.delay,
           reverse = _props.reverse,
           offset = _props.offset,
-          paused = _props.paused;
+          paused = _props.paused,
+          title = _props.title;
 
       return _react2.default.createElement(
-        'div',
+        _rcTweenOne.TweenOneGroup,
         null,
         _react2.default.createElement(
           _rcTweenOne2.default,
           { animation: { top: top, duration: time, delay: delay, type: 'to' },
-            paused: paused, reverse: reverse,
+            paused: paused, reverse: reverse, className: 'flex-row jus-cen',
             style: { position: 'relative', top: offset } },
-          _react2.default.createElement(
-            'div',
-            { className: 'align-center flex-col' },
-            _react2.default.createElement(_FloatingActionButton2.default, { mini: true, onMouseEnter: this.handleCoverIn,
-              onMouseLeave: this.handleCoverOut, children: this.props.children })
-          )
+          _react2.default.createElement(_FloatingActionButton2.default, { mini: true, onMouseEnter: this.handleCoverIn, style: style.iconStyle,
+            onMouseLeave: this.handleCoverOut, children: this.props.children })
         )
       );
     }
@@ -293,7 +291,24 @@ var IcButtonWithMsg = function (_React$Component) {
 
 exports.default = IcButtonWithMsg;
 
-},{"material-ui/FloatingActionButton":188,"rc-tween-one":229,"react":422}],5:[function(require,module,exports){
+
+var style = {
+  paperStyle: {
+    height: 30,
+    left: 100
+  }
+};
+
+IcButtonWithMsg.propTypes = {
+  top: _react2.default.PropTypes.number,
+  time: _react2.default.PropTypes.number,
+  delay: _react2.default.PropTypes.number,
+  reverse: _react2.default.PropTypes.bool,
+  offset: _react2.default.PropTypes.number,
+  paused: _react2.default.PropTypes.bool
+};
+
+},{"material-ui/FloatingActionButton":188,"material-ui/Paper":192,"rc-tween-one":229,"react":422}],5:[function(require,module,exports){
 module.exports = { "default": require("core-js/library/fn/array/from"), __esModule: true };
 },{"core-js/library/fn/array/from":24}],6:[function(require,module,exports){
 module.exports = { "default": require("core-js/library/fn/object/assign"), __esModule: true };

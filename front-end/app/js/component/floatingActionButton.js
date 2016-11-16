@@ -8,10 +8,6 @@ import TweenOne, {TweenOneGroup} from 'rc-tween-one';
 
 import IcButtonWithMsg from './iconButton';
 
-
-// let TweenOneGroup = TweenOne.TweenOneGroup;
-
-
 export default class FloatActionButtonWithChd extends React.Component {
 
   constructor(props) {
