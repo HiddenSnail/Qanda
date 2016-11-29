@@ -43,6 +43,11 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>cn.leancloud</groupId>
+			<artifactId>java-sdk</artifactId>
+			<version>0.1.6</version>
+		</dependency>
 	</dependencies>
 
 	<build>
