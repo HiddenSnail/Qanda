@@ -7,11 +7,15 @@ import org.springframework.stereotype.Component;
  * Created by huangrui on 2016/11/28.
  */
 @Component
-public class Anwser {
+public class Answer {
     private String aid;
     private String response;
+
     @Autowired
-    User user;
+    private Question question;
+    @Autowired
+    private User user;
+
 
     public String getAid(){ return aid; }
     public void setAid(String aid) { this.aid = aid; }

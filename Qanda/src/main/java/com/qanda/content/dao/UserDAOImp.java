@@ -3,6 +3,7 @@ package com.qanda.content.dao;
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVQuery;
+import com.avos.avoscloud.AVRelation;
 import com.qanda.content.model.User;
 import org.codehaus.groovy.transform.trait.Traits;
 import org.json.JSONObject;
@@ -16,7 +17,7 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public class UserDAOImp implements UserDAO {
-    public void saveUser(User user) {
+    public String saveUser(User user) {
         try {
             AVObject userObject = new AVObject("Account");
             userObject.put("name", user.getName());
@@ -24,10 +25,11 @@ public class UserDAOImp implements UserDAO {
             userObject.put("email", user.getEmail());
             userObject.put("password", user.getPassword());
             userObject.save();
-
+            return userObject.getObjectId();
         } catch (AVException e) {
             e.printStackTrace();
         }
+        return null;
     }
 
     public AVObject findUserById(String uid) {
@@ -54,38 +56,30 @@ public class UserDAOImp implements UserDAO {
         return null;
     }
 
-    public void deleteUser(String uid) {
+    public boolean deleteUser(String uid) {
         AVObject userObject = findUserById(uid);
         try {
             userObject.delete();
+            return true;
         } catch (AVException e) {
             e.printStackTrace();
         }
+        return false;
     }
 
-    public void updateUserInfo(User newInfo) {
-        AVObject userObject = findUserById(newInfo.getUid());
-        if (userObject == null) return;
-        try {
-            userObject.put("name", newInfo.getName());
-            userObject.put("age", newInfo.getAge());
-            userObject.put("email", newInfo.getEmail());
-            userObject.put("password", newInfo.getPassword());
-            userObject.save();
-
-        } catch (AVException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public User wrapUserData(AVObject userObject) {
+    public AVObject updateUserInfo(User newUserInfo) {
+        AVObject userObject = findUserById(newUserInfo.getUid());
         if (userObject == null) return null;
-        User user = new User();
-        user.setUid((String)userObject.get("objectId"));
-        user.setPassword((String)userObject.get("password"));
-        user.setName((String)userObject.get("name"));
-        user.setAge((int)userObject.get("age"));
-        user.setEmail((String)userObject.get("email"));
-        return user;
+        try {
+            userObject.put("name", newUserInfo.getName());
+            userObject.put("age", newUserInfo.getAge());
+            userObject.put("email", newUserInfo.getEmail());
+            userObject.put("password", newUserInfo.getPassword());
+            userObject.save();
+            return userObject;
+        } catch (AVException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

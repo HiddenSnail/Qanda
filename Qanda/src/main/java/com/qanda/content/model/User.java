@@ -2,6 +2,8 @@ package com.qanda.content.model;
 
 import com.alibaba.fastjson.JSON;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
 /**
@@ -14,6 +16,8 @@ public class User {
     private int age;
     private String email;
     private String password;
+
+    public User() {}
 
     public String getUid() { return uid; }
     public void setUid(String uid) { this.uid = uid; }

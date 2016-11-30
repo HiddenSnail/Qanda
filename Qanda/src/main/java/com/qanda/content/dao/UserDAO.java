@@ -1,8 +1,8 @@
 package com.qanda.content.dao;
 
 import com.avos.avoscloud.AVObject;
+import com.qanda.content.model.Question;
 import com.qanda.content.model.User;
-
 import javax.jws.soap.SOAPBinding;
 
 /**
@@ -10,9 +10,9 @@ import javax.jws.soap.SOAPBinding;
  */
 
 public interface UserDAO {
-    public void saveUser(User user);
+    public String saveUser(User user);
     public AVObject findUserById(String uid);
     public AVObject findUserByEmail(String email);
-    public void deleteUser(String uid);
-    public void updateUserInfo(User newInfo);
+    public boolean deleteUser(String uid);
+    public AVObject updateUserInfo(User newUserInfo);
 }

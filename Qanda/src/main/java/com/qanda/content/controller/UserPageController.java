@@ -2,12 +2,13 @@ package com.qanda.content.controller;
 
 import com.qanda.content.model.User;
 import com.qanda.content.service.UserServiceImp;
+import java.lang.String;
+
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -20,51 +21,39 @@ public class UserPageController {
     @Autowired
     UserServiceImp userServiceImp;
 
-
     /**
      *
-     * @param request: 请求参数为{"email", "name", "age", "password"}
-     * @param response
+     * @param user: {"name", "age", "email", "password"}
+     * @return
      * @throws Exception
      */
     @RequestMapping(value = "/register", method = RequestMethod.POST)
-    public void register(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        User newUser = new User();
-        newUser.setEmail(request.getParameter("email"));
-        newUser.setPassword(request.getParameter("password"));
-        newUser.setName(request.getParameter("name"));
-        newUser.setAge( Integer.valueOf(request.getParameter("age")) );
-        if (!userServiceImp.userRegister(newUser)) {
-            response.sendError(404, "This email already used");
-        } else {
-            response.setStatus(200);
-        }
+    public @ResponseBody User register(@RequestBody User user) throws Exception {
+        User registedUser = userServiceImp.userRegister(user);
+        return registedUser;
     }
 
     /**
      *
-     * @param request: 请求参数为{"uid", "email", "name", "age", "password"}
-     * @param response
+     * @param newInfo: {"uid", "name", "age", "email", "password"}
+     * @return
      * @throws Exception
      */
-
     @RequestMapping(value = "/info", method = RequestMethod.POST)
-    public void modifyInfo(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        User newInfo = new User();
-        newInfo.setUid(request.getParameter("uid"));
-        newInfo.setEmail(request.getParameter("email"));
-        newInfo.setName(request.getParameter("name"));
-        newInfo.setAge(Integer.valueOf(request.getParameter("age")));
-        newInfo.setPassword(request.getParameter("password"));
-        userServiceImp.infoModify(newInfo);
+    public @ResponseBody User modifyInfo(@RequestBody User newInfo) throws Exception {
+        return userServiceImp.infoModify(newInfo);
     }
 
+    /**
+     *
+     * @param loginInfo: {"email", "password"}
+     * @param model
+     * @return
+     * @throws Exception
+     */
     @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public String login(HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
-        User loginInfo = new User();
-        loginInfo.setEmail(request.getParameter("email"));
-        loginInfo.setPassword(request.getParameter("password"));
-        if(userServiceImp.userLogin(loginInfo)) return "login";
+    public String login(@RequestBody User loginInfo, Model model) throws Exception {
+        if(userServiceImp.userLogin(loginInfo) != null) return "login";
         else return "answer";
     }
 
