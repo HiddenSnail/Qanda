@@ -15,12 +15,12 @@ import browserSync, {reload} from 'browser-sync';
 import del from 'del';
 import runSequence from 'run-sequence';
 import browserifyShim from 'browserify-shim';
+import history from 'connect-history-api-fallback';
 
 const paths = {
   srcJsx: 'app/index.js',
   srcCommonStyle: 'app/assets/style/common.css',
-  srcSingleStyle: 'app/**/*.css',
-  srcImages: 'app/assets/images',
+  srcImages: 'app/assets/images/*.**',
   srcLint: 'app/**/*.js',
   distJs: 'dist/js',
   distStyle: 'dist/assets/style',
@@ -39,8 +39,10 @@ const opts = Object.assign({}, watchify.args, customOpts);
 gulp.task('browserSync', () => {
   browserSync({
     server: {
-      baseDir: './'
-    }
+      baseDir: './',
+      middleware: [history()]
+    },
+    port: 4001
   });
 });
 
@@ -97,6 +99,11 @@ gulp.task('html', () => {
     .pipe(reload({stream: true}));
 });
 
+gulp.task('images', ()=> {
+  return gulp.src(paths.srcImages)
+    .pipe(gulp.dest(paths.distImages));
+});
+
 gulp.task('lint', () => {
   gulp.src(paths.srcLint)
     .pipe(eslint())
@@ -107,19 +114,21 @@ gulp.task('watchTask', () => {
   gulp.watch(paths.srcCommonStyle, ['comstyles']);
   gulp.watch(paths.srcJsx, ['lint']);
   gulp.watch(paths.indexHTML, ['html']);
+  gulp.watch(paths.srcImages, ['images']);
 });
 
 gulp.task('clean', () => {
   return del([
     paths.distJs,
-    paths.distStyle
+    paths.distStyle,
+    paths.distImages
   ])
 });
 
 gulp.task('serve', cb => {
   runSequence(
     'clean',
-    ['browserSync','watchify','comstyles', 'lint', 'watchTask'],
+    ['browserSync','watchify','comstyles', 'lint', 'images', 'watchTask'],
     cb);
 });
 
@@ -127,6 +136,6 @@ gulp.task('build', cb => {
   process.env.NODE_ENV = 'production';
   runSequence(
     'clean',
-    ['browserify', 'comstyles'],
+    ['browserify', 'comstyles', 'images'],
     cb);
 });

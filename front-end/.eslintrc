@@ -22,7 +22,7 @@
       2,
       "smart"
     ],
-    "keyword-spacing": 1,
+    "keyword-spacing": 0,
     "no-console": 1,
     "no-var": 1
   }

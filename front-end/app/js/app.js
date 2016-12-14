@@ -1,22 +1,24 @@
 import React from 'react';
-import FloatActionButtonWithChd from './component/floatingActionButton';
+import HomePage from './pages/home-page';
+import Login from './pages/login';
+import {Link} from 'react-router';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
-export default class App extends React.Component {
-
+class App extends React.Component {
   constructor(props) {
     super(props);
   }
 
   render() {
     return (
-      <div>
-        <MuiThemeProvider>
-          <FloatActionButtonWithChd/>
-        </MuiThemeProvider>
-        {this.props.children}
-      </div>
-
+      <MuiThemeProvider>
+        <div>
+          <Login/>
+          {this.props.children}
+        </div>
+      </MuiThemeProvider>
     )
   }
 }
+
+export default App;
