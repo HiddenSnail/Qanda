@@ -1,8 +1,6 @@
 package com.qanda.content;
 
 import com.avos.avoscloud.AVOSCloud;
-import com.qanda.content.dao.UserDAO;
-import com.qanda.content.dao.UserDAOImp;
 import com.qanda.content.model.User;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

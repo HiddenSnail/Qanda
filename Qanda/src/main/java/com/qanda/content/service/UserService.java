@@ -8,10 +8,14 @@ import com.qanda.content.model.User;
 public interface UserService {
     /**
      * 注册
-     * 信息修改
      * 用户登录
+     * 信息修改
+     * 用户信息获取
+     * 用户密码重置
      */
-    public User userRegister(User newUser);
-    public User infoModify(User newInfo);
-    public User userLogin(User loginInfo);
+    boolean userRegister(User newUser);
+    boolean userLogin(User loginInfo);
+    boolean userInfoModify(User newInfo);
+    User userInfoFetch();
+    void userPasswordReset(String email);
 }
