@@ -11,10 +11,7 @@ public class Answer {
     private String aid;
     private String response;
 
-    @Autowired
-    private Question question;
-    @Autowired
-    private User user;
+
 
     public String getAid(){ return aid; }
     public void setAid(String aid) { this.aid = aid; }
