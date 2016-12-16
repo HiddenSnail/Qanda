@@ -1,8 +1,8 @@
 import React from 'react';
-import HomePage from './pages/home-page';
-import Login from './pages/login';
 import {Link} from 'react-router';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+
+import SideBar from './component/sideBar';
 
 class App extends React.Component {
   constructor(props) {
@@ -13,7 +13,7 @@ class App extends React.Component {
     return (
       <MuiThemeProvider>
         <div>
-          <Login/>
+          <SideBar/>
           {this.props.children}
         </div>
       </MuiThemeProvider>

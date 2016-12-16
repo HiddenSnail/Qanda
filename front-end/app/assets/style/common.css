@@ -178,11 +178,11 @@ html,body {
     flex-direction: row-reverse;
 }
 
-.jus-bet {
+.justify-between {
     justify-content: space-between;
 }
 
-.jus-cen {
+.justify-center {
     justify-content: center;
 }
 
@@ -192,6 +192,10 @@ html,body {
 
 .align-self-center {
     align-self: center;
+}
+
+.justise-end {
+    justify-content: flex-end;
 }
 
 .b-c-white {

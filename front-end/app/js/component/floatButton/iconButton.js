@@ -26,7 +26,7 @@ export default class IcButtonWithMsg extends React.Component {
     return (
     <TweenOneGroup>
       <TweenOne animation={{top: top, duration: time, delay: delay, type: 'to'}}
-                paused={paused} reverse={reverse} className="flex-row jus-cen"
+                paused={paused} reverse={reverse} className="flex-row justify-center"
                 style={{position: 'relative', top: offset}}>
         <FloatingActionButton mini={true} onMouseEnter={this.handleCoverIn} style={style.iconStyle}
                               onMouseLeave={this.handleCoverOut} children={this.props.children}>

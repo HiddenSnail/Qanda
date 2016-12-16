@@ -8,7 +8,7 @@ class SearchBar extends Component {
 
   render() {
     return (
-      <div className="flex-row jus-cen">
+      <div className="flex-row justify-center">
         <TextField
           textareaStyle={{width: '10vw'}}
           hintText="Hint Text"
