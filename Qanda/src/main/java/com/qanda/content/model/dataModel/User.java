@@ -30,9 +30,6 @@ public class User extends BaseUser {
     public String getBrief() { return brief; }
     public void setBrief(String brief) { this.brief = brief; }
 
-    public byte[] getPictureData() { return pictureData; }
-    public void setPictureData(byte[] data) { this.pictureData = data; }
-
     public Integer getQuestionNumber() { return questionNumber; }
     public void setQuestionNumber(Integer questionNumber) { this.questionNumber = questionNumber; }
 
@@ -49,6 +46,12 @@ public class User extends BaseUser {
         hashMap.put("brief", this.brief);
         hashMap.put("questionNumber", this.questionNumber);
         hashMap.put("answerNumber", this.answerNumber);
+        return hashMap;
+    }
+
+    public HashMap<String, Object> toHashMap(HashMap<String, Object> otherMap) {
+        HashMap<String, Object> hashMap = toHashMap();
+        hashMap.putAll(otherMap);
         return hashMap;
     }
 }

@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 
 /**
  * Created by huangrui on 2016/11/28.
@@ -23,10 +24,25 @@ public class Answer {
 
     public String getCreateDate() { return createDate; }
     public void setCreateDate(Date createDate) {
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
         this.createDate = format.format(createDate);
     }
     public void setCreateDate(String createDate) {
         this.createDate = createDate;
+    }
+
+
+    public HashMap<String, Object> toHashMap() {
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("aid", this.aid);
+        hashMap.put("response", this.response);
+        hashMap.put("createDate", this.createDate);
+        return hashMap;
+    }
+
+    public HashMap<String, Object> toHashMap(HashMap<String, Object> otherMap) {
+        HashMap<String, Object> hashMap = toHashMap();
+        hashMap.putAll(otherMap);
+        return hashMap;
     }
 }

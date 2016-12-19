@@ -13,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by huangrui on 2016/12/14.
@@ -25,6 +26,14 @@ public class QandaPageController {
     @Autowired
     UserServiceImp userServiceImp;
 
+//    @RequestMapping(value = "/questions/{gid}", method = RequestMethod.GET)
+//    public @ResponseBody HashMap<String, Object> getCourseGroupQuestions(
+//            @PathVariable(value = "gid", required = false) String gid,
+//            @RequestParam(value = "pageNumber", required = true) Integer pageNumber,
+//            HttpServletResponse response) throws Exception {
+//        List<Course> courseList =
+//    }
+
     /**
      * 方法说明：通过课程id获取相关问题
      * @param cid
@@ -33,22 +42,18 @@ public class QandaPageController {
      * @return
      * @throws Exception
      */
-    @RequestMapping(value = "/questions/{gid}/{cid}", method = RequestMethod.GET)
-    public @ResponseBody HashMap<String, Object> getIndexPageData(
-            @PathVariable(value = "gid", required = false) String gid,
+    @RequestMapping(value = "/questions/*/{cid}", method = RequestMethod.GET)
+    public @ResponseBody HashMap<String, Object> getCourseQuestions(
             @PathVariable(value = "cid", required = false) String cid,
             @RequestParam(value = "pageNumber", required = true) Integer pageNumber,
             HttpServletResponse response) throws Exception {
-//        HashMap<String, Object> questionDataMap = qandaServiceImp.getQuestions(cid, true, true, pageNumber);
-//        if (!CheckAPI.isEmpty(questionDataMap)) {
-//            return questionDataMap;
-//        } else {
-//            ResponseErrorAPI.findError(response);
-//            return null;
-//        }
-        if (gid == null) {System.out.println("gid is null");}
-        if (cid == null) {System.out.println("cid is null");}
-        return null;
+        HashMap<String, Object> questionDataMap = qandaServiceImp.getQuestionsByCid(cid, true, true, pageNumber);
+        if (!CheckAPI.isEmpty(questionDataMap)) {
+            return questionDataMap;
+        } else {
+            ResponseErrorAPI.findError(response);
+            return null;
+        }
     }
 
 

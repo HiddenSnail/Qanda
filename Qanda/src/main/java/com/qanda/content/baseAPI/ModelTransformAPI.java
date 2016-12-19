@@ -2,10 +2,7 @@ package com.qanda.content.baseAPI;
 
 import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVUser;
-import com.qanda.content.model.dataModel.Answer;
-import com.qanda.content.model.dataModel.BaseUser;
-import com.qanda.content.model.dataModel.Question;
-import com.qanda.content.model.dataModel.User;
+import com.qanda.content.model.dataModel.*;
 
 /**
  * Created by huangrui on 2016/12/18.
@@ -45,5 +42,19 @@ public class ModelTransformAPI {
         answer.setResponse(avAnswer.getString("response"));
         answer.setCreateDate(avAnswer.getCreatedAt());
         return answer;
+    }
+
+    static public CourseGroup transformAVCourseGroupToCourseGroup(AVObject avCourseGroup) {
+        CourseGroup courseGroup = new CourseGroup();
+        courseGroup.setName(avCourseGroup.getString("name"));
+        courseGroup.setGid(avCourseGroup.getObjectId());
+        return courseGroup;
+    }
+
+    static public Course transformAVCourseToCourse(AVObject avCourse) {
+        Course course = new Course();
+        course.setCid(avCourse.getObjectId());
+        course.setName(avCourse.getString("name"));
+        return course;
     }
 }

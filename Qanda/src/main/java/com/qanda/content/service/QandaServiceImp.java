@@ -3,10 +3,7 @@ package com.qanda.content.service;
 import com.avos.avoscloud.*;
 import com.qanda.content.baseAPI.CheckAPI;
 import com.qanda.content.baseAPI.ModelTransformAPI;
-import com.qanda.content.model.dataModel.Answer;
-import com.qanda.content.model.dataModel.BaseUser;
-import com.qanda.content.model.dataModel.Course;
-import com.qanda.content.model.dataModel.Question;
+import com.qanda.content.model.dataModel.*;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -79,24 +76,44 @@ public class QandaServiceImp implements QandaService {
         }
     }
 
-    /**通过问题的回答数(升序或降序)获取问题和提问者基本信息**/
-    public HashMap<String, Object> getQuestions(String gid, String cid, boolean isSortByTime, boolean isDescend, Integer pageNumber) {
-        List<String> cidList = new ArrayList<>();
-        if (!CheckAPI.isEmpty(gid)) {
-            AVQuery<AVObject> courseQuery = new AVQuery<>("Course");
-            AVObject avCourseGroup = AVObject.createWithoutData("CourseGroup", gid);
-            courseQuery.whereEqualTo("belongGroup", avCourseGroup);
-            try {
-                List<AVObject> avCourseList = courseQuery.find();
-                for (AVObject avCourse: avCourseList) {
-                    cidList.add(avCourse.getObjectId());
-                }
-            } catch (AVException e) {
-                e.printStackTrace();
-                return null;
+    /**获取所有的CourseGroups**/
+    public List<CourseGroup> getCourseGroups() {
+        AVQuery<AVObject> query = new AVQuery<>("CourseGroup");
+        List<CourseGroup> courseGroupList = new ArrayList<>();
+        try {
+            List<AVObject> avCourseGroupList = query.find();
+            for (AVObject avCourseGroup:avCourseGroupList) {
+                CourseGroup courseGroup = ModelTransformAPI.transformAVCourseGroupToCourseGroup(avCourseGroup);
+                courseGroupList.add(courseGroup);
             }
+            return courseGroupList;
+        } catch (AVException e) {
+            e.printStackTrace();
+            return null;
         }
+    }
 
+    /**通过CourseGroup的id获取它对应的Courses**/
+    public List<Course> getCoursesByGid(String gid) {
+        AVQuery<AVObject> query = new AVQuery<>("Course");
+        AVObject avCourseGroup = AVObject.createWithoutData("CourseGroup", gid);
+        query.whereEqualTo("belongGroup", avCourseGroup);
+        List<Course> courseList = new ArrayList<>();
+        try {
+            List<AVObject> avCourseList = query.find();
+            for (AVObject avCourse:avCourseList) {
+                Course course = ModelTransformAPI.transformAVCourseToCourse(avCourse);
+                courseList.add(course);
+            }
+            return courseList;
+        } catch (AVException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    /**通过Course的id获取问题和提问者基本信息,并按照排序规则进行排序**/
+    public HashMap<String, Object> getQuestionsByCid(String cid, boolean isSortByTime, boolean isDescend, Integer pageNumber) {
         AVQuery<AVObject> query = new AVQuery<>("Question");
         if (!CheckAPI.isEmpty(cid)) {
             AVObject avCourse = AVObject.createWithoutData("Course", cid);
@@ -116,30 +133,21 @@ public class QandaServiceImp implements QandaService {
         query.skip((pageNumber-1)*EPQN);
         try {
             List<AVObject> avQuestions = query.find();
-            List<Question> questions = new ArrayList<>();
-            List<BaseUser> questioners = new ArrayList<>();
+            List<HashMap<String, Object>> fusionMapList = new ArrayList<>();
             for (AVObject avQuestion:avQuestions) {
                 Question question = ModelTransformAPI.transformAVQuestionToQuestion(avQuestion);
-                questions.add(question);
                 AVUser baseAVUser = avQuestion.getAVUser("targetUser");
                 BaseUser questioner = ModelTransformAPI.transformAVUserToBaseUser(baseAVUser);
-                questioners.add(questioner);
+                fusionMapList.add(question.toHashMap(questioner.toHashMap()));
             }
             HashMap<String, Object> dataMap = new HashMap<>();
-            dataMap.put("questions", questions);
-            dataMap.put("questioners", questioners);
+            dataMap.put("questionList", fusionMapList);
             return dataMap;
         } catch (AVException e) {
             e.printStackTrace();
         }
         return null;
     }
-
-//    /**通过问题的课程id获取问题及提问者的信息，并根据回答数(升序或降序)排序**/
-//    public HashMap<String, Object> getCCQuestionsOrderByAnswerNumber(String cid, boolean isDescend, Integer pageNumber) {
-//        AVObject avCourse = AVObject.createWithoutData("Course", cid);
-//        AVQuery
-//    }
 
     /**通过问题id获取回答和回答者的基本信息**/
     public HashMap<String, Object> getAnswersByQid(String qid, Integer pageNumber) {

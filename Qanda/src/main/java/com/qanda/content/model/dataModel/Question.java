@@ -35,7 +35,7 @@ public class Question {
 
     public String getCreateDate() { return createDate; }
     public void setCreateDate(Date createDate) {
-        SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
+        SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
         this.createDate = format.format(createDate);
     }
     public void setCreateDate(String createDate) {
@@ -49,6 +49,13 @@ public class Question {
         hashMap.put("content", this.content);
         hashMap.put("answerNumber", this.answerNumber);
         hashMap.put("createDate", this.createDate);
+        hashMap.put("like", this.like);
+        return hashMap;
+    }
+
+    public HashMap<String, Object> toHashMap(HashMap<String, Object> otherMap) {
+        HashMap<String, Object> hashMap = toHashMap();
+        hashMap.putAll(otherMap);
         return hashMap;
     }
 }

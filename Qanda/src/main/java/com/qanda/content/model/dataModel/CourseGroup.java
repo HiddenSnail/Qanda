@@ -1,32 +1,24 @@
 package com.qanda.content.model.dataModel;
 
-import org.springframework.stereotype.Component;
-
 import java.util.HashMap;
 
 /**
- * Created by huangrui on 2016/12/18.
+ * Created by huangrui on 2016/12/19.
  */
-@Component
-public class BaseUser {
-    protected String uid;
-    protected String name;
-    protected String avatar;
+public class CourseGroup {
+    private String gid;
+    private String name;
 
-    public String getUid() { return uid; }
-    public void setUid(String uid) { this.uid = uid; }
+    public String getGid() { return gid; }
+    public void setGid(String cid) { this.gid = cid; }
 
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
 
-    public String getAvatar() { return avatar; }
-    public void setAvatar(String avatar) { this.avatar = avatar; }
-
     public HashMap<String, Object> toHashMap() {
         HashMap<String, Object> hashMap = new HashMap<>();
-        hashMap.put("uid", this.uid);
+        hashMap.put("gid", this.gid);
         hashMap.put("name", this.name);
-        hashMap.put("avatar", this.avatar);
         return hashMap;
     }
 
