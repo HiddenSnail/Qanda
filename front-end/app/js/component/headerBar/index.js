@@ -43,6 +43,7 @@ const style = {
   wrapHead: {
     position: 'fixed',
     boxSizing: 'border-box',
+    backgroundColor: '#fff',
     width: '100%',
     paddingLeft: '315px',
     paddingRight: '36px',

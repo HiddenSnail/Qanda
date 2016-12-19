@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 
 import Category from './category';
 import TagList from './tagList';
+import QuestionList from './questionList';
 
 class HomePage extends Component {
   constructor(props) {
@@ -14,6 +15,7 @@ class HomePage extends Component {
         <Category/>
         <div style={style.pageMargin}>
           <TagList/>
+          <QuestionList/>
         </div>
       </div>
 
