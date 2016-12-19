@@ -8,13 +8,15 @@ class SideBar extends Component {
   }
 
   render() {
-    return(
-      <div style={style.sideBarBg} className="flex-col">
-        <div style={style.pageListStyle}>
-          <PageList/>
-        </div>
-        <div>
-          <FooterList/>
+    return (
+      <div style={style.sideBarBgImg}>
+        <div style={style.sideBarBg} className="flex-col">
+          <div style={style.pageListStyle}>
+            <PageList/>
+          </div>
+          <div>
+            <FooterList/>
+          </div>
         </div>
       </div>
     );
@@ -23,11 +25,17 @@ class SideBar extends Component {
 
 const style = {
   sideBarBg: {
-    height: '725px',//TODO 记得修改为100vh
+    height: '726px',//TODO 记得修改为100vh
     width: '66px',
-    position: 'fixed',
     backgroundColor: '#222831',
-    opacity: 0.8
+    opacity: 0.8,
+  },
+  sideBarBgImg: {
+    background: "url('dist/assets/images/side-bar-background.jpg')",
+    position: 'fixed',
+    height: '726px',
+    width: '66px',
+    zIndex: 999
   },
   pageListStyle: {
     display: 'flex',

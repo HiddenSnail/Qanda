@@ -158,6 +158,10 @@ html,body {
     -webkit-align-items: center;
 }
 
+.flex-grow-one {
+    flex-grow:1;
+}
+
 .flex-col {
     display: flex;
     flex-direction: column;

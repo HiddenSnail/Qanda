@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import { observable } from 'mobx';
-import { observer } from 'mobx-react';
+import { observer, inject} from 'mobx-react';
 import ActionHelp from 'material-ui/svg-icons/action/help';
 import AvLibraryBook from 'material-ui/svg-icons/av/library-books';
 import CommunicationForum from 'material-ui/svg-icons/communication/forum';

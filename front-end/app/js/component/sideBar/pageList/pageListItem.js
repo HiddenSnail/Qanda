@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {observable} from 'mobx';
-import {observer} from 'mobx-react';
+import {observer, inject} from 'mobx-react';
 
 @observer
 class PageListItem extends Component {
@@ -64,6 +64,8 @@ const style = {
   pageListItemStyle: {
     width: '66px',
     height: '66px',
+    marginBottom: '25px',
+    cursor: 'pointer'
   },
   sideIcon: {
     width: '33px',

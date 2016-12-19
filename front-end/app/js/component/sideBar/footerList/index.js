@@ -18,7 +18,7 @@ class FooterList extends Component {
 
   render() {
     return(
-      <div>
+      <div className="m-b">
         {iconList.map((icon, index) =>
           <FooterListItem
             iconType={icon}

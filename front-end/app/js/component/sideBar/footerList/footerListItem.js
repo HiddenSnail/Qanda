@@ -38,7 +38,8 @@ class FooterListItem extends Component {
 const style = {
   footerListItemStyle: {
     width: '66px',
-    height: '66px',
+    height: '44px',
+    cursor: 'pointer'
   },
 };
 
