@@ -1,33 +1,49 @@
 package com.qanda.content.service;
 
-import com.avos.avoscloud.AVUser;
-import com.qanda.content.model.User;
+import com.qanda.content.model.dataModel.Answer;
+import com.qanda.content.model.dataModel.Question;
+import com.qanda.content.model.dataModel.User;
+
+import java.util.List;
 
 /**
  * Created by huangrui on 2016/11/28.
  */
 public interface UserService {
     /**用户注册**/
-    boolean userRegister(User newUser);
+    boolean register(User newUser);
 
     /**用户登录**/
-    String userLogin(User loginInfo);
+    String login(User loginInfo);
 
     /**用户登出**/
-    void userLogout();
+    void logout();
 
     /**用户信息修改**/
-    boolean userInfoModify(User newInfo);
+    boolean modifyUserInfo(User newInfo);
 
-    /**用户自身信息获取**/
-    User userInfoFetch();
+    /**用户详细信息获取**/
+    User fetchUserInfo();
+
+    /**用户所提出的问题获取**/
+    List<Question> fetchUserQuestions();
+
+    /**用户所发表的回答获取**/
+    List<Answer> fetchUserAnswers();
 
     /**密码重置**/
-    void userPasswordReset(String email);
+    void resetPassword(String email);
 
     /**用户状态验证**/
-    boolean userStateVerify(String session);
+    boolean verifyUserState(String session);
 
-    /**通过用户ID获取用户基本信息**/
+    /**通过用户id获取用户详细信息**/
     User getUserInfoById(String uid);
+
+    /**通过用户id获取用户所提出的问题**/
+    List<Question> getUserQuestionsByUid(String uid);
+
+    /**通过用户id获取用户所发表的回答**/
+    List<Answer> getUserAnswersByUid(String uid);
+
 }

@@ -1,14 +1,12 @@
 package com.qanda.content.service;
 import com.avos.avoscloud.*;
-import com.qanda.content.model.User;
-import com.sun.tools.internal.xjc.model.CClassInfoParent;
-import com.sun.tools.internal.xjc.reader.xmlschema.bindinfo.BIConversion;
-import org.springframework.beans.factory.FactoryBean;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.qanda.content.baseAPI.ModelTransformAPI;
+import com.qanda.content.model.dataModel.Answer;
+import com.qanda.content.model.dataModel.Question;
+import com.qanda.content.model.dataModel.User;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -16,9 +14,10 @@ import java.util.List;
  */
 @Service
 public class UserServiceImp implements UserService {
+
     /**用户注册**/
     @Override
-    public boolean userRegister(User newUser) {
+    public boolean register(User newUser) {
         try {
             AVUser user = new AVUser();
             user.setUsername(newUser.getEmail()); //用户名与邮箱一致
@@ -35,7 +34,7 @@ public class UserServiceImp implements UserService {
 
     /**用户登录**/
     @Override
-    public String userLogin(User loginInfo) {
+    public String login(User loginInfo) {
         try {
             AVUser user = AVUser.logIn(loginInfo.getEmail(), loginInfo.getPassword());
             return user.getSessionToken();
@@ -47,13 +46,14 @@ public class UserServiceImp implements UserService {
 
     /**用户登出**/
     @Override
-    public void userLogout() {
+    public void logout() {
         AVUser.logOut();
     }
 
+    //待修改
     /**用户信息修改**/
     @Override
-    public boolean userInfoModify(User newInfo) {
+    public boolean modifyUserInfo(User newInfo) {
         try {
             AVUser cAVUser = AVUser.getCurrentUser();
             if (cAVUser == null) return false;
@@ -70,26 +70,68 @@ public class UserServiceImp implements UserService {
         return true;
     }
 
-    /**用户自身信息获取**/
+    /**用户详细信息获取**/
     @Override
-    public User userInfoFetch() {
+    public User fetchUserInfo() {
         AVUser cAVUser = AVUser.getCurrentUser();
         if (cAVUser != null) {
-            return User.wrapAVUser(cAVUser);
+            return ModelTransformAPI.tansformAVUserToUser(cAVUser);
         } else {
             return null;
         }
     }
 
+    /**用户所提出的问题获取**/
+    @Override
+    public List<Question> fetchUserQuestions() {
+        AVUser cAVUser = AVUser.getCurrentUser();
+        if (cAVUser == null) return null;
+        AVQuery<AVObject> query = new AVQuery<>("Question");
+        query.whereEqualTo("targetUser", cAVUser);
+        try {
+            List<AVObject> avQuestions = query.find();
+            List<Question> questions = new ArrayList<Question>();
+            for (AVObject avQuestion:avQuestions) {
+                Question question = ModelTransformAPI.transformAVQuestionToQuestion(avQuestion);
+                questions.add(question);
+            }
+            return questions;
+        } catch (AVException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**用户所发表的回答获取**/
+    @Override
+    public List<Answer> fetchUserAnswers() {
+        AVUser cAVUser = AVUser.getCurrentUser();
+        if (cAVUser == null) return null;
+        AVQuery<AVObject> query = new AVQuery<>("Answer");
+        query.whereEqualTo("targetUser", cAVUser);
+        try {
+            List<AVObject> avAnswers = query.find();
+            List<Answer> answers = new ArrayList<Answer>();
+            for (AVObject avAnswer:avAnswers) {
+                Answer answer = ModelTransformAPI.transformAVAnswerToAnswer(avAnswer);
+                answers.add(answer);
+            }
+            return answers;
+        } catch (AVException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     /**密码重置**/
     @Override
-    public void userPasswordReset(String email) {
+    public void resetPassword(String email) {
         AVUser.requestPasswordReset(email);
     }
 
     /**用户状态验证**/
     @Override
-    public boolean userStateVerify(String session) {
+    public boolean verifyUserState(String session) {
         try {
             if (AVUser.becomeWithSessionToken(session) != null)
                 return true;
@@ -101,21 +143,71 @@ public class UserServiceImp implements UserService {
         }
     }
 
-    /**通过用户ID获取用户基本信息**/
+    /**通过用户id获取用户详细信息**/
     @Override
     public User getUserInfoById(String uid) {
         AVQuery<AVUser> userAVQuery = new AVQuery<>("_User");
         userAVQuery.whereEqualTo("objectId", uid);
         try {
-            List<AVUser> users = userAVQuery.find();
-            if (users.size() <= 0) return null;
+            AVUser avUser = userAVQuery.getFirst();
+            if (avUser == null) return null;
             else {
-                return User.wrapAVUser(users.get(0));
+                return ModelTransformAPI.tansformAVUserToUser(avUser);
             }
         } catch (AVException e) {
             e.printStackTrace();
             return null;
         }
+    }
+
+    /**通过用户id获取用户所提出的问题**/
+    @Override
+    public List<Question> getUserQuestionsByUid(String uid) {
+        AVQuery<AVUser> userAVQuery = new AVQuery<>("_User");
+        userAVQuery.whereEqualTo("objectId", uid);
+        try {
+            AVUser cAVUser = userAVQuery.getFirst();
+            if (cAVUser == null) return null;
+            else {
+                AVQuery<AVObject> query = new AVQuery<>("Question");
+                query.whereEqualTo("targetUser", cAVUser);
+
+                List<AVObject> avQuestions = query.find();
+                List<Question> questions = new ArrayList<>();
+                for (AVObject avQuestion:avQuestions) {
+                    Question question = ModelTransformAPI.transformAVQuestionToQuestion(avQuestion);
+                    questions.add(question);
+                }
+                return questions;
+            }
+        } catch (AVException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**通过用户id获取用户所发表的回答**/
+    public List<Answer> getUserAnswersByUid(String uid) {
+        AVQuery<AVUser> userAVQuery = new AVQuery<>("_User");
+        userAVQuery.whereEqualTo("objectId", uid);
+        try {
+            AVUser cAVUser = userAVQuery.getFirst();
+            if (cAVUser == null) return null;
+            else {
+                AVQuery<AVObject> query = new AVQuery<>("Answer");
+                query.whereEqualTo("targetUser", cAVUser);
+                List<AVObject> avAnswers = query.find();
+                List<Answer> answers = new ArrayList<Answer>();
+                for (AVObject avAnswer:avAnswers) {
+                    Answer answer = ModelTransformAPI.transformAVAnswerToAnswer(avAnswer);
+                    answers.add(answer);
+                }
+                return answers;
+            }
+        } catch (AVException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }
 
