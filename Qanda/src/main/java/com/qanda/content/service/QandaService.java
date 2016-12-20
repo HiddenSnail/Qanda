@@ -24,6 +24,12 @@ public interface QandaService {
     /**通过CourseGroup的id获取它对应的Courses**/
     List<Course> getCoursesByGid(String gid);
 
+    /**获取所有问题和提问者的基本信息，并按照排序规则进行排序**/
+    HashMap<String, Object> getQuestions(boolean isSortByTime, boolean isDescend, Integer pageNumber);
+
+    /**通过CourseGroup的id获取问题和提问者的基本信息,并按照排序规则进行排序**/
+    HashMap<String, Object> getQuestionsByGid(String gid, boolean isSortByTime, boolean isDescend, Integer pageNumber);
+
     /**通过Course的id获取问题和提问者基本信息,并按照排序规则进行排序**/
     HashMap<String, Object> getQuestionsByCid(String cid, boolean isSortByTime, boolean isDescend, Integer pageNumber);
 

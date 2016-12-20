@@ -20,14 +20,16 @@ public class QandaServiceImp implements QandaService {
 
     /**提出一个问题**/
     public boolean askQuestion(Question question, String cid) {
-        AVObject avCourse = AVObject.createWithoutData("Course", cid);
         try {
+            AVObject avCourse = AVObject.createWithoutData("Course", cid);
+            avCourse.fetch();
             AVUser cAVUser = AVUser.getCurrentUser();
             AVObject avQuestion = new AVObject("Question");
             avQuestion.put("title", question.getTitle());
             avQuestion.put("content", question.getContent());
             avQuestion.put("targetUser", cAVUser);
             avQuestion.put("targetCourse", avCourse);
+            avQuestion.put("belongGroup", avCourse.getAVObject("belongGroup"));
             avQuestion.save();
             question.setQid(avQuestion.getObjectId());
 
@@ -112,17 +114,13 @@ public class QandaServiceImp implements QandaService {
         }
     }
 
-    /**通过Course的id获取问题和提问者基本信息,并按照排序规则进行排序**/
-    public HashMap<String, Object> getQuestionsByCid(String cid, boolean isSortByTime, boolean isDescend, Integer pageNumber) {
+    /**获取所有问题和提问者的基本信息，并按照排序规则进行排序**/
+    public HashMap<String, Object> getQuestions(boolean isSortByTime, boolean isDescend, Integer pageNumber) {
         AVQuery<AVObject> query = new AVQuery<>("Question");
-        if (!CheckAPI.isEmpty(cid)) {
-            AVObject avCourse = AVObject.createWithoutData("Course", cid);
-            query.whereEqualTo("targetCourse", avCourse);
-        }
         if (isSortByTime && isDescend) {
             query.addDescendingOrder("createdAt");
         } else if (isSortByTime && !isDescend) {
-            query.addAscendingOrder("createAt");
+            query.addDescendingOrder("createAt");
         } else if (!isSortByTime && isDescend) {
             query.addDescendingOrder("answerNumber");
         } else {
@@ -149,6 +147,83 @@ public class QandaServiceImp implements QandaService {
         return null;
     }
 
+    /**通过CourseGroup的id获取问题和提问者的基本信息,并按照排序规则进行排序**/
+    public HashMap<String, Object> getQuestionsByGid(String gid, boolean isSortByTime, boolean isDescend, Integer pageNumber) {
+        AVQuery<AVObject> query = new AVQuery<>("Question");
+        if (!CheckAPI.isEmpty(gid)) {
+            AVObject avCourseGroup = AVObject.createWithoutData("CourseGroup", gid);
+            query.whereEqualTo("belongGroup", avCourseGroup);
+
+            if (isSortByTime && isDescend) {
+                query.addDescendingOrder("createdAt");
+            } else if (isSortByTime && !isDescend) {
+                query.addAscendingOrder("createdAt");
+            } else if (!isSortByTime && isDescend) {
+                query.addDescendingOrder("answerNumber");
+            } else {
+                query.addAscendingOrder("answerNumber");
+            }
+            query.include("targetUser");
+            query.limit(EPQN);
+            query.skip((pageNumber-1)*EPQN);
+            try {
+                List<AVObject> avQuestions = query.find();
+                List<HashMap<String, Object>> fusionMapList = new ArrayList<>();
+                for (AVObject avQuestion:avQuestions) {
+                    Question question = ModelTransformAPI.transformAVQuestionToQuestion(avQuestion);
+                    AVUser baseAVUser = avQuestion.getAVUser("targetUser");
+                    BaseUser questioner = ModelTransformAPI.transformAVUserToBaseUser(baseAVUser);
+                    fusionMapList.add(question.toHashMap(questioner.toHashMap()));
+                }
+                HashMap<String, Object> dataMap = new HashMap<>();
+                dataMap.put("questionList", fusionMapList);
+                return dataMap;
+            } catch (AVException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
+
+
+    /**通过Course的id获取问题和提问者基本信息,并按照排序规则进行排序**/
+    public HashMap<String, Object> getQuestionsByCid(String cid, boolean isSortByTime, boolean isDescend, Integer pageNumber) {
+        AVQuery<AVObject> query = new AVQuery<>("Question");
+        if (!CheckAPI.isEmpty(cid)) {
+            AVObject avCourse = AVObject.createWithoutData("Course", cid);
+            query.whereEqualTo("targetCourse", avCourse);
+
+            if (isSortByTime && isDescend) {
+                query.addDescendingOrder("createdAt");
+            } else if (isSortByTime && !isDescend) {
+                query.addAscendingOrder("createAt");
+            } else if (!isSortByTime && isDescend) {
+                query.addDescendingOrder("answerNumber");
+            } else {
+                query.addAscendingOrder("answerNumber");
+            }
+            query.include("targetUser");
+            query.limit(EPQN);
+            query.skip((pageNumber-1)*EPQN);
+            try {
+                List<AVObject> avQuestions = query.find();
+                List<HashMap<String, Object>> fusionMapList = new ArrayList<>();
+                for (AVObject avQuestion:avQuestions) {
+                    Question question = ModelTransformAPI.transformAVQuestionToQuestion(avQuestion);
+                    AVUser baseAVUser = avQuestion.getAVUser("targetUser");
+                    BaseUser questioner = ModelTransformAPI.transformAVUserToBaseUser(baseAVUser);
+                    fusionMapList.add(question.toHashMap(questioner.toHashMap()));
+                }
+                HashMap<String, Object> dataMap = new HashMap<>();
+                dataMap.put("questionList", fusionMapList);
+                return dataMap;
+            } catch (AVException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
+
     /**通过问题id获取回答和回答者的基本信息**/
     public HashMap<String, Object> getAnswersByQid(String qid, Integer pageNumber) {
         AVObject avQuestion = AVObject.createWithoutData("Question", qid);
@@ -159,18 +234,15 @@ public class QandaServiceImp implements QandaService {
         query.skip((pageNumber-1)*EPQN);
         try {
             List<AVObject> avAnswers = query.find();
-            List<Answer> answers = new ArrayList<>();
-            List<BaseUser> repliers = new ArrayList<>();
+            List<HashMap<String, Object>> fusionMapList = new ArrayList<>();
             for (AVObject avAnswer:avAnswers) {
                 Answer answer = ModelTransformAPI.transformAVAnswerToAnswer(avAnswer);
-                answers.add(answer);
                 AVUser baseAVUser = avAnswer.getAVUser("targetUser");
                 BaseUser replier = ModelTransformAPI.transformAVUserToBaseUser(baseAVUser);
-                repliers.add(replier);
+                fusionMapList.add(answer.toHashMap(replier.toHashMap()));
             }
             HashMap<String, Object> dataMap = new HashMap<>();
-            dataMap.put("answers", answers);
-            dataMap.put("repliers", repliers);
+            dataMap.put("answerList", fusionMapList);
             return dataMap;
         } catch (AVException e) {
             e.printStackTrace();
