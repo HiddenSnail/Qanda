@@ -1,6 +1,6 @@
 package com.qanda.content.controller;
 
-import com.qanda.content.baseAPI.CheckEmpty;
+import com.qanda.content.baseAPI.Check;
 import com.qanda.content.baseAPI.CookieAPI;
 import com.qanda.content.baseAPI.ResponseState;
 import com.qanda.content.model.dataModel.Answer;
@@ -35,8 +35,8 @@ public class UserPageController {
      */
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     public @ResponseBody HashMap<String, Object> register(@RequestBody User user) {
-        if (!CheckEmpty.isStringEmpty(user.getEmail()) && !CheckEmpty.isStringEmpty(user.getPassword())
-                && !CheckEmpty.isStringEmpty(user.getName())) {
+        if (!Check.isStringEmpty(user.getEmail()) && !Check.isStringEmpty(user.getPassword())
+                && !Check.isStringEmpty(user.getName())) {
             if (userServiceImp.register(user)) {
                 return ResponseState.success();
             } else {
@@ -54,9 +54,9 @@ public class UserPageController {
      */
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public @ResponseBody HashMap<String, Object> login(@RequestBody User loginInfo, HttpServletResponse response) {
-        if (!CheckEmpty.isStringEmpty(loginInfo.getEmail()) && !CheckEmpty.isStringEmpty(loginInfo.getPassword())) {
+        if (!Check.isStringEmpty(loginInfo.getEmail()) && !Check.isStringEmpty(loginInfo.getPassword())) {
             String session = userServiceImp.login(loginInfo);
-            if (!CheckEmpty.isStringEmpty(session)) {
+            if (!Check.isStringEmpty(session)) {
                 CookieAPI.addCookie(response,"sessionID", session, -1);
                 return ResponseState.success();
             } else {
@@ -76,7 +76,7 @@ public class UserPageController {
     @RequestMapping(value = "/logout")
     public @ResponseBody HashMap<String, Object> logout(@CookieValue(value = "sessionID", required = false) String session,
                        HttpServletResponse response) {
-        if (!CheckEmpty.isStringEmpty(session) && userServiceImp.verifyUserState(session)) {
+        if (!Check.isStringEmpty(session) && userServiceImp.verifyUserState(session)) {
             userServiceImp.logout();
             CookieAPI.addCookie(response, "sessionID", null, 0);
             return ResponseState.success();
@@ -97,7 +97,7 @@ public class UserPageController {
     public @ResponseBody HashMap<String, Object> getUserInfo(
             @CookieValue(value = "sessionID", required = false) String session,
             HttpServletResponse response) throws Exception {
-        if (!CheckEmpty.isStringEmpty(session) && userServiceImp.verifyUserState(session)) {
+        if (!Check.isStringEmpty(session) && userServiceImp.verifyUserState(session)) {
             HashMap<String, Object> profileData = new HashMap<>();
             User userInfo = userServiceImp.fetchUserInfo();
             profileData.put("user", userInfo);
@@ -126,7 +126,7 @@ public class UserPageController {
     public @ResponseBody HashMap<String, Object> modifyUserInfo(
             @RequestBody User newInfo,
             @CookieValue(value = "sessionID", required = false) String session) {
-        if (!CheckEmpty.isStringEmpty(session) && userServiceImp.verifyUserState(session)) {
+        if (!Check.isStringEmpty(session) && userServiceImp.verifyUserState(session)) {
             if (userServiceImp.modifyUserInfo(newInfo)) {
                 return ResponseState.success();
             } else {
@@ -145,7 +145,7 @@ public class UserPageController {
     @RequestMapping(value = "/password", method = RequestMethod.POST)
     public @ResponseBody HashMap<String, Object> resetPassword(@RequestBody User info) {
         String email = info.getEmail();
-        if (CheckEmpty.isStringEmpty(email)) {
+        if (Check.isStringEmpty(email)) {
             return ResponseState.dataNotComplete();
         } else {
             userServiceImp.resetPassword(email);
@@ -163,7 +163,7 @@ public class UserPageController {
     public @ResponseBody HashMap<String, Object> getOtherUserInfo(
             @PathVariable(value = "uid") String uid,
             @CookieValue(value = "sessionID", required = false) String session) {
-        if (!CheckEmpty.isStringEmpty(session) && userServiceImp.verifyUserState(session)) {
+        if (!Check.isStringEmpty(session) && userServiceImp.verifyUserState(session)) {
             User userInfo = userServiceImp.getUserInfoById(uid);
             if (userInfo != null) {
                 HashMap<String, Object> otherProfileData = new HashMap<>();

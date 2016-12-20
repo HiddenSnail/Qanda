@@ -1,7 +1,7 @@
 package com.qanda.content.service;
 
 import com.avos.avoscloud.*;
-import com.qanda.content.baseAPI.CheckEmpty;
+import com.qanda.content.baseAPI.Check;
 import com.qanda.content.baseAPI.ModelTransformAPI;
 import com.qanda.content.model.dataModel.*;
 import org.springframework.stereotype.Service;
@@ -148,7 +148,7 @@ public class QandaServiceImp implements QandaService {
     /**通过CourseGroup的id获取问题和提问者的基本信息,并按照排序规则进行排序**/
     public HashMap<String, Object> getQuestionsByGid(String gid, boolean isSortByTime, boolean isDescend, Integer pageNumber) {
         AVQuery<AVObject> query = new AVQuery<>("Question");
-        if (!CheckEmpty.isStringEmpty(gid)) {
+        if (!Check.isStringEmpty(gid)) {
             AVObject avCourseGroup = AVObject.createWithoutData("CourseGroup", gid);
             query.whereEqualTo("belongGroup", avCourseGroup);
 
@@ -187,7 +187,7 @@ public class QandaServiceImp implements QandaService {
     /**通过Course的id获取问题和提问者基本信息,并按照排序规则进行排序**/
     public HashMap<String, Object> getQuestionsByCid(String cid, boolean isSortByTime, boolean isDescend, Integer pageNumber) {
         AVQuery<AVObject> query = new AVQuery<>("Question");
-        if (!CheckEmpty.isStringEmpty(cid)) {
+        if (!Check.isStringEmpty(cid)) {
             AVObject avCourse = AVObject.createWithoutData("Course", cid);
             query.whereEqualTo("targetCourse", avCourse);
 

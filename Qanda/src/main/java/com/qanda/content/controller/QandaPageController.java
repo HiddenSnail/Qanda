@@ -1,6 +1,6 @@
 package com.qanda.content.controller;
 
-import com.qanda.content.baseAPI.CheckEmpty;
+import com.qanda.content.baseAPI.Check;
 import com.qanda.content.baseAPI.ResponseState;
 import com.qanda.content.model.dataModel.Answer;
 import com.qanda.content.model.dataModel.Course;
@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -139,9 +138,9 @@ public class QandaPageController {
                                               @CookieValue(value = "sessionID", required = false) String session) {
         Question question = questionSubmitForm.question;
         Course course = questionSubmitForm.course;
-        if (!CheckEmpty.isStringEmpty(session) && userServiceImp.verifyUserState(session)) {
-            if (!CheckEmpty.isStringEmpty(question.getTitle()) && !CheckEmpty.isStringEmpty(question.getContent())
-                    && !CheckEmpty.isStringEmpty(course.getCid())) {
+        if (!Check.isStringEmpty(session) && userServiceImp.verifyUserState(session)) {
+            if (!Check.isStringEmpty(question.getTitle()) && !Check.isStringEmpty(question.getContent())
+                    && !Check.isStringEmpty(course.getCid())) {
                 if (qandaServiceImp.askQuestion(question, course.getCid())) {
                     return ResponseState.success();
                 } else {
@@ -166,8 +165,8 @@ public class QandaPageController {
     public @ResponseBody HashMap<String, Object> answerQuestion(@RequestBody Answer answer,
                                                @PathVariable(value = "qid", required = false) String qid,
                                                @CookieValue(value = "sessionID", required = false) String session) {
-        if (!CheckEmpty.isStringEmpty(session) && userServiceImp.verifyUserState(session)) {
-            if (!CheckEmpty.isStringEmpty(answer.getResponse()) && !CheckEmpty.isStringEmpty(qid)) {
+        if (!Check.isStringEmpty(session) && userServiceImp.verifyUserState(session)) {
+            if (!Check.isStringEmpty(answer.getResponse()) && !Check.isStringEmpty(qid)) {
                 if (qandaServiceImp.answerQuestion(answer, qid)) {
                     return ResponseState.success();
                 } else {
@@ -180,5 +179,4 @@ public class QandaPageController {
             return ResponseState.notLogin();
         }
     }
-
 }

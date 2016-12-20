@@ -12,6 +12,7 @@ public class ModelTransformAPI {
         User user = new User();
         user.setUid(avUser.getObjectId());
         user.setName(avUser.getString("nickname"));
+        user.setAvatar(avUser.getString("avatar"));
         user.setEmail(avUser.getEmail());
         user.setBrief(avUser.getString("brief"));
         user.setQuestionNumber(avUser.getInt("questionNumber"));
@@ -23,6 +24,7 @@ public class ModelTransformAPI {
         BaseUser baseUser = new BaseUser();
         baseUser.setUid(avUser.getObjectId());
         baseUser.setName(avUser.getString("nickname"));
+        baseUser.setAvatar(avUser.getString("avatar"));
         return baseUser;
     }
 
