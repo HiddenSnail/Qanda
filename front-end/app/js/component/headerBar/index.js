@@ -19,13 +19,7 @@ import ModalLog from './modalLog';
 class HeaderBar extends Component {
   constructor(props) {
     super(props);
-    this.modalOpen = this.props.store.modal.modalOpen;
-
-    this.getLogin = this.getLogin.bind(this);
-  }
-
-  getLogin() {
-    this.modalOpen = true;
+    this.openModal = this.props.store.modal.openModal;
   }
 
   render() {
@@ -43,10 +37,9 @@ class HeaderBar extends Component {
             <MenuItem primaryText="个人设置" leftIcon={<ActionSettings/>}/>
             <MenuItem primaryText="登出" leftIcon={<HardwareKeyboardTab/>}/>
             <MenuItem primaryText="登陆" leftIcon={<EditorverticalAlignTop/>}
-                      onTouchTap={this.getLogin}>
-              <ModalLog/>
-            </MenuItem>
+                      onClick={this.openModal}/>
           </IconMenu>
+          <ModalLog/>
         </div>
         <Divider style={style.divider}/>
       </div>

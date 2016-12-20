@@ -40,6 +40,8 @@ public class QandaPageController {
     public @ResponseBody HashMap<String, Object> getQuestions(
             @RequestParam(value = "pageNumber", required = true) Integer pageNumber,
             HttpServletResponse response) throws Exception {
+        response.setContentType("application/json;charset=utf-8");
+
         HashMap<String ,Object> cgQuestionsDataMap = new HashMap<>();
         List<CourseGroup> courseGroupList = qandaServiceImp.getCourseGroups();
         if (courseGroupList.size() > 0) {
