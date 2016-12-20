@@ -23,6 +23,30 @@ public class ResponseState {
         return response;
     }
 
+    static public HashMap<String, Object> loginFail() {
+        HashMap<String, Object> response = new HashMap<>();
+        response.put("status", 400);
+        response.put("message", "登录失败");
+        response.put("data", null);
+        return response;
+    }
+
+    static public HashMap<String, Object> notLogin() {
+        HashMap<String, Object> response = new HashMap<>();
+        response.put("status", 401);
+        response.put("message", "用户未登陆");
+        response.put("data", null);
+        return response;
+    }
+
+    static public HashMap<String, Object> dataNotComplete() {
+        HashMap<String, Object> response = new HashMap<>();
+        response.put("status", 409);
+        response.put("message", "请求信息不完整");
+        response.put("data", null);
+        return response;
+    }
+
     static public HashMap<String, Object> noFindGid() {
         HashMap<String, Object> response = new HashMap<>();
         response.put("status", 410);
@@ -47,10 +71,34 @@ public class ResponseState {
         return response;
     }
 
-    static public HashMap<String, Object> serverEerror() {
+    static public HashMap<String, Object> noFindUid() {
+        HashMap<String, Object> response = new HashMap<>();
+        response.put("status", 413);
+        response.put("message", "找不到对应的用户");
+        response.put("data", null);
+        return response;
+    }
+
+    static public HashMap<String, Object> serverError() {
         HashMap<String, Object> response = new HashMap<>();
         response.put("status", 500);
         response.put("message", "服务器内部错误,无法获取请求信息");
+        response.put("data", null);
+        return response;
+    }
+
+    static public HashMap<String, Object> registerError() {
+        HashMap<String, Object> response = new HashMap<>();
+        response.put("status", 501);
+        response.put("message", "服务器内部错误,注册失败");
+        response.put("data", null);
+        return response;
+    }
+
+    static public HashMap<String, Object> saveError() {
+        HashMap<String, Object> response = new HashMap<>();
+        response.put("status", 502);
+        response.put("message", "服务器内部错误,信息保存失败");
         response.put("data", null);
         return response;
     }

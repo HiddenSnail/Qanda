@@ -8,7 +8,7 @@ import com.qanda.content.model.dataModel.*;
  * Created by huangrui on 2016/12/18.
  */
 public class ModelTransformAPI {
-    static public User tansformAVUserToUser(AVUser avUser) {
+    static public User transformAVUserToUser(AVUser avUser) {
         User user = new User();
         user.setUid(avUser.getObjectId());
         user.setName(avUser.getString("nickname"));
@@ -32,6 +32,7 @@ public class ModelTransformAPI {
         question.setTitle(avQuestion.getString("title"));
         question.setContent(avQuestion.getString("content"));
         question.setAnswerNumber(avQuestion.getInt("answerNumber"));
+        question.setLike(avQuestion.getInt("like"));
         question.setCreateDate(avQuestion.getCreatedAt());
         return question;
     }

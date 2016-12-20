@@ -75,7 +75,7 @@ public class UserServiceImp implements UserService {
     public User fetchUserInfo() {
         AVUser cAVUser = AVUser.getCurrentUser();
         if (cAVUser != null) {
-            return ModelTransformAPI.tansformAVUserToUser(cAVUser);
+            return ModelTransformAPI.transformAVUserToUser(cAVUser);
         } else {
             return null;
         }
@@ -152,7 +152,7 @@ public class UserServiceImp implements UserService {
             AVUser avUser = userAVQuery.getFirst();
             if (avUser == null) return null;
             else {
-                return ModelTransformAPI.tansformAVUserToUser(avUser);
+                return ModelTransformAPI.transformAVUserToUser(avUser);
             }
         } catch (AVException e) {
             e.printStackTrace();

@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
  * Created by huangrui on 2016/12/19.
  */
 @Component
-public class ViewQuestion {
+public class QuestionSubmitForm {
     @Autowired
     public Question question;
     @Autowired

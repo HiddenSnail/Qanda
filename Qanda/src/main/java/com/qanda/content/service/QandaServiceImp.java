@@ -1,7 +1,7 @@
 package com.qanda.content.service;
 
 import com.avos.avoscloud.*;
-import com.qanda.content.baseAPI.CheckAPI;
+import com.qanda.content.baseAPI.CheckEmpty;
 import com.qanda.content.baseAPI.ModelTransformAPI;
 import com.qanda.content.model.dataModel.*;
 import org.springframework.stereotype.Service;
@@ -38,7 +38,6 @@ public class QandaServiceImp implements QandaService {
             cAVUser.put("questionNumber", questionNumber);
             cAVUser.save();
             return true;
-
         } catch (AVException e) {
             e.printStackTrace();
             return false;
@@ -51,9 +50,8 @@ public class QandaServiceImp implements QandaService {
             AVUser cAVUser = AVUser.getCurrentUser();
             AVQuery<AVObject> query = new AVQuery<>("Question");
             query.whereEqualTo("objectId", qid);
-            List<AVObject> avQuestions = query.find();
-            if (avQuestions.size() <= 0) return false;
-            AVObject avQuestion = avQuestions.get(0);
+            AVObject avQuestion = query.getFirst();
+            if (avQuestion == null) return false;
 
             AVObject avAnswer = new AVObject("Answer");
             avAnswer.put("response", answer.getResponse());
@@ -150,7 +148,7 @@ public class QandaServiceImp implements QandaService {
     /**通过CourseGroup的id获取问题和提问者的基本信息,并按照排序规则进行排序**/
     public HashMap<String, Object> getQuestionsByGid(String gid, boolean isSortByTime, boolean isDescend, Integer pageNumber) {
         AVQuery<AVObject> query = new AVQuery<>("Question");
-        if (!CheckAPI.isEmpty(gid)) {
+        if (!CheckEmpty.isStringEmpty(gid)) {
             AVObject avCourseGroup = AVObject.createWithoutData("CourseGroup", gid);
             query.whereEqualTo("belongGroup", avCourseGroup);
 
@@ -189,7 +187,7 @@ public class QandaServiceImp implements QandaService {
     /**通过Course的id获取问题和提问者基本信息,并按照排序规则进行排序**/
     public HashMap<String, Object> getQuestionsByCid(String cid, boolean isSortByTime, boolean isDescend, Integer pageNumber) {
         AVQuery<AVObject> query = new AVQuery<>("Question");
-        if (!CheckAPI.isEmpty(cid)) {
+        if (!CheckEmpty.isStringEmpty(cid)) {
             AVObject avCourse = AVObject.createWithoutData("Course", cid);
             query.whereEqualTo("targetCourse", avCourse);
 
