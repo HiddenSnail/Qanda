@@ -20,6 +20,7 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * Created by huangrui on 2016/11/28.
  */
+@CrossOrigin(origins = "http://localhost:4001")
 @Controller
 @RequestMapping(value = "/user")
 public class UserPageController {
