@@ -18,7 +18,7 @@ import browserifyShim from 'browserify-shim';
 import history from 'connect-history-api-fallback';
 
 const paths = {
-  srcJsx: 'app/modalLog.js',
+  srcJsx: 'app/index.js',
   srcCommonStyle: 'app/assets/style/common.css',
   srcImages: 'app/assets/images/*.**',
   srcLint: 'app/**/*.js',
