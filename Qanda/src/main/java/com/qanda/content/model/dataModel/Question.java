@@ -42,6 +42,9 @@ public class Question {
         this.createDate = createDate;
     }
 
+    public Integer getLike() { return like; }
+    public void setLike(Integer like) { this.like = like; }
+
     public HashMap<String, Object> toHashMap() {
         HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put("qid", this.qid);

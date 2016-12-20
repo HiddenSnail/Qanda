@@ -1,8 +1,8 @@
 package com.qanda.content.controller;
 
-import com.qanda.content.baseAPI.CheckAPI;
+import com.qanda.content.baseAPI.CheckEmpty;
 import com.qanda.content.baseAPI.CookieAPI;
-import com.qanda.content.baseAPI.ResponseErrorAPI;
+import com.qanda.content.baseAPI.ResponseState;
 import com.qanda.content.model.dataModel.Answer;
 import com.qanda.content.model.dataModel.Question;
 import com.qanda.content.model.dataModel.User;
@@ -34,41 +34,36 @@ public class UserPageController {
      * @throws Exception
      */
     @RequestMapping(value = "/register", method = RequestMethod.POST)
-    public @ResponseBody boolean register(@RequestBody User user, HttpServletResponse response) throws Exception {
-        if (!CheckAPI.isEmpty(user.getEmail()) && !CheckAPI.isEmpty(user.getPassword()) && !CheckAPI.isEmpty(user.getName())) {
+    public @ResponseBody HashMap<String, Object> register(@RequestBody User user) {
+        if (!CheckEmpty.isStringEmpty(user.getEmail()) && !CheckEmpty.isStringEmpty(user.getPassword())
+                && !CheckEmpty.isStringEmpty(user.getName())) {
             if (userServiceImp.register(user)) {
-                return true;
+                return ResponseState.success();
             } else {
-                ResponseErrorAPI.infoOccupyError(response);
-                return false;
+                return ResponseState.registerError();
             }
         } else {
-            ResponseErrorAPI.completeError(response);
-            return false;
+            return ResponseState.dataNotComplete();
         }
     }
 
     /**
      * 方法说明：用户登录
      * @param loginInfo: {"email", "password"}
-     * @param response
      * @return
-     * @throws Exception
      */
     @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public @ResponseBody boolean login(@RequestBody User loginInfo, HttpServletResponse response) throws Exception {
-        if (!CheckAPI.isEmpty(loginInfo.getEmail()) && !CheckAPI.isEmpty(loginInfo.getPassword())) {
+    public @ResponseBody HashMap<String, Object> login(@RequestBody User loginInfo, HttpServletResponse response) {
+        if (!CheckEmpty.isStringEmpty(loginInfo.getEmail()) && !CheckEmpty.isStringEmpty(loginInfo.getPassword())) {
             String session = userServiceImp.login(loginInfo);
-            if (!CheckAPI.isEmpty(session)) {
+            if (!CheckEmpty.isStringEmpty(session)) {
                 CookieAPI.addCookie(response,"sessionID", session, -1);
-                return true;
+                return ResponseState.success();
             } else {
-                ResponseErrorAPI.loginError(response);
-                return false;
+                return ResponseState.loginFail();
             }
         } else {
-            ResponseErrorAPI.completeError(response);
-            return false;
+            return ResponseState.dataNotComplete();
         }
     }
 
@@ -77,16 +72,16 @@ public class UserPageController {
      * 方法说明：用户登出
      * @param session
      * @param response
-     * @throws Exception
      */
     @RequestMapping(value = "/logout")
-    public void logout(@CookieValue(value = "sessionID", required = false) String session,
-                       HttpServletResponse response) throws Exception {
-        if (!CheckAPI.isEmpty(session) && userServiceImp.verifyUserState(session)) {
+    public @ResponseBody HashMap<String, Object> logout(@CookieValue(value = "sessionID", required = false) String session,
+                       HttpServletResponse response) {
+        if (!CheckEmpty.isStringEmpty(session) && userServiceImp.verifyUserState(session)) {
             userServiceImp.logout();
             CookieAPI.addCookie(response, "sessionID", null, 0);
+            return ResponseState.success();
         } else {
-            ResponseErrorAPI.aclError(response);
+            return ResponseState.notLogin();
         }
     }
 
@@ -102,64 +97,59 @@ public class UserPageController {
     public @ResponseBody HashMap<String, Object> getUserInfo(
             @CookieValue(value = "sessionID", required = false) String session,
             HttpServletResponse response) throws Exception {
-        if (!CheckAPI.isEmpty(session) && userServiceImp.verifyUserState(session)) {
+        if (!CheckEmpty.isStringEmpty(session) && userServiceImp.verifyUserState(session)) {
             HashMap<String, Object> profileData = new HashMap<>();
             User userInfo = userServiceImp.fetchUserInfo();
             profileData.put("user", userInfo);
 
             List<Question> userQuestions = userServiceImp.fetchUserQuestions();
-            profileData.put("questions", userQuestions);
+            profileData.put("questionList", userQuestions);
 
             List<Answer> userAnswers = userServiceImp.fetchUserAnswers();
-            profileData.put("answers", userAnswers);
+            profileData.put("answerList", userAnswers);
 
-            return profileData;
+            return ResponseState.success(profileData);
 
         } else {
-            ResponseErrorAPI.aclError(response);
-            return null;
+            return ResponseState.notLogin();
         }
     }
 
     /**
      * 方法说明：修改用户信息
-     * @param newInfo: {"name", "brief", "pictureData"}
+     * @param newInfo: {"name", "brief"}
      * @param session
-     * @param response
      * @return
      * @throws Exception
      */
     @RequestMapping(value = "/profile", method = RequestMethod.PUT)
-    public @ResponseBody User modifyUserInfo(@RequestBody User newInfo,
-                                             @CookieValue(value = "sessionID", required = false) String session,
-                                             HttpServletResponse response) throws Exception {
-        if (!CheckAPI.isEmpty(session) && userServiceImp.verifyUserState(session)) {
+    public @ResponseBody HashMap<String, Object> modifyUserInfo(
+            @RequestBody User newInfo,
+            @CookieValue(value = "sessionID", required = false) String session) {
+        if (!CheckEmpty.isStringEmpty(session) && userServiceImp.verifyUserState(session)) {
             if (userServiceImp.modifyUserInfo(newInfo)) {
-                return newInfo;
+                return ResponseState.success();
             } else {
-                ResponseErrorAPI.saveError(response);
-                return null;
+                return ResponseState.saveError();
             }
         } else {
-            ResponseErrorAPI.aclError(response);
-            return null;
+            return ResponseState.notLogin();
         }
     }
 
     /**
      * 方法说明：重置密码
      * @param info {"email"}
-     * @param response
      * @throws Exception
      */
     @RequestMapping(value = "/password", method = RequestMethod.POST)
-    public void resetPassword(@RequestBody User info, HttpServletResponse response) throws Exception {
+    public @ResponseBody HashMap<String, Object> resetPassword(@RequestBody User info) {
         String email = info.getEmail();
-        System.out.println(email);
-        if (CheckAPI.isEmpty(email)) {
-            ResponseErrorAPI.completeError(response);
+        if (CheckEmpty.isStringEmpty(email)) {
+            return ResponseState.dataNotComplete();
         } else {
             userServiceImp.resetPassword(email);
+            return ResponseState.success();
         }
     }
 
@@ -167,36 +157,31 @@ public class UserPageController {
      * 方法说明：通过id获取其他用户主页信息
      * @param uid
      * @param session
-     * @param response
      * @return
-     * @throws Exception
      */
     @RequestMapping(value = "/profile/{uid}", method = RequestMethod.GET)
     public @ResponseBody HashMap<String, Object> getOtherUserInfo(
             @PathVariable(value = "uid") String uid,
-            @CookieValue(value = "sessionID", required = false) String session,
-            HttpServletResponse response) throws Exception {
-        if (!CheckAPI.isEmpty(session) && userServiceImp.verifyUserState(session)) {
+            @CookieValue(value = "sessionID", required = false) String session) {
+        if (!CheckEmpty.isStringEmpty(session) && userServiceImp.verifyUserState(session)) {
             User userInfo = userServiceImp.getUserInfoById(uid);
             if (userInfo != null) {
                 HashMap<String, Object> otherProfileData = new HashMap<>();
                 otherProfileData.put("user", userInfo);
 
                 List<Question> userQuestions = userServiceImp.getUserQuestionsByUid(uid);
-                otherProfileData.put("questions", userQuestions);
+                otherProfileData.put("questionList", userQuestions);
 
                 List<Answer> userAnswers = userServiceImp.getUserAnswersByUid(uid);
-                otherProfileData.put("answers", userAnswers);
+                otherProfileData.put("answerList", userAnswers);
 
-                return otherProfileData;
+                return ResponseState.success(otherProfileData);
 
             } else {
-                ResponseErrorAPI.findError(response);
-                return null;
+                return ResponseState.noFindUid();
             }
         } else {
-            ResponseErrorAPI.aclError(response);
-            return null;
+            return ResponseState.notLogin();
         }
     }
 }
