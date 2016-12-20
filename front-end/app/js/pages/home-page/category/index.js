@@ -34,9 +34,9 @@ const style = {
   categoryBgStyle: {
     background: "url('dist/assets/images/background.jpg')",
     backgroundRepeat: 'noRepeat',
-    backgroundSize: '266px 726px',
+    backgroundSize: '266px 100vh',
     width: '266px',
-    height: '726px',
+    height: '100vh',
     position: 'fixed',
     zIndex: '0'
   },

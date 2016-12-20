@@ -1,17 +1,13 @@
-import React, {Component} from 'react';
+import {httpPost} from './httpUtils';
+import baseUrl from './config.http';
 
-class  extends
-Component
-{
-  constructor(props)
-  {
-    super(props);
-  }
+const questionsUrl = baseUrl + 'questions';
 
-  render()
-  {
-    return;
-  }
-}
 
-export default ;
+
+const questionUrl = baseUrl + 'question';
+let askQuestion = options => httpPost(questionUrl, {}, options);
+let answserQuestion = (qid, options) => {
+  const answerUrl = questionsUrl + `/${qid}`;
+  return httpPost(answerUrl, {}, options);
+};

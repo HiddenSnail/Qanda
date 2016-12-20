@@ -1,12 +1,10 @@
-const queryString = obj =>
-  Object.keys(obj).map(key => `${key}=${obj[key]}`)
-    .reduce((pre, late) => `${pre}&${late}`);
+import qs from 'querystring';
 
 
 let http = method => (...options) => {
   let {url, params, body} = options;
   if(Object.keys(params).length !== 0)
-    url += `?${queryString(obj)}`;
+    url += qs.stringify(params);
 
   return fetch(url, {
     method,

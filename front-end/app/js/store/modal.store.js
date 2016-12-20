@@ -1,17 +1,12 @@
-import React, {Component} from 'react';
+import {observable} from 'mobx';
 
-class  extends
-Component
-{
-  constructor(props)
-  {
-    super(props);
-  }
+let modal = observable({
+  userInfo: {
+    nickNam: "",
+    email: "",
+    password: "",
+  },
+  modalOpen: "false"
+});
 
-  render()
-  {
-    return;
-  }
-}
-
-export default ;
+export default modal;

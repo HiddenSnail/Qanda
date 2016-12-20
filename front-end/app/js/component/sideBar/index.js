@@ -25,7 +25,7 @@ class SideBar extends Component {
 
 const style = {
   sideBarBg: {
-    height: '726px',//TODO 记得修改为100vh
+    height: '100vh',//TODO 记得修改为100vh
     width: '66px',
     backgroundColor: '#222831',
     opacity: 0.8,
@@ -33,7 +33,7 @@ const style = {
   sideBarBgImg: {
     background: "url('dist/assets/images/side-bar-background.jpg')",
     position: 'fixed',
-    height: '726px',
+    height: '100vh',
     width: '66px',
     zIndex: 999
   },

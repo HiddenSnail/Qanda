@@ -1,24 +1,19 @@
 import React, {Component} from 'react';
 import {observable} from 'mobx';
-import {observer} from 'mobx-react';
+import {observer,inject} from 'mobx-react';
 
 import QuestionItem from './questionItem';
 
-
+@inject('store')
 @observer
 class QuestionList extends Component {
-  @observable questionList = [{
-    avatar: "dist/assets/images/background.jpg",
-    questioner: "Tuzi",
-    createDate: "2016/12/19 23:59:59",
-    title: "What's your name?",
-    content: "content",
-    answerNumber: 13,
-    like: 0
-  }];
-
   constructor(props) {
     super(props);
+    this.questionList = this.props.store.questionList;
+  }
+
+  componentWillMount() {
+
   }
 
   render() {

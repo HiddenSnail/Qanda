@@ -1,17 +1,17 @@
-import React, {Component} from 'react';
+import {httpGet, httpPost} from './httpUtils';
+import baseUrl from './config.http';
 
-class  extends
-Component
-{
-  constructor(props)
-  {
-    super(props);
-  }
+const userUrl = baseUrl + '/user';
 
-  render()
-  {
-    return;
-  }
-}
+const loginUrl = userUrl + '/login';
+export let userLogin = options => httpPost(loginUrl, {}, options);
 
-export default ;
+const registerUrl = userUrl + '/register';
+export let userRegister = options => httpPost(registerUrl, {}, options);
+
+const userInfoUrl = userUrl + 'profile';
+export let modifyUserInfo = options => httpPost(userInfoUrl, {}, options);
+export let getUserInfo = options => httpGet(userInfoUrl, {}, options);
+
+const passwordUrl = userUrl + 'password';
+export let resetPassword = options => httpPost(passwordUrl, {}, options);

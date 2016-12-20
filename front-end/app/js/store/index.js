@@ -1,17 +1,13 @@
-import React, {Component} from 'react';
+import questionList from './question.store';
+import user from './user.store';
+import modal from './modal.store';
 
-class  extends
-Component
-{
-  constructor(props)
-  {
-    super(props);
-  }
+let store = {
+  questionList,
+  user,
+  modal
+};
 
-  render()
-  {
-    return;
-  }
-}
 
-export default ;
+
+export default store;

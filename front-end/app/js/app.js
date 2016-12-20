@@ -15,7 +15,6 @@ class App extends React.Component {
 
   render() {
     return (
-      <Provider>
         <MuiThemeProvider>
           <div>
             <SideBar/>
@@ -23,7 +22,6 @@ class App extends React.Component {
             {this.props.children}
           </div>
         </MuiThemeProvider>
-      </Provider>
     )
   }
 }

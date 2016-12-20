@@ -8,12 +8,24 @@ import NavigationMoreVert from 'material-ui/svg-icons/navigation/more-vert';
 import HardwareKeyboardTab from 'material-ui/svg-icons/hardware/keyboard-tab';
 import ActionHome from 'material-ui/svg-icons/action/home';
 import ActionSettings from 'material-ui/svg-icons/action/settings';
+import EditorverticalAlignTop from 'material-ui/svg-icons/editor/vertical-align-top';
+
+import {observer, inject} from 'mobx-react';
 
 import SearchBar from './searchBar';
+import ModalLog from './modalLog';
 
+@inject("store") @observer
 class HeaderBar extends Component {
   constructor(props) {
     super(props);
+    this.modalOpen = this.props.store.modal.modalOpen;
+
+    this.getLogin = this.getLogin.bind(this);
+  }
+
+  getLogin() {
+    this.modalOpen = true;
   }
 
   render() {
@@ -30,6 +42,10 @@ class HeaderBar extends Component {
             <MenuItem primaryText="个人主页" leftIcon={<ActionHome/>}/>
             <MenuItem primaryText="个人设置" leftIcon={<ActionSettings/>}/>
             <MenuItem primaryText="登出" leftIcon={<HardwareKeyboardTab/>}/>
+            <MenuItem primaryText="登陆" leftIcon={<EditorverticalAlignTop/>}
+                      onTouchTap={this.getLogin}>
+              <ModalLog/>
+            </MenuItem>
           </IconMenu>
         </div>
         <Divider style={style.divider}/>
