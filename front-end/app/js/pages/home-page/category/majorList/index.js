@@ -17,8 +17,8 @@ class MarjorList extends Component {
     this.handleClick = this.handleClick.bind(this);
 
     this.majorList = this.props.store.courseList.majorList;
-    this.setQuestionList = this.props.store.questions.setQuestionList;
     this.getTag = this.props.store.courseList.getTag;
+    this.setQuestionList = this.props.store.questions.setQuestionList;
   }
 
   handleClick(index, mid) {

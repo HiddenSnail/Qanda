@@ -66,13 +66,11 @@ class MajorItem extends Component {
         }}
         style={style.fontBgStyle}
       >
-        <Link to={"/"+majorType}>
-          <div style={style.fontStyle} className={this.className}
-               onClick={() => handleClick(listIndex, majorId)}
-          >
-            {majorType}
-          </div>
-        </Link>
+        <div style={style.fontStyle} className={this.className}
+             onClick={() => handleClick(listIndex, majorId)}
+        >
+          {majorType}
+        </div>
       </TweenOne>
     );
   }

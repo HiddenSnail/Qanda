@@ -18,7 +18,6 @@ ReactDOM.render((
     <Router history={browserHistory}>
       <Route path="/" component={App}>
         <IndexRoute component={HomePage}/>
-        <Route path=":majorType" component={HomePage}/>
       </Route>
     </Router>
   </Provider>

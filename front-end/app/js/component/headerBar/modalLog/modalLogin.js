@@ -45,13 +45,13 @@ class ModalLogin extends Component {
             backgroundColor='#2EB872'
             labelColor='#fff'
             disabled={this.modal.nextBtnDisable}
-            onClick={()=>this.login()}
+            onClick={this.login}
           />
           <RaisedButton
             className="m-t-md btn-nm"
             label="注册账号"
             primary={true}
-            onClick={() => this.changeToRegister}
+            onClick={this.changeToRegister}
           />
         </div>
     );

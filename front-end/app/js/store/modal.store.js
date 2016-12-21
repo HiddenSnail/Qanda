@@ -21,6 +21,7 @@ modal.openModal = () => {
 
 modal.closeModal = () => {
   modal.modalState = false;
+  modal.changeToLogin();
 };
 
 modal.changeToLogin = () => {
