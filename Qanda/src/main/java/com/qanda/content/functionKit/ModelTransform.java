@@ -1,4 +1,4 @@
-package com.qanda.content.baseAPI;
+package com.qanda.content.functionKit;
 
 import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVUser;
@@ -7,11 +7,12 @@ import com.qanda.content.model.dataModel.*;
 /**
  * Created by huangrui on 2016/12/18.
  */
-public class ModelTransformAPI {
+public class ModelTransform {
     static public User transformAVUserToUser(AVUser avUser) {
         User user = new User();
         user.setUid(avUser.getObjectId());
         user.setName(avUser.getString("nickname"));
+        user.setAvatar(avUser.getString("avatar"));
         user.setEmail(avUser.getEmail());
         user.setBrief(avUser.getString("brief"));
         user.setQuestionNumber(avUser.getInt("questionNumber"));
@@ -23,6 +24,7 @@ public class ModelTransformAPI {
         BaseUser baseUser = new BaseUser();
         baseUser.setUid(avUser.getObjectId());
         baseUser.setName(avUser.getString("nickname"));
+        baseUser.setAvatar(avUser.getString("avatar"));
         return baseUser;
     }
 

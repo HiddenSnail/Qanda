@@ -1,8 +1,8 @@
 package com.qanda.content.controller;
 
-import com.qanda.content.baseAPI.CheckEmpty;
-import com.qanda.content.baseAPI.CookieAPI;
-import com.qanda.content.baseAPI.ResponseState;
+import com.qanda.content.functionKit.Check;
+import com.qanda.content.functionKit.EasyCookie;
+import com.qanda.content.functionKit.ServerNotice;
 import com.qanda.content.model.dataModel.Answer;
 import com.qanda.content.model.dataModel.Question;
 import com.qanda.content.model.dataModel.User;
@@ -35,15 +35,15 @@ public class UserPageController {
      */
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     public @ResponseBody HashMap<String, Object> register(@RequestBody User user) {
-        if (!CheckEmpty.isStringEmpty(user.getEmail()) && !CheckEmpty.isStringEmpty(user.getPassword())
-                && !CheckEmpty.isStringEmpty(user.getName())) {
+        if (!Check.isStringEmpty(user.getEmail()) && !Check.isStringEmpty(user.getPassword())
+                && !Check.isStringEmpty(user.getName())) {
             if (userServiceImp.register(user)) {
-                return ResponseState.success();
+                return ServerNotice.success();
             } else {
-                return ResponseState.registerError();
+                return ServerNotice.registerError();
             }
         } else {
-            return ResponseState.dataNotComplete();
+            return ServerNotice.dataNotComplete();
         }
     }
 
@@ -54,50 +54,46 @@ public class UserPageController {
      */
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public @ResponseBody HashMap<String, Object> login(@RequestBody User loginInfo, HttpServletResponse response) {
-        if (!CheckEmpty.isStringEmpty(loginInfo.getEmail()) && !CheckEmpty.isStringEmpty(loginInfo.getPassword())) {
+        if (!Check.isStringEmpty(loginInfo.getEmail()) && !Check.isStringEmpty(loginInfo.getPassword())) {
             String session = userServiceImp.login(loginInfo);
-            if (!CheckEmpty.isStringEmpty(session)) {
-                CookieAPI.addCookie(response,"sessionID", session, -1);
-                return ResponseState.success();
+            if (!Check.isStringEmpty(session)) {
+                EasyCookie.addCookie(response,"sessionId", session, -1);
+                ServerNotice.active();
+                return ServerNotice.success();
             } else {
-                return ResponseState.loginFail();
+                return ServerNotice.loginFail();
             }
         } else {
-            return ResponseState.dataNotComplete();
+            return ServerNotice.dataNotComplete();
         }
     }
 
 
     /**
      * 方法说明：用户登出
-     * @param session
      * @param response
      */
     @RequestMapping(value = "/logout")
-    public @ResponseBody HashMap<String, Object> logout(@CookieValue(value = "sessionID", required = false) String session,
-                       HttpServletResponse response) {
-        if (!CheckEmpty.isStringEmpty(session) && userServiceImp.verifyUserState(session)) {
+    public @ResponseBody HashMap<String, Object> logout(HttpServletResponse response) {
+        if (ServerNotice.isActive()) {
             userServiceImp.logout();
-            CookieAPI.addCookie(response, "sessionID", null, 0);
-            return ResponseState.success();
+            EasyCookie.addCookie(response, "sessionId", null, 0);
+            ServerNotice.inactive();
+            return ServerNotice.success();
         } else {
-            return ResponseState.notLogin();
+            return ServerNotice.notLogin();
         }
     }
 
 
     /**
      * 方法说明：获取用户主页信息
-     * @param session
-     * @param response
      * @return
      * @throws Exception
      */
     @RequestMapping(value = "/profile", method = RequestMethod.GET)
-    public @ResponseBody HashMap<String, Object> getUserInfo(
-            @CookieValue(value = "sessionID", required = false) String session,
-            HttpServletResponse response) throws Exception {
-        if (!CheckEmpty.isStringEmpty(session) && userServiceImp.verifyUserState(session)) {
+    public @ResponseBody HashMap<String, Object> getUserInfo() throws Exception {
+        if (ServerNotice.isActive()) {
             HashMap<String, Object> profileData = new HashMap<>();
             User userInfo = userServiceImp.fetchUserInfo();
             profileData.put("user", userInfo);
@@ -108,32 +104,29 @@ public class UserPageController {
             List<Answer> userAnswers = userServiceImp.fetchUserAnswers();
             profileData.put("answerList", userAnswers);
 
-            return ResponseState.success(profileData);
+            return ServerNotice.success(profileData);
 
         } else {
-            return ResponseState.notLogin();
+            return ServerNotice.notLogin();
         }
     }
 
     /**
      * 方法说明：修改用户信息
      * @param newInfo: {"name", "brief"}
-     * @param session
      * @return
      * @throws Exception
      */
     @RequestMapping(value = "/profile", method = RequestMethod.PUT)
-    public @ResponseBody HashMap<String, Object> modifyUserInfo(
-            @RequestBody User newInfo,
-            @CookieValue(value = "sessionID", required = false) String session) {
-        if (!CheckEmpty.isStringEmpty(session) && userServiceImp.verifyUserState(session)) {
+    public @ResponseBody HashMap<String, Object> modifyUserInfo(@RequestBody User newInfo) {
+        if (ServerNotice.isActive()) {
             if (userServiceImp.modifyUserInfo(newInfo)) {
-                return ResponseState.success();
+                return ServerNotice.success();
             } else {
-                return ResponseState.saveError();
+                return ServerNotice.saveError();
             }
         } else {
-            return ResponseState.notLogin();
+            return ServerNotice.notLogin();
         }
     }
 
@@ -145,25 +138,23 @@ public class UserPageController {
     @RequestMapping(value = "/password", method = RequestMethod.POST)
     public @ResponseBody HashMap<String, Object> resetPassword(@RequestBody User info) {
         String email = info.getEmail();
-        if (CheckEmpty.isStringEmpty(email)) {
-            return ResponseState.dataNotComplete();
+        if (Check.isStringEmpty(email)) {
+            return ServerNotice.dataNotComplete();
         } else {
             userServiceImp.resetPassword(email);
-            return ResponseState.success();
+            return ServerNotice.success();
         }
     }
 
     /**
      * 方法说明：通过id获取其他用户主页信息
      * @param uid
-     * @param session
      * @return
      */
     @RequestMapping(value = "/profile/{uid}", method = RequestMethod.GET)
     public @ResponseBody HashMap<String, Object> getOtherUserInfo(
-            @PathVariable(value = "uid") String uid,
-            @CookieValue(value = "sessionID", required = false) String session) {
-        if (!CheckEmpty.isStringEmpty(session) && userServiceImp.verifyUserState(session)) {
+            @PathVariable(value = "uid") String uid) {
+        if (ServerNotice.isActive()) {
             User userInfo = userServiceImp.getUserInfoById(uid);
             if (userInfo != null) {
                 HashMap<String, Object> otherProfileData = new HashMap<>();
@@ -175,13 +166,40 @@ public class UserPageController {
                 List<Answer> userAnswers = userServiceImp.getUserAnswersByUid(uid);
                 otherProfileData.put("answerList", userAnswers);
 
-                return ResponseState.success(otherProfileData);
-
+                return ServerNotice.success(otherProfileData);
             } else {
-                return ResponseState.noFindUid();
+                return ServerNotice.noFindUid();
             }
         } else {
-            return ResponseState.notLogin();
+            return ServerNotice.notLogin();
+        }
+    }
+
+    /**
+     * 方法说明：用户删除所有问题
+     * @return
+     */
+    @RequestMapping(value = "/profile/questions", method = RequestMethod.DELETE)
+    public @ResponseBody HashMap<String, Object> deleteAllQuestions() {
+        if (ServerNotice.isActive()) {
+            if (userServiceImp.deleteAllQuestions()) return ServerNotice.success();
+            else return ServerNotice.deleteError();
+        } else {
+            return ServerNotice.notLogin();
+        }
+    }
+
+    /**
+     * 方法说明：用户删除所有回答
+     * @return
+     */
+    @RequestMapping(value = "/profile/answers", method = RequestMethod.DELETE)
+    public @ResponseBody HashMap<String, Object> deleteAllAnswers() {
+        if (ServerNotice.isActive()) {
+            if (userServiceImp.deleteAllAnswers()) return ServerNotice.success();
+            else return ServerNotice.deleteError();
+        } else {
+            return ServerNotice.notLogin();
         }
     }
 }

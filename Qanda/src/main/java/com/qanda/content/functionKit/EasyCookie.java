@@ -1,4 +1,4 @@
-package com.qanda.content.baseAPI;
+package com.qanda.content.functionKit;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -9,7 +9,7 @@ import java.util.Map;
 /**
  * Created by huangrui on 2016/12/15.
  */
-public class CookieAPI {
+public class EasyCookie {
     private static Map<String, Cookie> readCookieMap(HttpServletRequest request) {
         Map<String, Cookie> cookieMap = new HashMap<String, Cookie>();
         Cookie[] cookies = request.getCookies();
