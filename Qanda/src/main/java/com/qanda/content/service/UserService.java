@@ -46,4 +46,10 @@ public interface UserService {
     /**通过用户id获取用户所发表的回答**/
     List<Answer> getUserAnswersByUid(String uid);
 
+    /**用户删除所有问题**/
+    boolean deleteAllQuestions();
+
+    /**用户删除所有回答**/
+    boolean deleteAllAnswers();
+
 }

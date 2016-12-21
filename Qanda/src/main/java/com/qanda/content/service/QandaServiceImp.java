@@ -1,8 +1,8 @@
 package com.qanda.content.service;
 
 import com.avos.avoscloud.*;
-import com.qanda.content.baseAPI.Check;
-import com.qanda.content.baseAPI.ModelTransformAPI;
+import com.qanda.content.functionKit.Check;
+import com.qanda.content.functionKit.ModelTransform;
 import com.qanda.content.model.dataModel.*;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +21,7 @@ public class QandaServiceImp implements QandaService {
     /**提出一个问题**/
     public boolean askQuestion(Question question, String cid) {
         try {
+
             AVObject avCourse = AVObject.createWithoutData("Course", cid);
             avCourse.fetch();
             AVUser cAVUser = AVUser.getCurrentUser();
@@ -31,11 +32,7 @@ public class QandaServiceImp implements QandaService {
             avQuestion.put("targetCourse", avCourse);
             avQuestion.put("belongGroup", avCourse.getAVObject("belongGroup"));
             avQuestion.save();
-            question.setQid(avQuestion.getObjectId());
-
-            Integer questionNumber = cAVUser.getInt("questionNumber");
-            questionNumber += 1;
-            cAVUser.put("questionNumber", questionNumber);
+            cAVUser.increment("questionNumber");
             cAVUser.save();
             return true;
         } catch (AVException e) {
@@ -60,14 +57,9 @@ public class QandaServiceImp implements QandaService {
             avAnswer.save();
             answer.setAid(avAnswer.getObjectId());
 
-            Integer uAnswerNumber = cAVUser.getInt("answerNumber");
-            uAnswerNumber += 1;
-            cAVUser.put("answerNumber", uAnswerNumber);
+            cAVUser.increment("answerNumber");
             cAVUser.save();
-
-            Integer qAnswerNumber = avQuestion.getInt("answerNumber");
-            qAnswerNumber += 1;
-            avQuestion.put("answerNumber", qAnswerNumber);
+            avQuestion.increment("answerNumber");
             avQuestion.save();
             return true;
         } catch (AVException e) {
@@ -83,7 +75,7 @@ public class QandaServiceImp implements QandaService {
         try {
             List<AVObject> avCourseGroupList = query.find();
             for (AVObject avCourseGroup:avCourseGroupList) {
-                CourseGroup courseGroup = ModelTransformAPI.transformAVCourseGroupToCourseGroup(avCourseGroup);
+                CourseGroup courseGroup = ModelTransform.transformAVCourseGroupToCourseGroup(avCourseGroup);
                 courseGroupList.add(courseGroup);
             }
             return courseGroupList;
@@ -102,7 +94,7 @@ public class QandaServiceImp implements QandaService {
         try {
             List<AVObject> avCourseList = query.find();
             for (AVObject avCourse:avCourseList) {
-                Course course = ModelTransformAPI.transformAVCourseToCourse(avCourse);
+                Course course = ModelTransform.transformAVCourseToCourse(avCourse);
                 courseList.add(course);
             }
             return courseList;
@@ -131,9 +123,9 @@ public class QandaServiceImp implements QandaService {
             List<AVObject> avQuestions = query.find();
             List<HashMap<String, Object>> fusionMapList = new ArrayList<>();
             for (AVObject avQuestion:avQuestions) {
-                Question question = ModelTransformAPI.transformAVQuestionToQuestion(avQuestion);
+                Question question = ModelTransform.transformAVQuestionToQuestion(avQuestion);
                 AVUser baseAVUser = avQuestion.getAVUser("targetUser");
-                BaseUser questioner = ModelTransformAPI.transformAVUserToBaseUser(baseAVUser);
+                BaseUser questioner = ModelTransform.transformAVUserToBaseUser(baseAVUser);
                 fusionMapList.add(question.toHashMap(questioner.toHashMap()));
             }
             HashMap<String, Object> dataMap = new HashMap<>();
@@ -168,9 +160,9 @@ public class QandaServiceImp implements QandaService {
                 List<AVObject> avQuestions = query.find();
                 List<HashMap<String, Object>> fusionMapList = new ArrayList<>();
                 for (AVObject avQuestion:avQuestions) {
-                    Question question = ModelTransformAPI.transformAVQuestionToQuestion(avQuestion);
+                    Question question = ModelTransform.transformAVQuestionToQuestion(avQuestion);
                     AVUser baseAVUser = avQuestion.getAVUser("targetUser");
-                    BaseUser questioner = ModelTransformAPI.transformAVUserToBaseUser(baseAVUser);
+                    BaseUser questioner = ModelTransform.transformAVUserToBaseUser(baseAVUser);
                     fusionMapList.add(question.toHashMap(questioner.toHashMap()));
                 }
                 HashMap<String, Object> dataMap = new HashMap<>();
@@ -207,9 +199,9 @@ public class QandaServiceImp implements QandaService {
                 List<AVObject> avQuestions = query.find();
                 List<HashMap<String, Object>> fusionMapList = new ArrayList<>();
                 for (AVObject avQuestion:avQuestions) {
-                    Question question = ModelTransformAPI.transformAVQuestionToQuestion(avQuestion);
+                    Question question = ModelTransform.transformAVQuestionToQuestion(avQuestion);
                     AVUser baseAVUser = avQuestion.getAVUser("targetUser");
-                    BaseUser questioner = ModelTransformAPI.transformAVUserToBaseUser(baseAVUser);
+                    BaseUser questioner = ModelTransform.transformAVUserToBaseUser(baseAVUser);
                     fusionMapList.add(question.toHashMap(questioner.toHashMap()));
                 }
                 HashMap<String, Object> dataMap = new HashMap<>();
@@ -234,9 +226,9 @@ public class QandaServiceImp implements QandaService {
             List<AVObject> avAnswers = query.find();
             List<HashMap<String, Object>> fusionMapList = new ArrayList<>();
             for (AVObject avAnswer:avAnswers) {
-                Answer answer = ModelTransformAPI.transformAVAnswerToAnswer(avAnswer);
+                Answer answer = ModelTransform.transformAVAnswerToAnswer(avAnswer);
                 AVUser baseAVUser = avAnswer.getAVUser("targetUser");
-                BaseUser replier = ModelTransformAPI.transformAVUserToBaseUser(baseAVUser);
+                BaseUser replier = ModelTransform.transformAVUserToBaseUser(baseAVUser);
                 fusionMapList.add(answer.toHashMap(replier.toHashMap()));
             }
             HashMap<String, Object> dataMap = new HashMap<>();

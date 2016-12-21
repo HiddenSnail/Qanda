@@ -1,7 +1,7 @@
 package com.qanda.content.controller;
 
-import com.qanda.content.baseAPI.Check;
-import com.qanda.content.baseAPI.ResponseState;
+import com.qanda.content.functionKit.Check;
+import com.qanda.content.functionKit.ServerNotice;
 import com.qanda.content.model.dataModel.Answer;
 import com.qanda.content.model.dataModel.Course;
 import com.qanda.content.model.dataModel.CourseGroup;
@@ -30,27 +30,25 @@ public class QandaPageController {
     /**
      * 方法说明：获取首页数据
      * @param pageNumber
-     * @param response
      * @return
      * @throws Exception
      */
     @RequestMapping(value = "/questions", method = RequestMethod.GET)
     public @ResponseBody HashMap<String, Object> getQuestions(
-            @RequestParam(value = "pageNumber", required = true) Integer pageNumber,
-            HttpServletResponse response) throws Exception {
-        HashMap<String ,Object> cgQuestionsDataMap = new HashMap<>();
+            @RequestParam(value = "pageNumber") Integer pageNumber) {
+        HashMap<String ,Object> cgcQuestionsData = new HashMap<>();
         List<CourseGroup> courseGroupList = qandaServiceImp.getCourseGroups();
         if (courseGroupList.size() > 0) {
+            cgcQuestionsData.put("courseGroupList", courseGroupList);
             //获得第一个CourseGroup的问题和提问者的数据
-            cgQuestionsDataMap = qandaServiceImp.getQuestionsByGid(courseGroupList.get(0).getGid(), true, true, pageNumber);
+            cgcQuestionsData = qandaServiceImp.getQuestionsByGid(courseGroupList.get(0).getGid(), true, true, pageNumber);
             List<Course> courseList = qandaServiceImp.getCoursesByGid(courseGroupList.get(0).getGid());
-            cgQuestionsDataMap.put("courseList", courseList);
-            cgQuestionsDataMap.put("courseGroupList", courseGroupList);
+            cgcQuestionsData.put("courseList", courseList);
         }
-        if (cgQuestionsDataMap.size() > 0) {
-            return ResponseState.success(cgQuestionsDataMap);
+        if (cgcQuestionsData.size() > 0) {
+            return ServerNotice.success(cgcQuestionsData);
         } else {
-            return ResponseState.serverError();
+            return ServerNotice.serverError();
         }
     }
 
@@ -62,7 +60,7 @@ public class QandaPageController {
      */
     @RequestMapping(value = "/questions/{gid}", method = RequestMethod.GET)
     public @ResponseBody HashMap<String, Object> getCourseGroupQuestions(
-            @PathVariable(value = "gid", required = false) String gid,
+            @PathVariable(value = "gid") String gid,
             @RequestParam(value = "pageNumber") Integer pageNumber){
         HashMap<String, Object> cQuestionsDataMap = new HashMap<>();
         List<Course> courseList = qandaServiceImp.getCoursesByGid(gid);
@@ -71,9 +69,9 @@ public class QandaPageController {
             cQuestionsDataMap.put("courseList", courseList);
         }
         if (cQuestionsDataMap.size() > 0) {
-            return ResponseState.success(cQuestionsDataMap);
+            return ServerNotice.success(cQuestionsDataMap);
         } else {
-            return ResponseState.noFindGid();
+            return ServerNotice.noFindGid();
         }
     }
 
@@ -97,13 +95,13 @@ public class QandaPageController {
                 for (Course course:courseList) {
                     if (course.getCid().equals(cid)) {
                         HashMap<String, Object> questionsDataMap = qandaServiceImp.getQuestionsByCid(cid, true, true, pageNumber);
-                        return ResponseState.success(questionsDataMap);
+                        return ServerNotice.success(questionsDataMap);
                     }
                 }
-                return ResponseState.noFindCid();
+                return ServerNotice.noFindCid();
             }
         }
-        return ResponseState.noFindGid();
+        return ServerNotice.noFindGid();
     }
 
 
@@ -117,40 +115,38 @@ public class QandaPageController {
     @RequestMapping(value = "/question/{qid}", method = RequestMethod.GET)
     public @ResponseBody HashMap<String, Object> getAnswers(
             @PathVariable("qid") String qid,
-            @RequestParam(value = "pageNumber", required = true) Integer pageNumber) {
+            @RequestParam(value = "pageNumber") Integer pageNumber) {
         HashMap<String, Object> answersDataMap = qandaServiceImp.getAnswersByQid(qid,pageNumber);
         if (answersDataMap.size() > 0) {
-            return ResponseState.success(answersDataMap);
+            return ServerNotice.success(answersDataMap);
         } else {
-            return ResponseState.noFindQid();
+            return ServerNotice.noFindQid();
         }
     }
 
     /**
      * 方法说明：用户提问
      * @param questionSubmitForm
-     * @param session
      * @return
      * @throws Exception
      */
     @RequestMapping(value = "/question", method = RequestMethod.POST)
-    public @ResponseBody HashMap<String, Object> askQuestion(@RequestBody QuestionSubmitForm questionSubmitForm,
-                                              @CookieValue(value = "sessionID", required = false) String session) {
-        Question question = questionSubmitForm.question;
-        Course course = questionSubmitForm.course;
-        if (!Check.isStringEmpty(session) && userServiceImp.verifyUserState(session)) {
+    public @ResponseBody HashMap<String, Object> askQuestion(@RequestBody QuestionSubmitForm questionSubmitForm) {
+        if (ServerNotice.isActive()) {
+            Question question = questionSubmitForm.question;
+            Course course = questionSubmitForm.course;
             if (!Check.isStringEmpty(question.getTitle()) && !Check.isStringEmpty(question.getContent())
                     && !Check.isStringEmpty(course.getCid())) {
                 if (qandaServiceImp.askQuestion(question, course.getCid())) {
-                    return ResponseState.success();
+                    return ServerNotice.success();
                 } else {
-                    return ResponseState.noFindCid();
+                    return ServerNotice.noFindCid();
                 }
             } else {
-                return ResponseState.dataNotComplete();
+                return ServerNotice.dataNotComplete();
             }
         } else {
-            return ResponseState.notLogin();
+            return ServerNotice.notLogin();
         }
     }
 
@@ -158,25 +154,22 @@ public class QandaPageController {
      * 方法说明：用户回答
      * @param answer: {"response"}
      * @param qid
-     * @param session
      * @return
      */
     @RequestMapping(value = "/question/{qid}/answer", method = RequestMethod.POST)
-    public @ResponseBody HashMap<String, Object> answerQuestion(@RequestBody Answer answer,
-                                               @PathVariable(value = "qid", required = false) String qid,
-                                               @CookieValue(value = "sessionID", required = false) String session) {
-        if (!Check.isStringEmpty(session) && userServiceImp.verifyUserState(session)) {
+    public @ResponseBody HashMap<String, Object> answerQuestion(@RequestBody Answer answer, @PathVariable(value = "qid") String qid) {
+        if (ServerNotice.isActive()) {
             if (!Check.isStringEmpty(answer.getResponse()) && !Check.isStringEmpty(qid)) {
                 if (qandaServiceImp.answerQuestion(answer, qid)) {
-                    return ResponseState.success();
+                    return ServerNotice.success();
                 } else {
-                    return ResponseState.noFindQid();
+                    return ServerNotice.noFindQid();
                 }
             } else {
-                return ResponseState.dataNotComplete();
+                return ServerNotice.dataNotComplete();
             }
         } else {
-            return ResponseState.notLogin();
+            return ServerNotice.notLogin();
         }
     }
 }

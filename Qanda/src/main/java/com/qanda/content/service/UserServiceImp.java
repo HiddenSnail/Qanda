@@ -1,9 +1,11 @@
 package com.qanda.content.service;
 import com.avos.avoscloud.*;
-import com.qanda.content.baseAPI.ModelTransformAPI;
+import com.qanda.content.functionKit.ModelTransform;
 import com.qanda.content.model.dataModel.Answer;
 import com.qanda.content.model.dataModel.Question;
 import com.qanda.content.model.dataModel.User;
+import org.springframework.cglib.proxy.CallbackHelper;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -14,6 +16,10 @@ import java.util.List;
  */
 @Service
 public class UserServiceImp implements UserService {
+
+    static public UserServiceImp userServiceImp() {
+        return new UserServiceImp();
+    }
 
     /**用户注册**/
     @Override
@@ -75,7 +81,8 @@ public class UserServiceImp implements UserService {
     public User fetchUserInfo() {
         AVUser cAVUser = AVUser.getCurrentUser();
         if (cAVUser != null) {
-            return ModelTransformAPI.transformAVUserToUser(cAVUser);
+            System.out.println(cAVUser.getString("avatar"));
+            return ModelTransform.transformAVUserToUser(cAVUser);
         } else {
             return null;
         }
@@ -92,7 +99,7 @@ public class UserServiceImp implements UserService {
             List<AVObject> avQuestions = query.find();
             List<Question> questions = new ArrayList<Question>();
             for (AVObject avQuestion:avQuestions) {
-                Question question = ModelTransformAPI.transformAVQuestionToQuestion(avQuestion);
+                Question question = ModelTransform.transformAVQuestionToQuestion(avQuestion);
                 questions.add(question);
             }
             return questions;
@@ -113,7 +120,7 @@ public class UserServiceImp implements UserService {
             List<AVObject> avAnswers = query.find();
             List<Answer> answers = new ArrayList<Answer>();
             for (AVObject avAnswer:avAnswers) {
-                Answer answer = ModelTransformAPI.transformAVAnswerToAnswer(avAnswer);
+                Answer answer = ModelTransform.transformAVAnswerToAnswer(avAnswer);
                 answers.add(answer);
             }
             return answers;
@@ -152,7 +159,7 @@ public class UserServiceImp implements UserService {
             AVUser avUser = userAVQuery.getFirst();
             if (avUser == null) return null;
             else {
-                return ModelTransformAPI.transformAVUserToUser(avUser);
+                return ModelTransform.transformAVUserToUser(avUser);
             }
         } catch (AVException e) {
             e.printStackTrace();
@@ -175,7 +182,7 @@ public class UserServiceImp implements UserService {
                 List<AVObject> avQuestions = query.find();
                 List<Question> questions = new ArrayList<>();
                 for (AVObject avQuestion:avQuestions) {
-                    Question question = ModelTransformAPI.transformAVQuestionToQuestion(avQuestion);
+                    Question question = ModelTransform.transformAVQuestionToQuestion(avQuestion);
                     questions.add(question);
                 }
                 return questions;
@@ -199,7 +206,7 @@ public class UserServiceImp implements UserService {
                 List<AVObject> avAnswers = query.find();
                 List<Answer> answers = new ArrayList<Answer>();
                 for (AVObject avAnswer:avAnswers) {
-                    Answer answer = ModelTransformAPI.transformAVAnswerToAnswer(avAnswer);
+                    Answer answer = ModelTransform.transformAVAnswerToAnswer(avAnswer);
                     answers.add(answer);
                 }
                 return answers;
@@ -208,6 +215,63 @@ public class UserServiceImp implements UserService {
             e.printStackTrace();
         }
         return null;
+    }
+
+    /**用户删除所有问题**/
+    @Override
+    public boolean deleteAllQuestions() {
+        AVQuery<AVObject> queryQue = new AVQuery<>("Question");
+        AVUser cAVUser = AVUser.getCurrentUser();
+        queryQue.whereEqualTo("targetUser", cAVUser);
+        try {
+            List<AVObject> avQuestions = queryQue.find();
+            AVQuery<AVObject> queryAns = new AVQuery<>("Answer");
+            queryAns.include("targetUser");
+            for (AVObject avQuestion:avQuestions) {
+                queryAns.whereEqualTo("targetQuestion", avQuestion);
+                List<AVObject> avAnswers = queryAns.find();
+                List<AVUser> avRepliers = new ArrayList<>();
+                for (AVObject avAnswer:avAnswers) {
+                    AVUser replier = avAnswer.getAVUser("targetUser");
+                    replier.increment("answerNumber", -1);
+                    avRepliers.add(replier);
+                }
+                AVObject.deleteAll(avAnswers);
+                AVUser.saveAll(avRepliers);
+            }
+            cAVUser.increment("questionNumber", -avQuestions.size());
+            AVObject.deleteAll(avQuestions);
+            cAVUser.save();
+            return true;
+        } catch (AVException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    /**用户删除所有回答**/
+    @Override
+    public boolean deleteAllAnswers() {
+        AVQuery<AVObject> queryAns = new AVQuery<>("Answer");
+        AVUser cAVUser = AVUser.getCurrentUser();
+        queryAns.whereEqualTo("targetUser", cAVUser);
+        try {
+            List<AVObject> avAnswers = queryAns.find();
+            List<AVObject> avQuestions = new ArrayList<>();
+            for (AVObject avAnswer:avAnswers) {
+                AVObject avQuestion = avAnswer.getAVObject("targetQuestion");
+                avQuestion.increment("answerNumber", -1);
+                avQuestions.add(avQuestion);
+            }
+            cAVUser.increment("answerNumber", -avAnswers.size());
+            AVObject.deleteAll(avAnswers);
+            AVObject.saveAll(avQuestions);
+            cAVUser.save();
+            return true;
+        } catch (AVException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }
 

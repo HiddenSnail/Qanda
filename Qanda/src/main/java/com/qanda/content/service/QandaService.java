@@ -35,5 +35,4 @@ public interface QandaService {
 
     /**通过问题id获取回答和回答者基本信息**/
     HashMap<String, Object> getAnswersByQid(String qid, Integer pageNumber);
-
 }

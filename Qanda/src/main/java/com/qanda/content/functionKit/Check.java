@@ -1,4 +1,4 @@
-package com.qanda.content.baseAPI;
+package com.qanda.content.functionKit;
 
 /**
  * Created by huangrui on 2016/12/15.
