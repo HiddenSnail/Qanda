@@ -1,18 +1,13 @@
 import React, {Component} from 'react';
 import Chip from 'material-ui/Chip';
 import Avatar from 'material-ui/Avatar';
-import {observable} from 'mobx';
-import {observer} from 'mobx-react';
+import {observer, inject} from 'mobx-react';
 
-@observer
+@inject('store') @observer
 class TagList extends Component {
-  @observable tagList = [
-    "高等数学", "高等数学", "高等数学", "高等数学",
-    "高等数学", "高等数学", "高等数学", "高等数学",
-  ];
-
   constructor(props) {
     super(props);
+    this.tagList = this.props.store.courseList.tagList;
   }
 
   render() {
@@ -21,8 +16,8 @@ class TagList extends Component {
         {this.tagList.map((tag, index) => {
           return (
             <Chip style={style.chip} key={index}>
-              <Avatar size={32}>{tag[0]}</Avatar>
-              {tag}
+              <Avatar size={32}>{tag.name[0]}</Avatar>
+              {tag.name}
             </Chip>
           )
         })}

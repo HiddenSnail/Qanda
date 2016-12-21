@@ -1,5 +1,10 @@
 import {observable} from 'mobx';
 
-let questionList = observable([]);
+let questions = observable({});
+questions.questionList = observable([]);
 
-export default questionList;
+questions.setQuestionList = data =>
+  data.questionList.forEach(item => questions.questionList.push(item));
+
+
+export default questions;

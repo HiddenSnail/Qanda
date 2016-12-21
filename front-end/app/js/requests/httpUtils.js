@@ -3,15 +3,20 @@ import stream from 'stream';
 
 let http = method => (...options) => {
   let [url, params, body] = options;
+  let fetchConfig = {
+    method,
+    credentials: 'include'
+  };
 
   if (Object.keys(params).length !== 0)
     url += `?${qs.stringify(params)}`;
 
-  return fetch(url, {
-    method,
-    body,
-    credentials: 'include'
-  }).then(res => res.json(), error => console.error(error.message))
+  if (method !== 'GET')
+    fetchConfig.body = JSON.stringify(body);
+
+  return fetch(url, fetchConfig)
+    .then(res => res.json(),
+      error => console.error(error.message))
     .then(obj => {
       if (obj.status == 200)
         return obj.data;

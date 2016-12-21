@@ -32,6 +32,7 @@ const style = {
   },
   sideBarBgImg: {
     background: "url('dist/assets/images/side-bar-background.jpg')",
+    backgroundSize: 'cover',
     position: 'fixed',
     height: '100vh',
     width: '66px',

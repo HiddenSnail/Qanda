@@ -1,20 +1,47 @@
 import {observable} from 'mobx';
 
+import {userRegister, userLogin} from '../requests/userHttp';
+
 let modal = observable({
   userInfo: {
-    nickNam: "",
+    name: "",
     email: "",
     password: ""
   },
-  modalState: false
+  modalState: false,
+  modalTitle: "",
+  nextBtnDisable: false,
+  errorText: "",
+  isLogin: true
 });
 
-modal.openModal = function () {
+modal.openModal = () => {
   modal.modalState = true;
 };
 
-modal.closeModal = function () {
+modal.closeModal = () => {
   modal.modalState = false;
 };
+
+modal.changeToLogin = () => {
+  modal.isLogin = true;
+};
+
+modal.changeToRegister = () => {
+  modal.isLogin = false;
+};
+
+modal.register = () => {
+  userRegister(modal.userInfo).then(data=>console.log(data))
+};
+
+modal.login = () => {
+  let userInfo = {
+    email: modal.userInfo.email,
+    password: modal.userInfo.password
+  };
+  userLogin(userInfo).then(data=>console.log(data));
+};
+
 
 export default modal;

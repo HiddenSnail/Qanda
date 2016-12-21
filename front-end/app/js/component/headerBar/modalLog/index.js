@@ -1,16 +1,20 @@
 import React, {Component} from 'react';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
-import {autorun} from 'mobx';
-
 import {observer, inject} from 'mobx-react';
+
+import ModalRegister from './modalRegister';
+import ModalLogin from './modalLogin';
 
 @inject('store') @observer
 class ModalLog extends Component {
+
   constructor(props) {
     super(props);
-    this.modal= this.props.store.modal;
-    this.closeModal = this.props.store.modal.closeModal;
+    this.modal = this.props.store.modal;
+    this.register = this.modal.register;
+    this.closeModal = this.modal.closeModal;
+    this.changeToRegister = this.modal.changeToRegister;
   }
 
   render() {
@@ -20,22 +24,18 @@ class ModalLog extends Component {
         primary={true}
         onClick={this.closeModal}
       />,
-      <FlatButton
-        label="注册"
-        primary={true}
-        disabled={true}
-      />,
     ];
 
-    return(
+    return (
       <Dialog
-        title="注册账号"
+        title={this.modal.modalTitle}
         actions={actions}
         modal={true}
         open={this.modal.modalState}
         autoScrollBodyContent={true}
       >
-        测试
+        {this.modal.isLogin ? <ModalLogin/> : <ModalRegister/>}
+
       </Dialog>
     );
   }

@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import {Link} from 'react-router';
 import {observable} from 'mobx';
 import {observer} from 'mobx-react';
 import TweenOne from 'rc-tween-one';
@@ -7,6 +8,8 @@ import TweenOne from 'rc-tween-one';
 class MajorItem extends Component {
   @observable isPaused = true;
   @observable moment = null;
+  @observable isClick = false;
+  @observable className = '';
 
   constructor(props) {
     super(props);
@@ -19,8 +22,38 @@ class MajorItem extends Component {
     }
   }
 
+  changeToNormalColor() {
+    if (!this.isClick) {
+      this.className = '';
+    }
+  }
+
+  changeToUnnormalColor() {
+    if (!this.isClick) {
+      this.className = 'm-l';
+    }
+  }
+
+  componentDidMount() {
+    if (this.props.listIndex === this.props.param.clickIndex) {
+      this.changeToUnnormalColor();
+      this.isClick = true;
+    }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (this.props.listIndex === nextProps.param.clickIndex) {
+      if (!this.isClick)
+        this.changeToUnnormalColor();
+      this.isClick = true;
+    } else {
+      this.isClick = false;
+      this.changeToNormalColor();
+    }
+  }
+
   render() {
-    const {majorType} = this.props;
+    const {majorType, param, listIndex, majorId, handleClick} = this.props;
     return (
       <TweenOne
         animation={this.animation}
@@ -33,9 +66,13 @@ class MajorItem extends Component {
         }}
         style={style.fontBgStyle}
       >
-        <div style={style.fontStyle}>
-          {majorType}
-        </div>
+        <Link to={"/"+majorType}>
+          <div style={style.fontStyle} className={this.className}
+               onClick={() => handleClick(listIndex, majorId)}
+          >
+            {majorType}
+          </div>
+        </Link>
       </TweenOne>
     );
   }

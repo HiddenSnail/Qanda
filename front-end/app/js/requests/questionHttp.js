@@ -2,7 +2,8 @@ import {httpPost, httpGet} from './httpUtils';
 import baseUrl from './config.http';
 
 const questionsUrl = baseUrl + '/questions';
-export let getQuestions = pageNumber => httpGet(questionsUrl, {pageNumber}, {});
+export let getAllQuestions = pageNumber => httpGet(questionsUrl, {pageNumber}, {});
+export let getMajorQuestions = (pageNumber, majorId) => httpGet(`${questionsUrl}/${majorId}`, {pageNumber}, {});
 
 const questionUrl = baseUrl + '/question';
 export let askQuestion = options => httpPost(questionUrl, {}, options);
