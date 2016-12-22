@@ -89,6 +89,13 @@ public class ServerNotice {
         return notice;
     }
 
+    static public HashMap<String, Object> noFindAid() {
+        notice.put("status", 414);
+        notice.put("message", "找不到对应的回答");
+        notice.put("data", null);
+        return notice;
+    }
+
     static public HashMap<String, Object> serverError() {
         notice.put("status", 500);
         notice.put("message", "服务器内部错误,无法获取请求信息");

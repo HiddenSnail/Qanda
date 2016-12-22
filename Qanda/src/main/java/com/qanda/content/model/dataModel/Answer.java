@@ -15,6 +15,7 @@ public class Answer {
     private String aid;
     private String response;
     private String createDate;
+    private Integer supportNumber;
 
     public String getAid(){ return aid; }
     public void setAid(String aid) { this.aid = aid; }
@@ -31,12 +32,15 @@ public class Answer {
         this.createDate = createDate;
     }
 
+    public Integer getSupportNumber() { return supportNumber; }
+    public void setSupportNumber(Integer supportNumber) { this.supportNumber = supportNumber; }
 
     public HashMap<String, Object> toHashMap() {
         HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put("aid", this.aid);
         hashMap.put("response", this.response);
         hashMap.put("createDate", this.createDate);
+        hashMap.put("supportNumber", this.supportNumber);
         return hashMap;
     }
 

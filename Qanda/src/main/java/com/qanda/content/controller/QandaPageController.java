@@ -39,12 +39,13 @@ public class QandaPageController {
         HashMap<String ,Object> cgcQuestionsData = new HashMap<>();
         List<CourseGroup> courseGroupList = qandaServiceImp.getCourseGroups();
         if (courseGroupList.size() > 0) {
-            cgcQuestionsData.put("courseGroupList", courseGroupList);
             //获得第一个CourseGroup的问题和提问者的数据
             cgcQuestionsData = qandaServiceImp.getQuestionsByGid(courseGroupList.get(0).getGid(), true, true, pageNumber);
             List<Course> courseList = qandaServiceImp.getCoursesByGid(courseGroupList.get(0).getGid());
+            cgcQuestionsData.put("courseGroupList", courseGroupList);
             cgcQuestionsData.put("courseList", courseList);
         }
+
         if (cgcQuestionsData.size() > 0) {
             return ServerNotice.success(cgcQuestionsData);
         } else {
@@ -156,7 +157,7 @@ public class QandaPageController {
      * @param qid
      * @return
      */
-    @RequestMapping(value = "/question/{qid}/answer", method = RequestMethod.POST)
+    @RequestMapping(value = "/question/{qid}", method = RequestMethod.POST)
     public @ResponseBody HashMap<String, Object> answerQuestion(@RequestBody Answer answer, @PathVariable(value = "qid") String qid) {
         if (ServerNotice.isActive()) {
             if (!Check.isStringEmpty(answer.getResponse()) && !Check.isStringEmpty(qid)) {
@@ -167,6 +168,23 @@ public class QandaPageController {
                 }
             } else {
                 return ServerNotice.dataNotComplete();
+            }
+        } else {
+            return ServerNotice.notLogin();
+        }
+    }
+
+    @RequestMapping(value = "/question/{qid}/{aid}", method = RequestMethod.POST)
+    public @ResponseBody HashMap<String, Object> supportAnswer(@PathVariable(value = "aid")String aid,
+                                                               @RequestParam(value = "isSupport")boolean isSupport) {
+        if (ServerNotice.isActive()) {
+            boolean flag;
+            if(isSupport) { flag = qandaServiceImp.supportAnswer(aid); }
+            else { flag = qandaServiceImp.notSupportAnswer(aid); }
+            if (flag) {
+                return ServerNotice.success();
+            } else {
+                return ServerNotice.noFindAid();
             }
         } else {
             return ServerNotice.notLogin();

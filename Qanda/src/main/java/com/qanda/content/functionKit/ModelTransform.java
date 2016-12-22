@@ -17,6 +17,7 @@ public class ModelTransform {
         user.setBrief(avUser.getString("brief"));
         user.setQuestionNumber(avUser.getInt("questionNumber"));
         user.setAnswerNumber(avUser.getInt("answerNumber"));
+        user.setSupportNumber(avUser.getInt("supportNumber"));
         return user;
     }
 
@@ -44,6 +45,7 @@ public class ModelTransform {
         answer.setAid(avAnswer.getObjectId());
         answer.setResponse(avAnswer.getString("response"));
         answer.setCreateDate(avAnswer.getCreatedAt());
+        answer.setSupportNumber(avAnswer.getInt("supportNumber"));
         return answer;
     }
 

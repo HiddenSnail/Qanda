@@ -51,5 +51,4 @@ public interface UserService {
 
     /**用户删除所有回答**/
     boolean deleteAllAnswers();
-
 }

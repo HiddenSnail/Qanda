@@ -35,4 +35,10 @@ public interface QandaService {
 
     /**通过问题id获取回答和回答者基本信息**/
     HashMap<String, Object> getAnswersByQid(String qid, Integer pageNumber);
+
+    /**用户点赞回答**/
+    boolean supportAnswer(String aid);
+
+    /**用户取消回答的点赞**/
+    boolean notSupportAnswer(String aid);
 }

@@ -15,6 +15,7 @@ public class User extends BaseUser {
     private String brief;
     private Integer questionNumber;
     private Integer answerNumber;
+    private Integer supportNumber;
 
     public User() {super();}
 
@@ -36,6 +37,9 @@ public class User extends BaseUser {
     public Integer getAnswerNumber() { return answerNumber; }
     public void setAnswerNumber(Integer answerNumber) { this.answerNumber = answerNumber; }
 
+    public Integer getSupportNumber() { return supportNumber; }
+    public void setSupportNumber(Integer supportNumber) { this.supportNumber = supportNumber; }
+
     public HashMap<String, Object> toHashMap() {
         HashMap<String, Object> hashMap = new HashMap<>();
         HashMap<String, Object> superHashMap = super.toHashMap();
@@ -46,6 +50,7 @@ public class User extends BaseUser {
         hashMap.put("brief", this.brief);
         hashMap.put("questionNumber", this.questionNumber);
         hashMap.put("answerNumber", this.answerNumber);
+        hashMap.put("supportNumber", this.supportNumber);
         return hashMap;
     }
 
