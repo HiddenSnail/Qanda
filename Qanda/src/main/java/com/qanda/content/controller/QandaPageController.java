@@ -39,12 +39,13 @@ public class QandaPageController {
         HashMap<String ,Object> cgcQuestionsData = new HashMap<>();
         List<CourseGroup> courseGroupList = qandaServiceImp.getCourseGroups();
         if (courseGroupList.size() > 0) {
-            cgcQuestionsData.put("courseGroupList", courseGroupList);
             //获得第一个CourseGroup的问题和提问者的数据
             cgcQuestionsData = qandaServiceImp.getQuestionsByGid(courseGroupList.get(0).getGid(), true, true, pageNumber);
             List<Course> courseList = qandaServiceImp.getCoursesByGid(courseGroupList.get(0).getGid());
+            cgcQuestionsData.put("courseGroupList", courseGroupList);
             cgcQuestionsData.put("courseList", courseList);
         }
+
         if (cgcQuestionsData.size() > 0) {
             return ServerNotice.success(cgcQuestionsData);
         } else {
