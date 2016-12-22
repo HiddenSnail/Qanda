@@ -2,22 +2,12 @@ import {observable} from 'mobx';
 import {EditorState, convertToRaw} from 'draft-js';
 import {stateToHTML} from 'draft-js-export-html';
 
-class ModalAsk {
-  @observable major;
-  @observable tag;
-  @observable title;
+class ModalAnswer {
   @observable content;
   @observable html;
   @observable modalState = false;
 
-  majorList = [
-    'a','b','c'
-  ];
-
   init() {
-    this.major = '';
-    this.tag = '';
-    this.title = '';
     this.content = EditorState.createEmpty();
     this.html = '';
   }
@@ -32,25 +22,17 @@ class ModalAsk {
     this.init();
   }
 
-  addTag(tag) {
-    this.tag = tag;
-  }
-
-  addMajor(major) {
-    this.major = major;
-  }
-
   addContent(richTextContent) {
     this.content = richTextContent;
     this.html = stateToHTML(richTextContent.getCurrentContent());
   }
 
-  askQuestion() {
+  answerQuestion() {
     console.log(this.html);
     this.closeModal();
   }
 }
 
-let modalAsk = new ModalAsk();
+let modalAnswer = new ModalAnswer();
 
-export default modalAsk;
+export default modalAnswer;

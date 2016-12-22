@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {inject, observer} from 'mobx-react';
 
 import RaiseQuestion from '../../component/raiseQuestion';
+import AnswerQuestion from '../../component/answerQuestion';
 
 @inject('modalAsk') @observer
 class QuestionDetailPage extends Component {
@@ -9,17 +10,18 @@ class QuestionDetailPage extends Component {
     super(props);
   }
 
-  componentWillMount() {
-  }
-
   render() {
-    return(
+    return (
       <div style={style.pageMargin} className="flex-row">
-        <RaiseQuestion/>
-        <div>
+        <div style={style.raiseQuestion} className="flex-col align-center justise-end">
+          <RaiseQuestion/>
+        </div>
+        <div style={style.questionContent}>
 
         </div>
-        <div></div>
+        <div style={style.answerQuestion} className="flex-col align-center justise-end">
+          <AnswerQuestion/>
+        </div>
       </div>
     );
   }
@@ -27,9 +29,18 @@ class QuestionDetailPage extends Component {
 
 const style = {
   pageMargin: {
-    marginLeft: '66px',
-    marginRight: '249px',
-    paddingTop: '87px'
+    marginLeft: '66px'
+  },
+  raiseQuestion: {
+    height: '100vh',
+    width: '200px'
+  },
+  questionContent: {
+    flex: 1
+  },
+  answerQuestion: {
+    height: '100vh',
+    width: '249px'
   }
 };
 

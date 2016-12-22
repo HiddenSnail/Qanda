@@ -4,7 +4,7 @@ import modal from './modal.store';
 import courseList from './course.store';
 import global from './global.store';
 import modalAsk from './modal-ask.store';
-import toolbarConfig from './rich-text.store';
+import modalAnswer from './modal-answer.store';
 
 let store = {
   questions,
@@ -13,9 +13,7 @@ let store = {
   courseList,
   global,
   modalAsk,
-  toolbarConfig
+  modalAnswer
 };
-
-
 
 export default store;

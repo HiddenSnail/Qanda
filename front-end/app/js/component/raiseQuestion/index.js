@@ -5,17 +5,15 @@ import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
-import RichTextEditor from 'react-rte';
+import {Editor} from 'react-draft-wysiwyg';
 import {observer, inject} from 'mobx-react';
 
-@inject('modalAsk', 'toolbarConfig') @observer
+@inject('modalAsk') @observer
 class RaiseQuestion extends Component {
   constructor(props) {
     super(props);
 
     this.getMenuList = this.getMenuList.bind(this);
-
-    this.toolbarConfig = this.props.toolbarConfig;
 
     this.modalAsk = this.props.modalAsk;
     this.addMajor = this.modalAsk.addMajor.bind(this.modalAsk);
@@ -27,7 +25,7 @@ class RaiseQuestion extends Component {
   }
 
   getMenuList(rawList) {
-    return rawList.map((item, index)=>
+    return rawList.map((item, index) =>
       <MenuItem value={item} primaryText={item} key={index}/>
     )
   }
@@ -44,8 +42,8 @@ class RaiseQuestion extends Component {
         onClick={this.askQuestion}
       />
     ];
-    return(
-      <div style={style.raiseQuestion} className="flex-col align-center justise-end">
+    return (
+      <div className="pos-fix">
         <RaisedButton label="提出你的问题"
                       backgroundColor="rgba(15,129,199, 1)"
                       labelStyle={style.questionBtnLabelStyle}
@@ -61,26 +59,27 @@ class RaiseQuestion extends Component {
         >
           <div className="flex-col">
             <TextField
+              className="m-b-lg"
               hintText="写下你的问题"
               floatingLabelText="题目"
               fullWidth={true}
-              onChange={(e) => this.modalAsk.title = e.target.value}
+              onChange={e => this.modalAsk.title = e.target.value}
             />
-            <RichTextEditor
-              value={this.modalAsk.content}
-              onChange={(v) => this.addContent(v.toString('html'))}
-              toolbarConfig={this.toolbarConfig}
+            <Editor
+              editorState={this.modalAsk.content}
+              toolbarClassName="toolBar"
+              editorClassName="editor"
+              placeholder="问题的具体信息，如背景等"
+              onEditorStateChange={(v) => this.addContent(v)}
             />
             <SelectField
               floatingLabelText="选择专业方向"
               value={this.modalAsk.major}
-              onChange={(e,i,v)=>this.addMajor(v)}
+              onChange={(e, i, v) => this.addMajor(v)}
             >
               {this.getMenuList(this.modalAsk.majorList)}
             </SelectField>
           </div>
-
-
         </Dialog>
       </div>
     );
@@ -88,10 +87,6 @@ class RaiseQuestion extends Component {
 }
 
 const style = {
-  raiseQuestion: {
-    height: '100vh',
-    width: '200px'
-  },
   questionBtnStyle: {
     width: '150px',
     height: '40px',

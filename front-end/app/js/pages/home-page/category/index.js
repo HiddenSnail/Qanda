@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import RaisedButton from 'material-ui/RaisedButton';
 
 import MarjorList from './majorList/index';
+import RaiseQuestion from '../../../component/raiseQuestion';
 
 class Category extends Component {
   constructor(props) {
@@ -18,11 +19,7 @@ class Category extends Component {
           </div>
           <div className="flex-col align-center">
             <div style={style.desFontStyle}>A describing text filed</div>
-            <RaisedButton label="提出你的问题"
-                          backgroundColor="rgba(15,129,199, 1)"
-                          labelStyle={style.questionBtnLabelStyle}
-                          style={style.questionBtnStyle}
-            />
+            <RaiseQuestion/>
           </div>
         </div>
       </div>
