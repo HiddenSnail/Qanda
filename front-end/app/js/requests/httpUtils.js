@@ -5,6 +5,9 @@ let http = method => (...options) => {
   let [url, params, body] = options;
   let fetchConfig = {
     method,
+    headers: {
+      'Content-type': 'application/json; charset=utf-8'
+    },
     credentials: 'include'
   };
 

@@ -6,12 +6,12 @@ import {observer, inject} from 'mobx-react';
 import ModalRegister from './modalRegister';
 import ModalLogin from './modalLogin';
 
-@inject('store') @observer
+@inject('modal') @observer
 class ModalLog extends Component {
 
   constructor(props) {
     super(props);
-    this.modal = this.props.store.modal;
+    this.modal = this.props.modal;
     this.register = this.modal.register;
     this.closeModal = this.modal.closeModal;
     this.changeToRegister = this.modal.changeToRegister;

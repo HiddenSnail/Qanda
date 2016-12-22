@@ -5,7 +5,7 @@ import {observer, inject} from 'mobx-react';
 import {getMajorQuestions} from '../../../../requests/questionHttp';
 import MajorItem from './majorItem';
 
-@inject('store') @observer
+@inject('courseList', 'questions') @observer
 class MarjorList extends Component {
   param = {
     @observable clickIndex:0,
@@ -16,9 +16,9 @@ class MarjorList extends Component {
 
     this.handleClick = this.handleClick.bind(this);
 
-    this.majorList = this.props.store.courseList.majorList;
-    this.getTag = this.props.store.courseList.getTag;
-    this.setQuestionList = this.props.store.questions.setQuestionList;
+    this.majorList = this.props.courseList.majorList;
+    this.getTag = this.props.courseList.getTag;
+    this.setQuestionList = this.props.questions.setQuestionList;
   }
 
   handleClick(index, mid) {

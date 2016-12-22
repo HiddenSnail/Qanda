@@ -10,14 +10,16 @@ import store from './js/store';
 injectTapEventPlugin();
 
 import App from './js/app';
-import Login from './js/pages/login';
 import HomePage from './js/pages/home-page';
+import QuestionDetailPage from './js/pages/question-detail-page';
 
 ReactDOM.render((
-  <Provider store={store}>
+  <Provider {...store}>
     <Router history={browserHistory}>
       <Route path="/" component={App}>
         <IndexRoute component={HomePage}/>
+        <Route path="question/:qid" component={QuestionDetailPage}>
+        </Route>
       </Route>
     </Router>
   </Provider>

@@ -4,12 +4,12 @@ import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 import {observer, inject} from 'mobx-react';
 
-@inject('store') @observer
+@inject('modal') @observer
 class ModalLogin extends Component {
 
   constructor(props) {
     super(props);
-    this.modal = this.props.store.modal;
+    this.modal = this.props.modal;
     this.closeModal = this.modal.closeModal;
     this.changeToRegister = this.modal.changeToRegister;
     this.login = this.modal.login;

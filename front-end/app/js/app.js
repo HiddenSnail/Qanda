@@ -9,7 +9,6 @@ import HeaderBar from './component/headerBar';
 
 import {getAllQuestions} from './requests/questionHttp';
 
-@inject('store') @observer
 class App extends React.Component {
   constructor(props) {
     super(props);

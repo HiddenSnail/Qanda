@@ -31,7 +31,7 @@ const style = {
     opacity: 0.8,
   },
   sideBarBgImg: {
-    background: "url('dist/assets/images/side-bar-background.jpg')",
+    background: "url('/dist/assets/images/side-bar-background.jpg')",
     backgroundSize: 'cover',
     position: 'fixed',
     height: '100vh',

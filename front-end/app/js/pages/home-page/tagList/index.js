@@ -3,11 +3,11 @@ import Chip from 'material-ui/Chip';
 import Avatar from 'material-ui/Avatar';
 import {observer, inject} from 'mobx-react';
 
-@inject('store') @observer
+@inject('courseList') @observer
 class TagList extends Component {
   constructor(props) {
     super(props);
-    this.tagList = this.props.store.courseList.tagList;
+    this.tagList = this.props.courseList.tagList;
   }
 
   render() {

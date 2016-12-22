@@ -6,15 +6,15 @@ import {getAllQuestions} from '../../../requests/questionHttp';
 
 import QuestionItem from './questionItem';
 
-@inject('store')
+@inject('global', 'questions', 'courseList')
 @observer
 class QuestionList extends Component {
   constructor(props) {
     super(props);
-    this.global = this.props.store.global;
-    this.setQuestionList = this.props.store.questions.setQuestionList;
-    this.setCourseList = this.props.store.courseList.setCourseList;
-    this.questionList = this.props.store.questions.questionList;
+    this.global = this.props.global;
+    this.setQuestionList = this.props.questions.setQuestionList;
+    this.setCourseList = this.props.courseList.setCourseList;
+    this.questionList = this.props.questions.questionList;
   }
 
   componentWillMount() {

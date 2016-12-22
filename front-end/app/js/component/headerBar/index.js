@@ -15,11 +15,11 @@ import {observer, inject} from 'mobx-react';
 import SearchBar from './searchBar';
 import ModalLog from './modalLog';
 
-@inject("store") @observer
+@inject("modal") @observer
 class HeaderBar extends Component {
   constructor(props) {
     super(props);
-    this.openModal = this.props.store.modal.openModal;
+    this.openModal = this.props.modal.openModal;
   }
 
   render() {
@@ -27,7 +27,7 @@ class HeaderBar extends Component {
       <div style={style.wrapHead}>
         <div className="flex-row align-center justise-end m-b">
           <SearchBar style={style.searchBar}/>
-          <Avatar src="dist/assets/images/background.jpg"/>
+          <Avatar src="/dist/assets/images/background.jpg"/>
           <IconMenu style={style.headBeside}
             iconButtonElement={<IconButton><NavigationMoreVert /></IconButton>}
             anchorOrigin={{horizontal: 'right', vertical: 'top'}}
