@@ -157,7 +157,7 @@ public class QandaPageController {
      * @param qid
      * @return
      */
-    @RequestMapping(value = "/question/{qid}/answer", method = RequestMethod.POST)
+    @RequestMapping(value = "/question/{qid}", method = RequestMethod.POST)
     public @ResponseBody HashMap<String, Object> answerQuestion(@RequestBody Answer answer, @PathVariable(value = "qid") String qid) {
         if (ServerNotice.isActive()) {
             if (!Check.isStringEmpty(answer.getResponse()) && !Check.isStringEmpty(qid)) {
@@ -168,6 +168,23 @@ public class QandaPageController {
                 }
             } else {
                 return ServerNotice.dataNotComplete();
+            }
+        } else {
+            return ServerNotice.notLogin();
+        }
+    }
+
+    @RequestMapping(value = "/question/{qid}/{aid}", method = RequestMethod.POST)
+    public @ResponseBody HashMap<String, Object> supportAnswer(@PathVariable(value = "aid")String aid,
+                                                               @RequestParam(value = "isSupport")boolean isSupport) {
+        if (ServerNotice.isActive()) {
+            boolean flag;
+            if(isSupport) { flag = qandaServiceImp.supportAnswer(aid); }
+            else { flag = qandaServiceImp.notSupportAnswer(aid); }
+            if (flag) {
+                return ServerNotice.success();
+            } else {
+                return ServerNotice.noFindAid();
             }
         } else {
             return ServerNotice.notLogin();

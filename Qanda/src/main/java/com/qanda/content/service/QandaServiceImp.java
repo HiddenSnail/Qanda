@@ -7,6 +7,7 @@ import com.qanda.content.model.dataModel.*;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -238,5 +239,67 @@ public class QandaServiceImp implements QandaService {
             e.printStackTrace();
         }
         return null;
+    }
+
+    /**用户点赞回答**/
+    public boolean supportAnswer(String aid) {
+        try {
+            AVUser cAVUser = AVUser.getCurrentUser();
+            AVObject avAnswer = AVObject.createWithoutData("Answer", aid);
+            avAnswer.fetch();
+
+            AVRelation<AVObject> relation = cAVUser.getRelation("supportAnswers");
+            AVQuery<AVObject> query = relation.getQuery();
+            List<AVObject> supportAnswers = query.find();
+            if (supportAnswers.contains(avAnswer)) {
+                System.out.println("你已经赞过这条回答");
+                return false;
+            }
+            relation.add(avAnswer);
+            cAVUser.save();
+
+            avAnswer.increment("supportNumber");
+            avAnswer.save();
+
+            AVUser replier = avAnswer.getAVUser("targetUser");
+            replier.increment("supportNumber");
+            replier.save();
+
+            return true;
+        } catch (AVException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    /**用户取消回答的点赞**/
+    public boolean notSupportAnswer(String aid) {
+        try {
+            AVUser cAVUser = AVUser.getCurrentUser();
+            AVObject avAnswer = AVObject.createWithoutData("Answer", aid);
+            avAnswer.fetch();
+
+            AVRelation<AVObject> relation = cAVUser.getRelation("supportAnswers");
+            AVQuery<AVObject> query = relation.getQuery();
+            List<AVObject> supportAnswers = query.find();
+            if (!supportAnswers.contains(avAnswer)) {
+                System.out.println("你没有赞过这条回答");
+                return false;
+            }
+            relation.remove(avAnswer);
+            cAVUser.save();
+
+            avAnswer.increment("supportNumber", -1);
+            avAnswer.save();
+
+            AVUser replier = avAnswer.getAVUser("targetUser");
+            replier.increment("supportNumber", -1);
+            replier.save();
+
+            return true;
+        } catch (AVException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }
