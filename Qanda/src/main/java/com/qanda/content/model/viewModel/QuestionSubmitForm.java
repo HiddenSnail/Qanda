@@ -1,17 +1,21 @@
 package com.qanda.content.model.viewModel;
 
-import com.qanda.content.model.dataModel.Course;
-import com.qanda.content.model.dataModel.Question;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.qanda.content.functionKit.Check;
 import org.springframework.stereotype.Component;
 
 /**
  * Created by huangrui on 2016/12/19.
  */
 @Component
-public class QuestionSubmitForm {
-    @Autowired
-    public Question question;
-    @Autowired
-    public Course course;
+public class QuestionSubmitForm extends Form {
+    public String title;
+    public String content;
+    public String cid;
+
+    @Override
+    public boolean isComplete() {
+        if (Check.isStringEmpty(title) || Check.isStringEmpty(content) || Check.isStringEmpty(cid))
+            return false;
+        else return true;
+    }
 }

@@ -2,10 +2,13 @@ package com.qanda.content.controller;
 
 import com.qanda.content.functionKit.Check;
 import com.qanda.content.functionKit.EasyCookie;
-import com.qanda.content.functionKit.ServerNotice;
+import com.qanda.content.model.ServerNotice;
 import com.qanda.content.model.dataModel.Answer;
 import com.qanda.content.model.dataModel.Question;
 import com.qanda.content.model.dataModel.User;
+import com.qanda.content.model.viewModel.LoginForm;
+import com.qanda.content.model.viewModel.ModInfoForm;
+import com.qanda.content.model.viewModel.RegisterForm;
 import com.qanda.content.service.UserServiceImp;
 
 import java.lang.String;
@@ -30,43 +33,41 @@ public class UserPageController {
 
     /**
      * 方法说明：用户注册
-     * @param user: {"email", "password", "name"}
+     * @param form: {"email", "password", "name"}
      * @return
      * @throws Exception
      */
     @RequestMapping(value = "/register", method = RequestMethod.POST)
-    public @ResponseBody HashMap<String, Object> register(@RequestBody User user) {
-        if (!Check.isStringEmpty(user.getEmail()) && !Check.isStringEmpty(user.getPassword())
-                && !Check.isStringEmpty(user.getName())) {
-            if (userServiceImp.register(user)) {
-                return ServerNotice.success();
-            } else {
-                return ServerNotice.registerError();
-            }
+    public @ResponseBody HashMap<String, Object> register(@RequestBody RegisterForm form,
+                                                          @RequestAttribute ServerNotice serverNotice)
+    {
+        if (form.isComplete()) {
+            userServiceImp.register(form, errorKey->serverNotice.setError(errorKey));
         } else {
-            return ServerNotice.dataNotComplete();
+            serverNotice.setError("CONT_ERROR");
         }
+        return serverNotice.toHashMap();
     }
 
     /**
      * 方法说明：用户登录
-     * @param loginInfo: {"email", "password"}
+     * @param form: {"email", "password"}
      * @return
      */
     @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public @ResponseBody HashMap<String, Object> login(@RequestBody User loginInfo, HttpServletResponse response) {
-        if (!Check.isStringEmpty(loginInfo.getEmail()) && !Check.isStringEmpty(loginInfo.getPassword())) {
-            String session = userServiceImp.login(loginInfo);
-            if (!Check.isStringEmpty(session)) {
+    public @ResponseBody HashMap<String, Object> login(@RequestBody LoginForm form,
+                                                       @RequestAttribute ServerNotice serverNotice,
+                                                       HttpServletResponse response) {
+        if (form.isComplete()) {
+            String session = userServiceImp.login(form, errorKey->serverNotice.setError(errorKey));
+            if (serverNotice.isRight()) {
                 EasyCookie.addCookie(response,"sessionId", session, -1);
-                ServerNotice.active();
-                return ServerNotice.success();
-            } else {
-                return ServerNotice.loginFail();
+                serverNotice.active();
             }
         } else {
-            return ServerNotice.dataNotComplete();
+            serverNotice.setError("CONT_ERROR");
         }
+        return serverNotice.toHashMap();
     }
 
 
@@ -75,15 +76,16 @@ public class UserPageController {
      * @param response
      */
     @RequestMapping(value = "/logout")
-    public @ResponseBody HashMap<String, Object> logout(HttpServletResponse response) {
-        if (ServerNotice.isActive()) {
+    public @ResponseBody HashMap<String, Object> logout(@RequestAttribute ServerNotice serverNotice ,
+                                                        HttpServletResponse response) {
+        if (serverNotice.isActive()) {
             userServiceImp.logout();
             EasyCookie.addCookie(response, "sessionId", null, 0);
-            ServerNotice.inactive();
-            return ServerNotice.success();
+            serverNotice.inactive();
         } else {
-            return ServerNotice.notLogin();
+            serverNotice.setError("LOG_ERROR");
         }
+        return serverNotice.toHashMap();
     }
 
 
@@ -93,58 +95,66 @@ public class UserPageController {
      * @throws Exception
      */
     @RequestMapping(value = "/profile", method = RequestMethod.GET)
-    public @ResponseBody HashMap<String, Object> getUserInfo() throws Exception {
-        if (ServerNotice.isActive()) {
+    public @ResponseBody HashMap<String, Object> getUserInfo(@RequestAttribute ServerNotice serverNotice) throws Exception {
+        if (serverNotice.isActive()) {
             HashMap<String, Object> profileData = new HashMap<>();
-            User userInfo = userServiceImp.fetchUserInfo();
-            profileData.put("user", userInfo);
+            User userInfo = userServiceImp.fetchUserInfo(errorKey->serverNotice.setError(errorKey));
+            if (serverNotice.isRight()) {
+                profileData.put("user", userInfo);
+                List<Question> userQuestions = userServiceImp.fetchUserQuestions(errorKey->serverNotice.setError(errorKey));
 
-            List<Question> userQuestions = userServiceImp.fetchUserQuestions();
-            profileData.put("questionList", userQuestions);
+                if (serverNotice.isRight()) {
+                    profileData.put("questionList", userQuestions);
+                    List<Answer> userAnswers = userServiceImp.fetchUserAnswers(errorKey->serverNotice.setError(errorKey));
 
-            List<Answer> userAnswers = userServiceImp.fetchUserAnswers();
-            profileData.put("answerList", userAnswers);
-
-            return ServerNotice.success(profileData);
-
-        } else {
-            return ServerNotice.notLogin();
+                    if (serverNotice.isRight()) {
+                        profileData.put("answerList", userAnswers);
+                        serverNotice.setData(profileData);
+                    }
+                }
+            }
         }
+        else serverNotice.setError("LOG_ERROR");
+        return serverNotice.toHashMap();
     }
 
     /**
      * 方法说明：修改用户信息
-     * @param newInfo: {"name", "brief"}
+     * @param form: {"name", "brief"}
      * @return
      * @throws Exception
      */
     @RequestMapping(value = "/profile", method = RequestMethod.PUT)
-    public @ResponseBody HashMap<String, Object> modifyUserInfo(@RequestBody User newInfo) {
-        if (ServerNotice.isActive()) {
-            if (userServiceImp.modifyUserInfo(newInfo)) {
-                return ServerNotice.success();
+    public @ResponseBody HashMap<String, Object> modifyUserInfo(@RequestBody ModInfoForm form,
+                                                                @RequestAttribute ServerNotice serverNotice)
+    {
+        if (serverNotice.isActive()) {
+            if (form.isComplete()) {
+                userServiceImp.modifyUserInfo(form, errorKey->serverNotice.setError(errorKey));
             } else {
-                return ServerNotice.saveError();
+                serverNotice.setError("CONT_ERROR");
             }
         } else {
-            return ServerNotice.notLogin();
+            serverNotice.setError("LOG_ERROR");
         }
+        return serverNotice.toHashMap();
     }
 
     /**
      * 方法说明：重置密码
-     * @param info {"email"}
+     * @param email {"email"}
      * @throws Exception
      */
     @RequestMapping(value = "/password", method = RequestMethod.POST)
-    public @ResponseBody HashMap<String, Object> resetPassword(@RequestBody User info) {
-        String email = info.getEmail();
-        if (Check.isStringEmpty(email)) {
-            return ServerNotice.dataNotComplete();
-        } else {
+    public @ResponseBody HashMap<String, Object> resetPassword(@RequestBody String email,
+                                                               @RequestAttribute ServerNotice serverNotice)
+    {
+        if (!Check.isStringEmpty(email)) {
             userServiceImp.resetPassword(email);
-            return ServerNotice.success();
+        } else {
+            serverNotice.setError("CONT_ERROR");
         }
+        return serverNotice.toHashMap();
     }
 
     /**
@@ -154,53 +164,56 @@ public class UserPageController {
      */
     @RequestMapping(value = "/profile/{uid}", method = RequestMethod.GET)
     public @ResponseBody HashMap<String, Object> getOtherUserInfo(
-            @PathVariable(value = "uid") String uid) {
-        if (ServerNotice.isActive()) {
-            User userInfo = userServiceImp.getUserInfoById(uid);
-            if (userInfo != null) {
-                HashMap<String, Object> otherProfileData = new HashMap<>();
+            @PathVariable(value = "uid") String uid,
+            @RequestAttribute ServerNotice serverNotice)
+    {
+        if (serverNotice.isActive()) {
+            HashMap<String, Object> otherProfileData = new HashMap<>();
+            User userInfo = userServiceImp.getUserInfoById(uid, errorKey->serverNotice.setError(errorKey));
+            if (serverNotice.isRight()) {
                 otherProfileData.put("user", userInfo);
+                List<Question> userQuestions = userServiceImp.getUserQuestionsByUid(uid, errorKey -> serverNotice.setError(errorKey));
 
-                List<Question> userQuestions = userServiceImp.getUserQuestionsByUid(uid);
-                otherProfileData.put("questionList", userQuestions);
+                if (serverNotice.isRight()) {
+                    otherProfileData.put("questionList", userQuestions);
+                    List<Answer> userAnswers = userServiceImp.getUserAnswersByUid(uid, errorKey -> serverNotice.setError(errorKey));
 
-                List<Answer> userAnswers = userServiceImp.getUserAnswersByUid(uid);
-                otherProfileData.put("answerList", userAnswers);
-
-                return ServerNotice.success(otherProfileData);
-            } else {
-                return ServerNotice.noFindUid();
+                    if (serverNotice.isRight()) {
+                        otherProfileData.put("answerList", userAnswers);
+                        serverNotice.setData(otherProfileData);
+                    }
+                }
             }
-        } else {
-            return ServerNotice.notLogin();
         }
+        else serverNotice.setError("LOG_ERROR");
+        return serverNotice.toHashMap();
     }
 
-    /**
-     * 方法说明：用户删除所有问题
-     * @return
-     */
-    @RequestMapping(value = "/profile/questions", method = RequestMethod.DELETE)
-    public @ResponseBody HashMap<String, Object> deleteAllQuestions() {
-        if (ServerNotice.isActive()) {
-            if (userServiceImp.deleteAllQuestions()) return ServerNotice.success();
-            else return ServerNotice.deleteError();
-        } else {
-            return ServerNotice.notLogin();
-        }
-    }
-
-    /**
-     * 方法说明：用户删除所有回答
-     * @return
-     */
-    @RequestMapping(value = "/profile/answers", method = RequestMethod.DELETE)
-    public @ResponseBody HashMap<String, Object> deleteAllAnswers() {
-        if (ServerNotice.isActive()) {
-            if (userServiceImp.deleteAllAnswers()) return ServerNotice.success();
-            else return ServerNotice.deleteError();
-        } else {
-            return ServerNotice.notLogin();
-        }
-    }
+//    /**
+//     * 方法说明：用户删除所有问题
+//     * @return
+//     */
+//    @RequestMapping(value = "/profile/questions", method = RequestMethod.DELETE)
+//    public @ResponseBody HashMap<String, Object> deleteAllQuestions() {
+//        if (ServerNotice.isActive()) {
+//            if (userServiceImp.deleteAllQuestions()) return ServerNotice.success();
+//            else return ServerNotice.deleteError();
+//        } else {
+//            return ServerNotice.notLogin();
+//        }
+//    }
+//
+//    /**
+//     * 方法说明：用户删除所有回答
+//     * @return
+//     */
+//    @RequestMapping(value = "/profile/answers", method = RequestMethod.DELETE)
+//    public @ResponseBody HashMap<String, Object> deleteAllAnswers() {
+//        if (ServerNotice.isActive()) {
+//            if (userServiceImp.deleteAllAnswers()) return ServerNotice.success();
+//            else return ServerNotice.deleteError();
+//        } else {
+//            return ServerNotice.notLogin();
+//        }
+//    }
 }
