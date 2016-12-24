@@ -279,8 +279,9 @@ public class QandaServiceImp implements QandaService {
 
             AVRelation<AVObject> relation = cAVUser.getRelation("supportAnswers");
             AVQuery<AVObject> query = relation.getQuery();
+            query.whereEqualTo("objectId", aid);
             List<AVObject> supportAnswers = query.find();
-            if (supportAnswers.contains(avAnswer)) {
+            if (!supportAnswers.isEmpty()) {
                 errorHandler.catchError("SUPP_ERROR");
                 return false;
             }
@@ -311,8 +312,9 @@ public class QandaServiceImp implements QandaService {
 
             AVRelation<AVObject> relation = cAVUser.getRelation("supportAnswers");
             AVQuery<AVObject> query = relation.getQuery();
+            query.whereEqualTo("objectId", aid);
             List<AVObject> supportAnswers = query.find();
-            if (!supportAnswers.contains(avAnswer)) {
+            if (supportAnswers.isEmpty()) {
                 errorHandler.catchError("INSUPP_ERROR");
                 return false;
             }
