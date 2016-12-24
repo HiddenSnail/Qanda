@@ -41,12 +41,18 @@ public class UserPageController {
     public @ResponseBody HashMap<String, Object> register(@RequestBody RegisterForm form,
                                                           @RequestAttribute ServerNotice serverNotice)
     {
-        if (form.isComplete()) {
-            userServiceImp.register(form, errorKey->serverNotice.setError(errorKey));
-        } else {
-            serverNotice.setError("CONT_ERROR");
+        try {
+            if (form.isComplete()) {
+                userServiceImp.register(form, errorKey->serverNotice.setError(errorKey));
+            } else {
+                serverNotice.setError("CONT_ERROR");
+            }
+            return serverNotice.toHashMap();
+        } catch (Exception e) {
+            e.printStackTrace();
+            serverNotice.setError("UNK_ERROR");
+            return null;
         }
-        return serverNotice.toHashMap();
     }
 
     /**
@@ -105,7 +111,7 @@ public class UserPageController {
 
                 if (serverNotice.isRight()) {
                     profileData.put("questionList", userQuestions);
-                    List<Answer> userAnswers = userServiceImp.fetchUserAnswers(errorKey->serverNotice.setError(errorKey));
+                    List<HashMap<String, Object>> userAnswers = userServiceImp.fetchUserAnswers(errorKey->serverNotice.setError(errorKey));
 
                     if (serverNotice.isRight()) {
                         profileData.put("answerList", userAnswers);
@@ -176,7 +182,7 @@ public class UserPageController {
 
                 if (serverNotice.isRight()) {
                     otherProfileData.put("questionList", userQuestions);
-                    List<Answer> userAnswers = userServiceImp.getUserAnswersByUid(uid, errorKey -> serverNotice.setError(errorKey));
+                    List<HashMap<String, Object>> userAnswers = userServiceImp.getUserAnswersByUid(uid, errorKey -> serverNotice.setError(errorKey));
 
                     if (serverNotice.isRight()) {
                         otherProfileData.put("answerList", userAnswers);
@@ -189,6 +195,17 @@ public class UserPageController {
         return serverNotice.toHashMap();
     }
 
+
+    @RequestMapping(value = "/avatar", method = RequestMethod.PUT)
+    public @ResponseBody HashMap<String, Object> uploadAvatar(@RequestBody byte[] avatarData,
+                                                              @RequestAttribute ServerNotice serverNotice)
+    {
+        if (serverNotice.isActive()) {
+            userServiceImp.uploadAvatar(avatarData, errorKey->serverNotice.setError(errorKey));
+        }
+        else serverNotice.setError("LOG_ERROR");
+        return serverNotice.toHashMap();
+    }
 //    /**
 //     * 方法说明：用户删除所有问题
 //     * @return

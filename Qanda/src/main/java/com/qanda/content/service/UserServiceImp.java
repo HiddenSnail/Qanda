@@ -1,21 +1,17 @@
 package com.qanda.content.service;
 import com.avos.avoscloud.*;
-import com.qanda.content.functionKit.Check;
 import com.qanda.content.functionKit.ModelTransform;
 import com.qanda.content.model.ErrorHandler;
-import com.qanda.content.model.ServerNotice;
 import com.qanda.content.model.dataModel.Answer;
 import com.qanda.content.model.dataModel.Question;
 import com.qanda.content.model.dataModel.User;
 import com.qanda.content.model.viewModel.LoginForm;
 import com.qanda.content.model.viewModel.ModInfoForm;
 import com.qanda.content.model.viewModel.RegisterForm;
-import org.springframework.cglib.proxy.CallbackHelper;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestAttribute;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -23,15 +19,18 @@ import java.util.List;
  */
 @Service
 public class UserServiceImp implements UserService {
+    static private final String DEFAULT_AVATAR_ID = "585e4aa5128fe1006ba90593";  //default avatar objectId
+
     /**用户注册**/
     @Override
-    public boolean register(RegisterForm form, ErrorHandler errorHandler) {
+    public boolean register(RegisterForm form, ErrorHandler errorHandler) throws Exception {
         try {
             AVUser user = new AVUser();
             user.setUsername(form.email); //用户名与邮箱一致
             user.setEmail(form.email);
             user.setPassword(form.password);
             user.put("nickname", form.name); //用户昵称
+            user.put("avatar", AVFile.withObjectId(DEFAULT_AVATAR_ID));
             user.signUp();
             return true;
         } catch (AVException e) {
@@ -120,9 +119,9 @@ public class UserServiceImp implements UserService {
         }
     }
 
-    /**用户所发表的回答获取**/
+    /**用户所发表的回答以及对应问题信息的获取**/
     @Override
-    public List<Answer> fetchUserAnswers(ErrorHandler errorHandler) {
+    public List<HashMap<String, Object>> fetchUserAnswers(ErrorHandler errorHandler) {
         AVUser cAVUser = AVUser.getCurrentUser();
         if (cAVUser == null) {
             errorHandler.catchError("LOG_ERROR");
@@ -130,12 +129,17 @@ public class UserServiceImp implements UserService {
         }
         AVQuery<AVObject> query = new AVQuery<>("Answer");
         query.whereEqualTo("targetUser", cAVUser);
+        query.include("targetQuestion");
         try {
             List<AVObject> avAnswers = query.find();
-            List<Answer> answers = new ArrayList<Answer>();
+            List<HashMap<String, Object>> answers = new ArrayList<>();
             for (AVObject avAnswer:avAnswers) {
                 Answer answer = ModelTransform.transformAVAnswerToAnswer(avAnswer);
-                answers.add(answer);
+                HashMap<String, Object> questionPartData = new HashMap<>();
+                AVObject avQuestion = avAnswer.getAVObject("targetQuestion");
+                questionPartData.put("qid", avQuestion.getObjectId());
+                questionPartData.put("qtitle", avQuestion.getString("title"));
+                answers.add(answer.toHashMap(questionPartData));
             }
             return answers;
         } catch (AVException e) {
@@ -216,9 +220,9 @@ public class UserServiceImp implements UserService {
         }
     }
 
-    /**通过用户id获取用户所发表的回答**/
+    /**通过用户id获取用户所发表的回答以及对应问题的信息**/
     @Override
-    public List<Answer> getUserAnswersByUid(String uid, ErrorHandler errorHandler) {
+    public List<HashMap<String, Object>> getUserAnswersByUid(String uid, ErrorHandler errorHandler) {
         AVQuery<AVUser> userAVQuery = new AVQuery<>("_User");
         userAVQuery.whereEqualTo("objectId", uid);
         try {
@@ -230,11 +234,16 @@ public class UserServiceImp implements UserService {
             else {
                 AVQuery<AVObject> query = new AVQuery<>("Answer");
                 query.whereEqualTo("targetUser", cAVUser);
+                query.include("targetQuestion");
                 List<AVObject> avAnswers = query.find();
-                List<Answer> answers = new ArrayList<Answer>();
+                List<HashMap<String, Object>> answers = new ArrayList<>();
                 for (AVObject avAnswer:avAnswers) {
                     Answer answer = ModelTransform.transformAVAnswerToAnswer(avAnswer);
-                    answers.add(answer);
+                    AVObject avQuestion = avAnswer.getAVObject("targetQuestion");
+                    HashMap<String, Object> questionPartData = new HashMap<>();
+                    questionPartData.put("qid", avQuestion.getObjectId());
+                    questionPartData.put("qtitle", avQuestion.getString("title"));
+                    answers.add(answer.toHashMap(questionPartData));
                 }
                 return answers;
             }
@@ -242,6 +251,28 @@ public class UserServiceImp implements UserService {
             e.printStackTrace();
             errorHandler.catchError("FIND_ERROR");
             return null;
+        }
+    }
+
+    /**用户上传头像**/
+    public void uploadAvatar(byte[] avatarData, ErrorHandler errorHandler) {
+        AVUser cAVUser = AVUser.getCurrentUser();
+        if (cAVUser == null) {
+            errorHandler.catchError("LOG_ERROR");
+            return;
+        }
+        AVFile avatarFile = new AVFile(cAVUser.getObjectId()+".png", avatarData);
+        try {
+            AVFile oldAvatarFile = cAVUser.getAVFile("avatar");
+            if (!oldAvatarFile.getObjectId().equals(DEFAULT_AVATAR_ID)) {
+                oldAvatarFile.delete();
+            }
+            avatarFile.save();
+            cAVUser.put("avatar", avatarFile);
+            cAVUser.save();
+        } catch (AVException e) {
+            e.printStackTrace();
+            errorHandler.catchError("SAVE_ERROR");
         }
     }
 

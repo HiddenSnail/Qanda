@@ -28,6 +28,8 @@ public interface ErrorHandler {
             put("SAVE_ERROR", new Error(500, "系统错误,数据保存失败"));
             put("DEL_ERROR", new Error(501, "系统错误,数据删除失败"));
             put("FIND_ERROR", new Error(502, "系统错误,数据获取失败"));
+
+            put("UNK_ERROR", new Error(666, "系统未知错误,操作失败"));
         }
     };
     static Error getError(String key) {

@@ -5,7 +5,7 @@ package com.qanda.content.functionKit;
  */
 public class Check {
     static public boolean isStringEmpty(String str) {
-        if (str == null || str.equals("")) {
+        if (str == null || str.isEmpty()) {
             return true;
         } else {
             return false;

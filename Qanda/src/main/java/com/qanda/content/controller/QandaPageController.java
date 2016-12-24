@@ -3,7 +3,6 @@ package com.qanda.content.controller;
 import com.qanda.content.model.ServerNotice;
 import com.qanda.content.model.dataModel.Course;
 import com.qanda.content.model.dataModel.CourseGroup;
-import com.qanda.content.model.dataModel.Question;
 import com.qanda.content.model.viewModel.AnswerSubmitForm;
 import com.qanda.content.model.viewModel.QuestionSubmitForm;
 import com.qanda.content.service.QandaServiceImp;
@@ -25,6 +24,20 @@ public class QandaPageController {
     QandaServiceImp qandaServiceImp;
     @Autowired
     UserServiceImp userServiceImp;
+
+//    @RequestMapping(value = "/", method = RequestMethod.GET)
+    public @ResponseBody HashMap<String ,Object> getAllQuestions(
+            @RequestParam(value = "pageNumber") Integer pageNumber,
+            @RequestAttribute ServerNotice serverNotice)
+    {
+        HashMap<String, Object> allQuestionData = new HashMap<>();
+        List<HashMap<String, Object>> questionList = qandaServiceImp.getQuestions(true, true, pageNumber,errorKey->serverNotice.setError(errorKey));
+        if (serverNotice.isRight()) {
+            allQuestionData.put("questionList", questionList);
+            serverNotice.setData(allQuestionData);
+        }
+        return serverNotice.toHashMap();
+    }
 
     /**
      * 方法说明：获取首页数据
@@ -136,11 +149,11 @@ public class QandaPageController {
             @RequestAttribute ServerNotice serverNotice)
     {
         HashMap<String, Object> answersDataMap = new HashMap<>();
-        Question question = qandaServiceImp.getQuestionByQid(qid, errorKey->serverNotice.setError(errorKey));
+        HashMap<String, Object> question = qandaServiceImp.getQuestionByQid(qid, errorKey->serverNotice.setError(errorKey));
         if (serverNotice.isRight()) {
             answersDataMap.put("question", question);
-
             List<HashMap<String, Object>> answerList = qandaServiceImp.getAnswersByQid(qid, pageNumber, errorKey->serverNotice.setError(errorKey));
+
             if (serverNotice.isRight()) {
                 answersDataMap.put("answerList", answerList);
                 serverNotice.setData(answersDataMap);
@@ -211,6 +224,28 @@ public class QandaPageController {
             }
         }
         else serverNotice.setError("LOG_ERROR");
+        return serverNotice.toHashMap();
+    }
+
+    /**
+     * 方法说明：用户根据关键字搜索问题
+     * @param keyValue
+     * @param pageNumber
+     * @param serverNotice
+     * @return
+     */
+    @RequestMapping(value = "/search", method = RequestMethod.POST)
+    public @ResponseBody HashMap<String, Object> searchQuestions(
+            @RequestParam(value = "keyValue") String keyValue,
+            @RequestParam(value = "pageNumber") Integer pageNumber,
+            @RequestAttribute ServerNotice serverNotice)
+    {
+        HashMap<String, Object> questionsDataMap = new HashMap<>();
+        List<HashMap<String, Object>> questionList = qandaServiceImp.searchQuestions(keyValue, pageNumber,errorKey->serverNotice.setError(errorKey));
+        if (serverNotice.isRight()) {
+            questionsDataMap.put("questionList", questionList);
+            serverNotice.setData(questionsDataMap);
+        }
         return serverNotice.toHashMap();
     }
 }

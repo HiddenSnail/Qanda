@@ -27,8 +27,9 @@ public interface QandaService {
     /**通过CourseGroup的id获取它对应的Courses**/
     List<Course> getCoursesByGid(String gid, ErrorHandler errorHandler);
 
-//    /**获取所有问题和提问者的基本信息，并按照排序规则进行排序**/
-//    HashMap<String, Object> getQuestions(boolean isSortByTime, boolean isDescend, Integer pageNumber);
+    /**获取所有问题和提问者的基本信息，并按照排序规则进行排序**/
+    List<HashMap<String, Object>> getQuestions(boolean isSortByTime, boolean isDescend,
+                                               Integer pageNumber, ErrorHandler errorHandler);
 
     /**通过CourseGroup的id获取问题和提问者的基本信息,并按照排序规则进行排序**/
     List<HashMap<String, Object>> getQuestionsByGid(String gid, boolean isSortByTime,
@@ -41,7 +42,7 @@ public interface QandaService {
                                               ErrorHandler errorHandler);
 
     /**通过问题id获取问题和提问者的基本信息**/
-    Question getQuestionByQid(String qid, ErrorHandler errorHandler);
+    HashMap<String, Object> getQuestionByQid(String qid, ErrorHandler errorHandler);
 
     /**通过问题id获取回答和回答者基本信息**/
     List<HashMap<String, Object>> getAnswersByQid(String qid, Integer pageNumber, ErrorHandler errorHandler);
@@ -51,4 +52,7 @@ public interface QandaService {
 
     /**用户取消回答的点赞**/
     boolean notSupportAnswer(String aid, ErrorHandler errorHandler);
+
+    /**搜索问题**/
+    List<HashMap<String, Object>> searchQuestions(String keyValue, Integer pageNumber, ErrorHandler errorHandler);
 }

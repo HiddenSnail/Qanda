@@ -113,41 +113,40 @@ public class QandaServiceImp implements QandaService {
         }
     }
 
-//    /**获取所有问题和提问者的基本信息，并按照排序规则进行排序**/
-//    @Override
-//    public HashMap<String, Object> getQuestions(boolean isSortByTime, boolean isDescend,
-//                                                Integer pageNumber, ErrorHandler errorHandler)
-//    {
-//        AVQuery<AVObject> query = new AVQuery<>("Question");
-//        if (isSortByTime && isDescend) {
-//            query.addDescendingOrder("createdAt");
-//        } else if (isSortByTime && !isDescend) {
-//            query.addDescendingOrder("createAt");
-//        } else if (!isSortByTime && isDescend) {
-//            query.addDescendingOrder("answerNumber");
-//        } else {
-//            query.addAscendingOrder("answerNumber");
-//        }
-//        query.include("targetUser");
-//        query.limit(EPQN);
-//        query.skip((pageNumber-1)*EPQN);
-//        try {
-//            List<AVObject> avQuestions = query.find();
-//            List<HashMap<String, Object>> fusionMapList = new ArrayList<>();
-//            for (AVObject avQuestion:avQuestions) {
-//                Question question = ModelTransform.transformAVQuestionToQuestion(avQuestion);
-//                AVUser baseAVUser = avQuestion.getAVUser("targetUser");
-//                BaseUser questioner = ModelTransform.transformAVUserToBaseUser(baseAVUser);
-//                fusionMapList.add(question.toHashMap(questioner.toHashMap()));
-//            }
-//            HashMap<String, Object> dataMap = new HashMap<>();
-//            dataMap.put("questionList", fusionMapList);
-//            return dataMap;
-//        } catch (AVException e) {
-//            e.printStackTrace();
-//        }
-//        return null;
-//    }
+    /**获取所有问题和提问者的基本信息，并按照排序规则进行排序**/
+    @Override
+    public List<HashMap<String, Object>> getQuestions(boolean isSortByTime, boolean isDescend,
+                                                Integer pageNumber, ErrorHandler errorHandler)
+    {
+        AVQuery<AVObject> query = new AVQuery<>("Question");
+        if (isSortByTime && isDescend) {
+            query.addDescendingOrder("createdAt");
+        } else if (isSortByTime && !isDescend) {
+            query.addDescendingOrder("createAt");
+        } else if (!isSortByTime && isDescend) {
+            query.addDescendingOrder("answerNumber");
+        } else {
+            query.addAscendingOrder("answerNumber");
+        }
+        query.include("targetUser");
+        query.limit(EPQN);
+        if (null != pageNumber && pageNumber > 0) query.skip((pageNumber-1)*EPQN);
+        try {
+            List<AVObject> avQuestions = query.find();
+            List<HashMap<String, Object>> fusionMapList = new ArrayList<>();
+            for (AVObject avQuestion:avQuestions) {
+                Question question = ModelTransform.transformAVQuestionToQuestion(avQuestion);
+                AVUser baseAVUser = avQuestion.getAVUser("targetUser");
+                BaseUser questioner = ModelTransform.transformAVUserToBaseUser(baseAVUser);
+                fusionMapList.add(question.toHashMap(questioner.toHashMap()));
+            }
+            return fusionMapList;
+        } catch (AVException e) {
+            e.printStackTrace();
+            errorHandler.catchError("FIND_ERROR");
+            return null;
+        }
+    }
 
     /**通过CourseGroup的id获取问题和提问者的基本信息,并按照排序规则进行排序**/
     @Override
@@ -169,7 +168,7 @@ public class QandaServiceImp implements QandaService {
         }
         query.include("targetUser");
         query.limit(EPQN);
-        query.skip((pageNumber-1)*EPQN);
+        if (null != pageNumber && pageNumber > 0) query.skip((pageNumber-1)*EPQN);
         try {
             avCourseGroup.fetch();
             List<AVObject> avQuestions = query.find();
@@ -209,7 +208,7 @@ public class QandaServiceImp implements QandaService {
         }
         query.include("targetUser");
         query.limit(EPQN);
-        query.skip((pageNumber-1)*EPQN);
+        if (null != pageNumber && pageNumber > 0) query.skip((pageNumber-1)*EPQN);
         try {
             avCourse.fetch();
             List<AVObject> avQuestions = query.find();
@@ -230,12 +229,13 @@ public class QandaServiceImp implements QandaService {
 
     /**通过问题id获取问题和提问者的基本信息**/
     @Override
-    public Question getQuestionByQid(String qid, ErrorHandler errorHandler) {
+    public HashMap<String, Object> getQuestionByQid(String qid, ErrorHandler errorHandler) {
         AVObject avQuestion = AVObject.createWithoutData("Question", qid);
         try {
-            avQuestion.fetch();
+            avQuestion.fetch("targetUser");
             Question question = ModelTransform.transformAVQuestionToQuestion(avQuestion);
-            return question;
+            BaseUser baseUser = ModelTransform.transformAVUserToBaseUser(avQuestion.getAVUser("targetUser"));
+            return question.toHashMap(baseUser.toHashMap());
         } catch (AVException e) {
             e.printStackTrace();
             errorHandler.catchError("QID_ERROR");
@@ -251,7 +251,7 @@ public class QandaServiceImp implements QandaService {
         query.whereEqualTo("targetQuestion", avQuestion);
         query.include("targetUser");
         query.limit(EPQN);
-        query.skip((pageNumber-1)*EPQN);
+        if (null != pageNumber && pageNumber > 0) query.skip((pageNumber-1)*EPQN);
         try {
             avQuestion.fetch();
             List<AVObject> avAnswers = query.find();
@@ -265,7 +265,7 @@ public class QandaServiceImp implements QandaService {
             return fusionMapList;
         } catch (AVException e) {
             e.printStackTrace();
-            errorHandler.catchError("UID_ERROR");
+            errorHandler.catchError("QID_ERROR");
             return null;
         }
     }
@@ -275,7 +275,7 @@ public class QandaServiceImp implements QandaService {
         try {
             AVUser cAVUser = AVUser.getCurrentUser();
             AVObject avAnswer = AVObject.createWithoutData("Answer", aid);
-            avAnswer.fetch();
+            avAnswer.fetch("targetUser");
 
             AVRelation<AVObject> relation = cAVUser.getRelation("supportAnswers");
             AVQuery<AVObject> query = relation.getQuery();
@@ -307,7 +307,7 @@ public class QandaServiceImp implements QandaService {
         try {
             AVUser cAVUser = AVUser.getCurrentUser();
             AVObject avAnswer = AVObject.createWithoutData("Answer", aid);
-            avAnswer.fetch();
+            avAnswer.fetch("targetUser");
 
             AVRelation<AVObject> relation = cAVUser.getRelation("supportAnswers");
             AVQuery<AVObject> query = relation.getQuery();
@@ -331,6 +331,31 @@ public class QandaServiceImp implements QandaService {
             e.printStackTrace();
             errorHandler.catchError("AID_ERROR");
             return false;
+        }
+    }
+
+    /**搜索问题**/
+    public List<HashMap<String, Object>> searchQuestions(String keyValue, Integer pageNumber, ErrorHandler errorHandler) {
+        AVQuery<AVObject> query = new AVQuery<>("Question");
+        query.whereContains("title", keyValue);
+        query.include("targetUser");
+        query.limit(EPQN);
+        if (null != pageNumber && pageNumber > 0) query.skip((pageNumber-1)*EPQN);
+        try {
+            List<AVObject> avQuestions = query.find();
+
+         List<HashMap<String, Object>> fusionMapList = new ArrayList<>();
+            for (AVObject avQuestion:avQuestions) {
+                Question question = ModelTransform.transformAVQuestionToQuestion(avQuestion);
+                AVUser baseAVUser = avQuestion.getAVUser("targetUser");
+                BaseUser questioner = ModelTransform.transformAVUserToBaseUser(baseAVUser);
+                fusionMapList.add(question.toHashMap(questioner.toHashMap()));
+            }
+            return fusionMapList;
+        } catch (AVException e) {
+            e.printStackTrace();
+            errorHandler.catchError("FIND_ERROR");
+            return null;
         }
     }
 }

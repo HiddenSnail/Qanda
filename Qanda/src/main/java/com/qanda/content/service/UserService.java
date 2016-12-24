@@ -9,6 +9,7 @@ import com.qanda.content.model.viewModel.LoginForm;
 import com.qanda.content.model.viewModel.ModInfoForm;
 import com.qanda.content.model.viewModel.RegisterForm;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -16,7 +17,7 @@ import java.util.List;
  */
 public interface UserService {
     /**用户注册**/
-    boolean register(RegisterForm form, ErrorHandler errorHandler);
+    boolean register(RegisterForm form, ErrorHandler errorHandler) throws Exception;
 
     /**用户登录**/
     String login(LoginForm form, ErrorHandler errorHandler);
@@ -33,8 +34,8 @@ public interface UserService {
     /**用户所提出的问题获取**/
     List<Question> fetchUserQuestions(ErrorHandler errorHandler);
 
-    /**用户所发表的回答获取**/
-    List<Answer> fetchUserAnswers(ErrorHandler errorHandler);
+    /**用户所发表的回答以及对应问题信息的获取**/
+    List<HashMap<String, Object>> fetchUserAnswers(ErrorHandler errorHandler);
 
     /**密码重置**/
     void resetPassword(String email);
@@ -48,8 +49,11 @@ public interface UserService {
     /**通过用户id获取用户所提出的问题**/
     List<Question> getUserQuestionsByUid(String uid, ErrorHandler errorHandler);
 
-    /**通过用户id获取用户所发表的回答**/
-    List<Answer> getUserAnswersByUid(String uid, ErrorHandler errorHandler);
+    /**通过用户id获取用户所发表的回答以及对应问题的信息**/
+    List<HashMap<String, Object>> getUserAnswersByUid(String uid, ErrorHandler errorHandler);
+
+    /**用户上传头像**/
+    void uploadAvatar(byte[] avatarData, ErrorHandler errorHandler);
 
 //    /**用户删除所有问题**/
 //    boolean deleteAllQuestions(ErrorHandler errorHandler);
