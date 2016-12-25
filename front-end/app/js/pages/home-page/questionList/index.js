@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
+import {Link} from 'react-router';
 import {observable} from 'mobx';
-import {observer,inject} from 'mobx-react';
+import {observer, inject} from 'mobx-react';
 
 import {getAllQuestions} from '../../../requests/questionHttp';
 
@@ -11,7 +12,9 @@ import QuestionItem from './questionItem';
 class QuestionList extends Component {
   constructor(props) {
     super(props);
+
     this.global = this.props.global;
+    this.setQuestion = this.global.setQuestion;
     this.setQuestionList = this.props.questions.setQuestionList;
     this.setCourseList = this.props.courseList.setCourseList;
     this.questionList = this.props.questions.questionList;
@@ -31,9 +34,13 @@ class QuestionList extends Component {
   render() {
     return (
       <div>
-        {this.questionList.map((questionItem, index)=>{
-          return(
-            <QuestionItem questionContent={questionItem} key={index}/>
+        {this.questionList.map((questionItem, index) => {
+          return (
+            <Link to={'question/' + questionItem.qid} key={index}
+                  onClick={this.setQuestion.bind(this, questionItem)}
+            >
+              <QuestionItem questionContent={questionItem}/>
+            </Link>
           );
         })}
       </div>

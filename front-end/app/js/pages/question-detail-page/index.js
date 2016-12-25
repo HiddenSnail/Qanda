@@ -1,13 +1,15 @@
 import React, {Component} from 'react';
-import {inject, observer} from 'mobx-react';
+import {inject} from 'mobx-react';
 
+import QuestionDescription from './questionDescription.js';
 import RaiseQuestion from '../../component/raiseQuestion';
 import AnswerQuestion from '../../component/answerQuestion';
 
-@inject('modalAsk') @observer
+@inject('modalAsk')
 class QuestionDetailPage extends Component {
   constructor(props) {
     super(props);
+
   }
 
   render() {
@@ -17,7 +19,7 @@ class QuestionDetailPage extends Component {
           <RaiseQuestion/>
         </div>
         <div style={style.questionContent}>
-
+          <QuestionDescription/>
         </div>
         <div style={style.answerQuestion} className="flex-col align-center justise-end">
           <AnswerQuestion/>
@@ -33,10 +35,12 @@ const style = {
   },
   raiseQuestion: {
     height: '100vh',
-    width: '200px'
+    width: '200px',
+    marginLeft: '49px'
   },
   questionContent: {
-    flex: 1
+    flex: 1,
+    paddingTop: '87px'
   },
   answerQuestion: {
     height: '100vh',

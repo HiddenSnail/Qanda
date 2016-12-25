@@ -11,8 +11,11 @@ class ModalAsk {
   @observable modalState = false;
 
   majorList = [
-    'a','b','c'
+    'a', 'b', 'c'
   ];
+
+  constructor() {
+  }
 
   init() {
     this.major = '';
@@ -27,7 +30,7 @@ class ModalAsk {
     this.init();
   }
 
-  closeModal () {
+  closeModal() {
     this.modalState = false;
     this.init();
   }
@@ -51,6 +54,6 @@ class ModalAsk {
   }
 }
 
-let modalAsk = new ModalAsk();
+let modalAsk = new ModalAsk;
 
 export default modalAsk;

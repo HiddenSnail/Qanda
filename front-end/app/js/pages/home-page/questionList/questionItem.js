@@ -19,7 +19,7 @@ class QuestionItem extends Component {
           <div className="c-blue m-l-sm m-r-sm">{questionContent.questioner}</div>
           <div className="c-deep-grey">{questionContent.createDate.slice(0,10)}</div>
         </div>
-        <div className="f-s-xxl m-t m-b-md pointer" style={{letterSpacing: '1px'}}>
+        <div className="f-s-xxl m-t m-b-md pointer c-black" style={{letterSpacing: '1px'}}>
           {questionContent.title}
         </div>
         <div className="flex-row f-s-md c-deep-grey m-b-md">

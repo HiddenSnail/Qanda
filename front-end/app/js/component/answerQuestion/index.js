@@ -51,7 +51,7 @@ class AnswerQuestion extends Component {
           <div className="flex-col">
             <Editor
               editorState={this.modalAnswer.content}
-              toolbarClassName="toolBar m-b-md"
+              toolbarClassName="toolBar m-t-md"
               editorClassName="editor"
               placeholder="问题的具体信息，如背景等"
               onEditorStateChange={(v) => this.addContent(v)}

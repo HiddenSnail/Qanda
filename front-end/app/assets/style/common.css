@@ -7,6 +7,10 @@ html, body {
     cursor: pointer;
 }
 
+.letter-sp {
+    letter-spacing: 1px;
+}
+
 .h-m-full {
     min-height: 100vh;
 }
