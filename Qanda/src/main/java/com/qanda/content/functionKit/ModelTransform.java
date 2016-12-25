@@ -1,5 +1,6 @@
 package com.qanda.content.functionKit;
 
+import com.avos.avoscloud.AVFile;
 import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVUser;
 import com.qanda.content.model.dataModel.*;
@@ -12,7 +13,7 @@ public class ModelTransform {
         User user = new User();
         user.setUid(avUser.getObjectId());
         user.setName(avUser.getString("nickname"));
-        user.setAvatar(avUser.getString("avatar"));
+        user.setAvatar(avUser.getAVFile("avatar").getUrl());
         user.setEmail(avUser.getEmail());
         user.setBrief(avUser.getString("brief"));
         user.setQuestionNumber(avUser.getInt("questionNumber"));
@@ -25,7 +26,7 @@ public class ModelTransform {
         BaseUser baseUser = new BaseUser();
         baseUser.setUid(avUser.getObjectId());
         baseUser.setName(avUser.getString("nickname"));
-        baseUser.setAvatar(avUser.getString("avatar"));
+        baseUser.setAvatar(avUser.getAVFile("avatar").getUrl());
         return baseUser;
     }
 
