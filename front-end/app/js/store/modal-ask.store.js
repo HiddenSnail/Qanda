@@ -46,7 +46,6 @@ class ModalAsk {
   }
 
   askQuestion() {
-    console.log(this.html);
     this.closeModal();
   }
 }

@@ -24,7 +24,7 @@ class ModalLogin extends Component {
 
     return (
         <div className="flex-col align-center m-b">
-          <img src="dist/assets/images/logo.png"
+          <img src="/dist/assets/images/logo.png"
                style={logoStyle} className="m-t-md"
                alt="..."/>
           <TextField
@@ -44,7 +44,6 @@ class ModalLogin extends Component {
             label="登陆"
             backgroundColor='#2EB872'
             labelColor='#fff'
-            disabled={this.modal.nextBtnDisable}
             onClick={this.login}
           />
           <RaisedButton

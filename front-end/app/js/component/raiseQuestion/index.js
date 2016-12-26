@@ -8,7 +8,7 @@ import TextField from 'material-ui/TextField';
 import {Editor} from 'react-draft-wysiwyg';
 import {observer, inject} from 'mobx-react';
 
-@inject('modalAsk') @observer
+@inject('modalAsk', 'global') @observer
 class RaiseQuestion extends Component {
   constructor(props) {
     super(props);
@@ -48,6 +48,7 @@ class RaiseQuestion extends Component {
                       backgroundColor="rgba(15,129,199, 1)"
                       labelStyle={style.questionBtnLabelStyle}
                       style={style.questionBtnStyle}
+                      disabled={!this.props.global.loginState}
                       onClick={this.openModal}
         />
         <Dialog

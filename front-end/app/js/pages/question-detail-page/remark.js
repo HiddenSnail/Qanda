@@ -15,9 +15,10 @@ class Remark extends Component {
   render() {
     let {fontColor, backgroundColor, likeCount} = this.props;
     return (
-      <div className="flex-col m-r pointer" style={style.likeBtnStyle} onClick={this.changeLike}>
+      <div className="flex-col m-r" style={style.likeBtnStyle}>
         <div
-          className="m-b-sm flex-col justify-center align-center"
+          onClick={this.changeLike}
+          className="m-b-sm flex-col justify-center align-center pointer"
           style={{...style.likeStyle, backgroundColor: backgroundColor}}>
           <span className="triggle" style={{...style.likeIcon, borderBottomColor: fontColor}}/>
           <span className="f-s-sm" style={{color: fontColor}}>{likeCount}</span>
@@ -33,6 +34,7 @@ const style = {
   },
   likeStyle: {
     height: '36px',
+    borderRadius: '6px'
   },
   likeIcon: {
     borderBottom: '13px solid',

@@ -6,7 +6,7 @@ import global from './global.store';
 import modalAsk from './modal-ask.store';
 import modalAnswer from './modal-answer.store';
 import Answer from './answerItem.store';
-import AnswerList from './answerList.store';
+import answerList from './answerList.store';
 
 let store = {
   questions,
@@ -17,7 +17,7 @@ let store = {
   modalAsk,
   modalAnswer,
   Answer,
-  AnswerList
+  answerList
 };
 
 export default store;

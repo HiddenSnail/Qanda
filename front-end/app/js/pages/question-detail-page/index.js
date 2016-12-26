@@ -5,12 +5,12 @@ import QuestionDescription from './questionDescription.js';
 import RaiseQuestion from '../../component/raiseQuestion';
 import AnswerQuestion from '../../component/answerQuestion';
 
-@inject('modalAsk', 'AnswerList') @observer
+@inject('modalAsk', 'answerList') @observer
 class QuestionDetailPage extends Component {
   constructor(props) {
     super(props);
 
-    this.answerList = new this.props.AnswerList();
+    this.answerList = this.props.answerList;
     this.getDetail = this.answerList.getDetail.bind(this.answerList);
   }
 
@@ -30,7 +30,7 @@ class QuestionDetailPage extends Component {
         </div>
         <div style={style.answerQuestion}
              className="flex-col align-center justise-end">
-          <AnswerQuestion/>
+          <AnswerQuestion qid={this.props.params.qid}/>
         </div>
       </div>
     );
@@ -42,7 +42,7 @@ const style = {
     marginLeft: '66px'
   },
   raiseQuestion: {
-    minHeight: '100vh',
+    height: '100vh',
     width: '248px',
     marginRight: '45px',
   },
@@ -51,7 +51,7 @@ const style = {
     paddingTop: '87px'
   },
   answerQuestion: {
-    minHeight: '100vh',
+    height: '100vh',
     width: '249px'
   }
 };

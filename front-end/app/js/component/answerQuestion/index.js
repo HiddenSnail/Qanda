@@ -8,7 +8,7 @@ import TextField from 'material-ui/TextField';
 import {Editor} from 'react-draft-wysiwyg';
 import {observer, inject} from 'mobx-react';
 
-@inject('modalAnswer') @observer
+@inject('modalAnswer', 'global') @observer
 class AnswerQuestion extends Component {
   constructor(props) {
     super(props);
@@ -22,6 +22,7 @@ class AnswerQuestion extends Component {
   }
 
   render() {
+    const {qid} = this.props;
     const actions = [
       <FlatButton
         label="取消"
@@ -30,7 +31,7 @@ class AnswerQuestion extends Component {
       />,
       <FlatButton
         label="回答问题"
-        onClick={this.answerQuestion}
+        onClick={()=>this.answerQuestion(qid)}
       />
     ];
     return (
@@ -39,6 +40,7 @@ class AnswerQuestion extends Component {
                       backgroundColor="rgba(46,184,114, 1)"
                       labelStyle={style.questionBtnLabelStyle}
                       style={style.questionBtnStyle}
+                      disabled={!this.props.global.loginState}
                       onClick={this.openModal}
         />
         <Dialog

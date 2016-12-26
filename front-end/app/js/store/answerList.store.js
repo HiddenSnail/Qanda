@@ -3,7 +3,7 @@ import {observable} from 'mobx';
 import Answer from './answerItem.store';
 import {getAnswerDetail} from '../requests/questionHttp';
 
-export default class AnswerList {
+class AnswerList {
   @observable answerList = [];
   @observable question = {};
   @observable pageNumber = 0;
@@ -14,6 +14,7 @@ export default class AnswerList {
 
   getDetail(qid) {
     let self = this;
+    this.answerList = [];
     getAnswerDetail(qid, this.pageNumber).then(data=>{
       data.answerList.forEach(item => {
         let answer = new Answer(item, qid);
@@ -23,3 +24,7 @@ export default class AnswerList {
     })
   }
 }
+
+let answerList = new AnswerList();
+
+export default answerList;

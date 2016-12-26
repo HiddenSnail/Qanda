@@ -33,12 +33,12 @@ class AnswerItem extends Component {
           <div className="flex-col">
             <div className="flex-row m-b-md">
               <Avatar src={this.answerContent.avatar} size={36}/>
-              <div className="flex-col m-l-sm">
+              <div className="flex-col m-l">
                 <span className="m-b-xs">{this.answerContent.name}</span>
                 <span className="letter-sp">{this.answerContent.createDate}</span>
               </div>
             </div>
-            <div>{this.answerContent.response}</div>
+            <div dangerouslySetInnerHTML={{__html: this.answerContent.response}}></div>
           </div>
         </div>
         <Divider/>

@@ -2,6 +2,9 @@ import {observable} from 'mobx';
 import {EditorState, convertToRaw} from 'draft-js';
 import {stateToHTML} from 'draft-js-export-html';
 
+import {answserQuestion} from '../requests/questionHttp';
+import answerList from './answerList.store';
+
 class ModalAnswer {
   @observable content;
   @observable html;
@@ -27,8 +30,9 @@ class ModalAnswer {
     this.html = stateToHTML(richTextContent.getCurrentContent());
   }
 
-  answerQuestion() {
-    console.log(this.html);
+  answerQuestion(qid) {
+    answserQuestion(qid, {response: this.html})
+      .then(()=>answerList.getDetail(qid));
     this.closeModal();
   }
 }
