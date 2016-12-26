@@ -14,9 +14,6 @@ class ModalAsk {
     'a', 'b', 'c'
   ];
 
-  constructor() {
-  }
-
   init() {
     this.major = '';
     this.tag = '';

@@ -69,6 +69,14 @@ html, body {
     line-height: 24px;
 }
 
+.c-qanda-grey {
+    color: #EDEBEB !important;
+}
+
+.c-qanda-blue {
+    color: #0f81c7 !important;
+}
+
 .c-yellow {
     color: #FFDF39 !important;
 }
@@ -234,6 +242,14 @@ html, body {
 
 .b-c-deep-grey {
     background-color: #222831;
+}
+
+.b-c-qanda-grey {
+    background-color: #EDEBEB;
+}
+
+.b-c-qanda-blue {
+    background-color: #0F81C7;
 }
 
 a,

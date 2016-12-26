@@ -1,5 +1,4 @@
 import qs from 'querystring';
-import stream from 'stream';
 
 let http = method => (...options) => {
   let [url, params, body] = options;
