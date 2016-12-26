@@ -49,6 +49,11 @@ html, body {
     line-height: 13px;
 }
 
+.f-s-smd {
+    font-size: 14px;
+    line-height: 14px;
+}
+
 .f-s-md {
     font-size: 15px;
     line-height: 15px;
@@ -111,6 +116,10 @@ html, body {
 
 .c-red {
     color: #D74144 !important;
+}
+
+.c-green {
+    color: #2EB872;
 }
 
 .btn-lg {

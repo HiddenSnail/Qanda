@@ -42,7 +42,7 @@ const style = {
     marginLeft: '66px'
   },
   raiseQuestion: {
-    height: '100vh',
+    minHeight: '100vh',
     width: '248px',
     marginRight: '45px',
   },
@@ -51,7 +51,7 @@ const style = {
     paddingTop: '87px'
   },
   answerQuestion: {
-    height: '100vh',
+    minHeight: '100vh',
     width: '249px'
   }
 };
