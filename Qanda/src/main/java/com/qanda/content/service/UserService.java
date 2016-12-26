@@ -55,6 +55,9 @@ public interface UserService {
     /**用户上传头像**/
     void uploadAvatar(byte[] avatarData, ErrorHandler errorHandler);
 
+    /**为回答数据打上是否被当前用户赞的标记**/
+    void markAnswers(HashMap<String, Object> answers, ErrorHandler errorHandler);
+
 //    /**用户删除所有问题**/
 //    boolean deleteAllQuestions(ErrorHandler errorHandler);
 //

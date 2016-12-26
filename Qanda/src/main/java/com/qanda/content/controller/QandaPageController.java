@@ -154,7 +154,11 @@ public class QandaPageController {
             answersDataMap.put("question", question);
             List<HashMap<String, Object>> answerList = qandaServiceImp.getAnswersByQid(qid, pageNumber, errorKey->serverNotice.setError(errorKey));
 
+            if (serverNotice.isActive()) {
+                answerList.stream().forEach(i->userServiceImp.markAnswers(i,errorKey->serverNotice.setData(errorKey)));
+            }
             if (serverNotice.isRight()) {
+
                 answersDataMap.put("answerList", answerList);
                 serverNotice.setData(answersDataMap);
             }

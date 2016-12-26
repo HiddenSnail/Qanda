@@ -276,6 +276,23 @@ public class UserServiceImp implements UserService {
         }
     }
 
+    /**为回答数据打上是否被当前用户赞的标记**/
+    public void markAnswers(HashMap<String, Object> answer, ErrorHandler errorHandler) {
+        try {
+            AVUser cAVUser = AVUser.getCurrentUser();
+            if (cAVUser == null) {
+                errorHandler.catchError("LOG_ERROR");
+            }
+            AVQuery<AVObject> checkQuery = cAVUser.getRelation("supportAnswers").getQuery();
+            checkQuery.whereEqualTo("objectId", answer.get("aid"));
+            if (!checkQuery.find().isEmpty()) {
+                answer.put("isSupport", true);
+            }
+        } catch (AVException e) {
+            e.printStackTrace();
+        }
+    }
+
 //    /**用户删除所有问题**/
 //    @Override
 //    public boolean deleteAllQuestions() {
