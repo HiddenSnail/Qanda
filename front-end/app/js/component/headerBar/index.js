@@ -9,17 +9,23 @@ import HardwareKeyboardTab from 'material-ui/svg-icons/hardware/keyboard-tab';
 import ActionHome from 'material-ui/svg-icons/action/home';
 import ActionSettings from 'material-ui/svg-icons/action/settings';
 import EditorverticalAlignTop from 'material-ui/svg-icons/editor/vertical-align-top';
+import FlatButton from 'material-ui/FlatButton';
 
 import {observer, inject} from 'mobx-react';
 
 import SearchBar from './searchBar';
 import ModalLog from './modalLog';
 
-@inject("modal") @observer
+@inject("modal", "global") @observer
 class HeaderBar extends Component {
   constructor(props) {
     super(props);
-    this.openModal = this.props.modal.openModal;
+
+    this.modal = this.props.modal;
+    this.openModal = this.modal.openModal;
+    this.logout = this.modal.logout;
+
+    this.global = this.props.global;
   }
 
   render() {
@@ -27,19 +33,28 @@ class HeaderBar extends Component {
       <div style={style.wrapHead}>
         <div className="flex-row align-center justise-end m-b">
           <SearchBar style={style.searchBar}/>
-          <Avatar src="/dist/assets/images/background.jpg"/>
-          <IconMenu style={style.headBeside}
-            iconButtonElement={<IconButton><NavigationMoreVert /></IconButton>}
-            anchorOrigin={{horizontal: 'right', vertical: 'top'}}
-            targetOrigin={{horizontal: 'right', vertical: 'top'}}
-          >
-            <MenuItem primaryText="个人主页" leftIcon={<ActionHome/>}/>
-            <MenuItem primaryText="个人设置" leftIcon={<ActionSettings/>}/>
-            <MenuItem primaryText="登出" leftIcon={<HardwareKeyboardTab/>}/>
-            <MenuItem primaryText="登陆" leftIcon={<EditorverticalAlignTop/>}
-                      onClick={this.openModal}/>
-          </IconMenu>
-          <ModalLog/>
+          {this.global.loginState ? (
+            <div className="flex-row align-center justise-end">
+              <Avatar src="/dist/assets/images/background.jpg"/>
+              <IconMenu style={style.headBeside}
+                        iconButtonElement={<IconButton><NavigationMoreVert /></IconButton>}
+                        anchorOrigin={{horizontal: 'right', vertical: 'top'}}
+                        targetOrigin={{horizontal: 'right', vertical: 'top'}}
+              >
+                <MenuItem primaryText="个人主页" leftIcon={<ActionHome/>}/>
+                <MenuItem primaryText="个人设置" leftIcon={<ActionSettings/>}/>
+                <MenuItem primaryText="登出" leftIcon={<HardwareKeyboardTab/>} onClick={this.logout}/>
+              </IconMenu>
+            </div>
+          ) : (
+          <div>
+            <FlatButton
+              label="登陆" onClick={this.openModal}
+              icon={<EditorverticalAlignTop/>}
+            />
+            <ModalLog/>
+          </div>
+          )}
         </div>
         <Divider style={style.divider}/>
       </div>

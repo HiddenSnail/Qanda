@@ -6,6 +6,9 @@ const userUrl = baseUrl + '/user';
 const loginUrl = userUrl + '/login';
 export let userLogin = options => httpPost(loginUrl, {}, options);
 
+const logoutUrl = userUrl + '/logout';
+export let userLogout = () => httpGet(logoutUrl, {}, {});
+
 const registerUrl = userUrl + '/register';
 export let userRegister = options => httpPost(registerUrl, {}, options);
 

@@ -1,5 +1,7 @@
 import qs from 'querystring';
 
+import global from '../store/global.store';
+
 let http = method => (...options) => {
   let [url, params, body] = options;
   let fetchConfig = {
@@ -20,8 +22,10 @@ let http = method => (...options) => {
     .then(res => res.json(),
       error => console.error(error.message))
     .then(obj => {
-      if (obj.status == 200)
+      if (obj.status == 200) {
+        global.setLoginState(obj.accessCode);
         return obj.data;
+      }
     }, error => console.error(error))
 };
 

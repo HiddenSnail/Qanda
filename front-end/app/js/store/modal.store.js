@@ -1,6 +1,8 @@
 import {observable} from 'mobx';
 
-import {userRegister, userLogin} from '../requests/userHttp';
+import global from './global.store';
+
+import {userRegister, userLogin, userLogout} from '../requests/userHttp';
 
 let modal = observable({
   userInfo: {
@@ -33,7 +35,8 @@ modal.changeToRegister = () => {
 };
 
 modal.register = () => {
-  userRegister(modal.userInfo).then(data=>console.log(data))
+  userRegister(modal.userInfo).then(data=>console.log(data));
+  golbal.setLoginState(true);
 };
 
 modal.login = () => {
@@ -41,7 +44,13 @@ modal.login = () => {
     email: modal.userInfo.email,
     password: modal.userInfo.password
   };
-  userLogin(userInfo).then(data=>console.log(data));
+  userLogin(userInfo);
+  modal.closeModal();
+
+};
+
+modal.logout = () => {
+  userLogout();
 };
 
 

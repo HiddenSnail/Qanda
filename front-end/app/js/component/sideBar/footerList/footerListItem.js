@@ -22,12 +22,13 @@ class FooterListItem extends Component {
 
 
   render() {
-    const {iconType} = this.props;
+    const {iconType, onClick} = this.props;
     return (
       <div style={style.footerListItemStyle}
            className="flex-col align-center justify-center"
            onMouseOver={this.changeToUnnormalColor.bind(this)}
            onMouseOut={this.changeToNormalColor.bind(this)}
+           onClick={onClick}
       >
         <iconType.type color={this.iconColor}/>
       </div>

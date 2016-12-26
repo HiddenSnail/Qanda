@@ -14,7 +14,6 @@ class QuestionList extends Component {
     super(props);
 
     this.global = this.props.global;
-    this.setQuestion = this.global.setQuestion;
     this.setQuestionList = this.props.questions.setQuestionList;
     this.setCourseList = this.props.courseList.setCourseList;
     this.questionList = this.props.questions.questionList;
@@ -25,7 +24,7 @@ class QuestionList extends Component {
   }
 
   initalPage() {
-    getAllQuestions(this.global.pageNumber.value).then(data => {
+    getAllQuestions(this.global.pageNumber).then(data => {
       this.setCourseList(data);
       this.setQuestionList(data);
     });
@@ -36,9 +35,7 @@ class QuestionList extends Component {
       <div>
         {this.questionList.map((questionItem, index) => {
           return (
-            <Link to={'question/' + questionItem.qid} key={index}
-                  onClick={this.setQuestion.bind(this, questionItem)}
-            >
+            <Link to={'question/' + questionItem.qid} key={index}>
               <QuestionItem questionContent={questionItem}/>
             </Link>
           );

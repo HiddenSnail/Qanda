@@ -10,15 +10,15 @@ class Category extends Component {
   }
 
   render() {
-    return(
+    return (
       <div style={style.categoryBgStyle} className="flex-col">
         <div style={style.wrapContent} className="flex-col">
           <div className="flex-grow-one">
             <div style={style.logoBgStyle}></div>
             <MarjorList/>
           </div>
-          <div className="flex-col align-center">
-            <div style={style.desFontStyle}>A describing text filed</div>
+          <div className="flex-col align-center"
+               style={style.desFontStyle}>
             <RaiseQuestion/>
           </div>
         </div>
@@ -47,9 +47,6 @@ const style = {
     height: '80px',
   },
   desFontStyle: {
-    fontSize: '16px',
-    fontWeight: '100',
-    color: '#fff',
     marginBottom: '80px'
   },
   questionBtnStyle: {
