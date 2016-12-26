@@ -262,14 +262,6 @@ public class QandaServiceImp implements QandaService {
                 BaseUser replier = ModelTransform.transformAVUserToBaseUser(baseAVUser);
                 HashMap<String, Object> fusionMapData = answer.toHashMap(replier.toHashMap());
                 fusionMapData.put("isSupport", false);
-
-                //检查该回答是否被当前用户点过赞
-                AVUser cAVUser = AVUser.getCurrentUser();
-                if (cAVUser != null) {
-                    AVQuery<AVObject> checkQuery = cAVUser.getRelation("supportAnswers").getQuery();
-                    checkQuery.whereEqualTo("objectId", avAnswer.getObjectId());
-                    if (!checkQuery.find().isEmpty()) { fusionMapData.put("isSupport", true); }
-                }
                 fusionMapList.add(fusionMapData);
             }
             return fusionMapList;
@@ -279,6 +271,7 @@ public class QandaServiceImp implements QandaService {
             return null;
         }
     }
+
 
     /**用户点赞回答**/
     public boolean supportAnswer(String aid, ErrorHandler errorHandler) {
