@@ -6,7 +6,12 @@ class SettingPage extends Component {
   }
 
   render() {
-    return;
+    console.log('ok');
+    return(
+      <div style={{marginTop: '100px'}}>
+        abcia
+      </div>
+    );
   }
 }
 

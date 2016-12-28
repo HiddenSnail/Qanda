@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import {Link} from 'react-router';
 import ActionAccountCircle from 'material-ui/svg-icons/action/account-circle';
 import ActionSettings from 'material-ui/svg-icons/action/settings';
 import HardwareKeyboardTab from 'material-ui/svg-icons/hardware/keyboard-tab';
@@ -26,7 +27,9 @@ class FooterList extends Component {
           this.global.loginState ? (
             <div>
               <FooterListItem iconType={<ActionAccountCircle/>}/>
-              <FooterListItem iconType={<ActionSettings/>}/>
+              <Link to="/person/settings">
+                <FooterListItem iconType={<ActionSettings/>}/>
+              </Link>
               <FooterListItem iconType={<HardwareKeyboardTab/>} onClick={this.logout}/>
             </div>
           ) : (

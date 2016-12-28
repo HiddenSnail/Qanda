@@ -1,15 +1,18 @@
 import React, {Component} from 'react';
+import {inject, observer} from 'mobx-react';
 
+@inject('global') @observer
 class Remark extends Component {
   constructor(props) {
     super(props);
 
     this.changeLike = this.changeLike.bind(this);
-
+    this.global = this.props.global;
   }
 
   changeLike() {
-    this.props.setLike();
+    if (this.global.loginState)
+      this.props.setLike();
   }
 
   render() {

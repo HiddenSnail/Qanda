@@ -5,7 +5,7 @@ import Divider from 'material-ui/Divider';
 
 import AnswerItem from './answerItem';
 
-@inject('Answer') @observer
+@observer
 class QuestionDescription extends Component {
   constructor(props) {
     super(props);
@@ -14,7 +14,7 @@ class QuestionDescription extends Component {
   }
 
   getAnswerItem() {
-    let answerList = this.props.answer.answerList;
+    let answerList = this.props.answers.answerList;
     return answerList.map((item, index)=>{
       return <AnswerItem answer={item} key={index}/>
     })
@@ -25,8 +25,8 @@ class QuestionDescription extends Component {
   }
 
   render() {
-    let {answer} = this.props;
-    let curQuestion = answer.question;
+    let {answers} = this.props;
+    let curQuestion = answers.question;
     return (
       <div className="flex-col f-s-md">
         <div className="c-deep-grey m-t letter-sp">{curQuestion.createDate}</div>

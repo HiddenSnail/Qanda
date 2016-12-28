@@ -26,7 +26,7 @@ class QuestionDetailPage extends Component {
           <RaiseQuestion/>
         </div>
         <div style={style.questionContent}>
-          <QuestionDescription answer={this.answerList}/>
+          <QuestionDescription answers={this.answerList}/>
         </div>
         <div style={style.answerQuestion}
              className="flex-col align-center justise-end">

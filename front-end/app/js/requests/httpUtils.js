@@ -23,7 +23,7 @@ let http = method => (...options) => {
       error => console.error(error.message))
     .then(obj => {
       if (obj.status == 200) {
-        global.setLoginState(obj.accessCode);
+        global.setLoginState(Boolean(obj.accessCode));
         return obj.data;
       }
     }, error => console.error(error))

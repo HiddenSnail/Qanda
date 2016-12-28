@@ -43,5 +43,4 @@ export default class Answer {
   regularLike() {
     this.likeCount = this.likeState ? this.likeCount + 1 : this.likeCount - 1;
   }
-
 }

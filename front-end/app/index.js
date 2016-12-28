@@ -12,8 +12,9 @@ injectTapEventPlugin();
 import App from './js/app';
 import HomePage from './js/pages/home-page';
 import QuestionDetailPage from './js/pages/question-detail-page';
-import PersonInfo from './js/component/personInfo';
+import SettingPage from './js/pages/setting-page';
 
+import PersonInfo from './js/component/personInfo';
 
 ReactDOM.render((
   <Provider {...store}>
@@ -22,7 +23,7 @@ ReactDOM.render((
         <IndexRoute component={HomePage}/>
         <Route path="question/:qid" component={QuestionDetailPage}/>
         <Route path="person" component={PersonInfo}>
-          <Route path="settings"/>
+          <Route path="settings" component={SettingPage}/>
           <Route path="profile"/>
         </Route>
       </Route>

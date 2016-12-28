@@ -5,7 +5,7 @@ import Divider from 'material-ui/Divider';
 
 import Remark from './remark';
 
-@inject('Answer') @observer
+@observer
 class AnswerItem extends Component {
   constructor(props) {
     super(props);

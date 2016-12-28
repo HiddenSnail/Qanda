@@ -35,22 +35,27 @@ modal.changeToRegister = () => {
 };
 
 modal.register = () => {
-  userRegister(modal.userInfo).then(data=>console.log(data));
-  golbal.setLoginState(true);
+  userRegister(modal.userInfo)
+    .then(() => location.reload());
 };
 
 modal.login = () => {
+  let storage=window.localStorage;
   let userInfo = {
     email: modal.userInfo.email,
     password: modal.userInfo.password
   };
-  userLogin(userInfo);
+  userLogin(userInfo)
+    .then((data) => {
+      location.reload()
+    });
   modal.closeModal();
 
 };
 
 modal.logout = () => {
-  userLogout();
+  userLogout()
+    .then(() => location.reload());
 };
 
 
