@@ -5,17 +5,25 @@ import QuestionDescription from './questionDescription.js';
 import RaiseQuestion from '../../component/raiseQuestion';
 import AnswerQuestion from '../../component/answerQuestion';
 
-@inject('modalAsk', 'answerList') @observer
+@inject('modalAsk', 'answerList', 'global') @observer
 class QuestionDetailPage extends Component {
   constructor(props) {
     super(props);
 
+    this.global = this.props.global;
     this.answerList = this.props.answerList;
     this.getDetail = this.answerList.getDetail.bind(this.answerList);
   }
 
+  wrapGetDetail(qid) {
+    return () => {
+      this.getDetail(qid);
+    }
+  }
+
   componentWillMount() {
-    this.getDetail(this.props.params.qid);
+    let getDetail = this.wrapGetDetail(this.props.params.qid);
+    getDetail();
   }
 
   render() {
@@ -26,7 +34,8 @@ class QuestionDetailPage extends Component {
           <RaiseQuestion/>
         </div>
         <div style={style.questionContent}>
-          <QuestionDescription answers={this.answerList}/>
+          <QuestionDescription answers={this.answerList} getDetail={this.wrapGetDetail(this.props.params.qid)}
+                               loginState={this.global.loginState}/>
         </div>
         <div style={style.answerQuestion}
              className="flex-col align-center justise-end">

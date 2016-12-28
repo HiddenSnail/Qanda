@@ -5,11 +5,7 @@ import global from './global.store';
 import {userRegister, userLogin, userLogout} from '../requests/userHttp';
 
 let modal = observable({
-  userInfo: {
-    name: "",
-    email: "",
-    password: ""
-  },
+  userInfo: localStorage,
   modalState: false,
   modalTitle: "",
   nextBtnDisable: false,
@@ -34,28 +30,34 @@ modal.changeToRegister = () => {
   modal.isLogin = false;
 };
 
+let userInfoStore = (data) => {
+  let user = data.user;
+  Object.keys(user).forEach(item => {
+    localStorage[item] = user[item];
+  });
+  modal.userInfo = localStorage;
+};
+
+
 modal.register = () => {
   userRegister(modal.userInfo)
-    .then(() => location.reload());
+    .then((data)=>userInfoStore(data));
+  modal.closeModal();
 };
 
 modal.login = () => {
-  let storage=window.localStorage;
   let userInfo = {
     email: modal.userInfo.email,
     password: modal.userInfo.password
   };
   userLogin(userInfo)
-    .then((data) => {
-      location.reload()
-    });
+    .then((data)=>userInfoStore(data));
   modal.closeModal();
-
 };
 
 modal.logout = () => {
   userLogout()
-    .then(() => location.reload());
+    .then(() => localStorage.clear());
 };
 
 

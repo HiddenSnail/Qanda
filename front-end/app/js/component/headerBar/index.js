@@ -22,6 +22,7 @@ class HeaderBar extends Component {
     super(props);
 
     this.modal = this.props.modal;
+    this.userInfo = this.modal.userInfo;
     this.openModal = this.modal.openModal;
     this.logout = this.modal.logout;
 
@@ -29,13 +30,13 @@ class HeaderBar extends Component {
   }
 
   render() {
-    return(
+    return (
       <div style={style.wrapHead}>
         <div className="flex-row align-center justise-end m-b">
           <SearchBar style={style.searchBar}/>
           {this.global.loginState ? (
             <div className="flex-row align-center justise-end">
-              <Avatar src="/dist/assets/images/background.jpg"/>
+              <Avatar src={this.modal.userInfo.avatar}/>
               <IconMenu style={style.headBeside}
                         iconButtonElement={<IconButton><NavigationMoreVert /></IconButton>}
                         anchorOrigin={{horizontal: 'right', vertical: 'top'}}
@@ -47,13 +48,13 @@ class HeaderBar extends Component {
               </IconMenu>
             </div>
           ) : (
-          <div>
-            <FlatButton
-              label="登陆" onClick={this.openModal}
-              icon={<EditorverticalAlignTop/>}
-            />
-            <ModalLog/>
-          </div>
+            <div>
+              <FlatButton
+                label="登陆" onClick={this.openModal}
+                icon={<EditorverticalAlignTop/>}
+              />
+              <ModalLog/>
+            </div>
           )}
         </div>
         <Divider style={style.divider}/>

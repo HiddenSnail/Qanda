@@ -15,9 +15,15 @@ class QuestionDescription extends Component {
 
   getAnswerItem() {
     let answerList = this.props.answers.answerList;
-    return answerList.map((item, index)=>{
+    return answerList.map((item, index) => {
       return <AnswerItem answer={item} key={index}/>
     })
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if(this.props.loginState !== nextProps.loginState) {
+      this.props.getDetail();
+    }
   }
 
   componentWillMount() {
