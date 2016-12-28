@@ -1,6 +1,4 @@
-package com.qanda.content.model.viewModel;
-
-import com.qanda.content.functionKit.Check;
+package com.qanda.content.model.form;
 
 /**
  * Created by huangrui on 2016/12/23.

@@ -1,4 +1,4 @@
-package com.qanda.content.model.viewModel;
+package com.qanda.content.model.form;
 
 import com.qanda.content.functionKit.Check;
 

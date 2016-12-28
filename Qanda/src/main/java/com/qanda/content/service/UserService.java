@@ -1,13 +1,11 @@
 package com.qanda.content.service;
 
-import com.qanda.content.model.Error;
 import com.qanda.content.model.ErrorHandler;
-import com.qanda.content.model.dataModel.Answer;
 import com.qanda.content.model.dataModel.Question;
 import com.qanda.content.model.dataModel.User;
-import com.qanda.content.model.viewModel.LoginForm;
-import com.qanda.content.model.viewModel.ModInfoForm;
-import com.qanda.content.model.viewModel.RegisterForm;
+import com.qanda.content.model.form.LoginForm;
+import com.qanda.content.model.form.ModInfoForm;
+import com.qanda.content.model.form.RegisterForm;
 
 import java.util.HashMap;
 import java.util.List;

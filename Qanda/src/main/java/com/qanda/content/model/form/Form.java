@@ -1,4 +1,4 @@
-package com.qanda.content.model.viewModel;
+package com.qanda.content.model.form;
 
 /**
  * Created by huangrui on 2016/12/23.
