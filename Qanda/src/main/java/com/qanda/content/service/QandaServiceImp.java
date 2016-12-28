@@ -1,17 +1,14 @@
 package com.qanda.content.service;
 
 import com.avos.avoscloud.*;
-import com.qanda.content.functionKit.Check;
 import com.qanda.content.functionKit.ModelTransform;
 import com.qanda.content.model.ErrorHandler;
 import com.qanda.content.model.dataModel.*;
-import com.qanda.content.model.viewModel.AnswerSubmitForm;
-import com.qanda.content.model.viewModel.QuestionSubmitForm;
+import com.qanda.content.model.form.AnswerSubmitForm;
+import com.qanda.content.model.form.QuestionSubmitForm;
 import org.springframework.stereotype.Service;
 
-import java.security.PublicKey;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 

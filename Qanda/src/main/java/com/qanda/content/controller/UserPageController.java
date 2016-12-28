@@ -3,12 +3,11 @@ package com.qanda.content.controller;
 import com.qanda.content.functionKit.Check;
 import com.qanda.content.functionKit.EasyCookie;
 import com.qanda.content.model.ServerNotice;
-import com.qanda.content.model.dataModel.Answer;
 import com.qanda.content.model.dataModel.Question;
 import com.qanda.content.model.dataModel.User;
-import com.qanda.content.model.viewModel.LoginForm;
-import com.qanda.content.model.viewModel.ModInfoForm;
-import com.qanda.content.model.viewModel.RegisterForm;
+import com.qanda.content.model.form.LoginForm;
+import com.qanda.content.model.form.ModInfoForm;
+import com.qanda.content.model.form.RegisterForm;
 import com.qanda.content.service.UserServiceImp;
 
 import java.lang.String;
@@ -32,18 +31,25 @@ public class UserPageController {
     UserServiceImp userServiceImp;
 
     /**
-     * 方法说明：用户注册
+     * 方法说明：用户注册并登录
      * @param form: {"email", "password", "name"}
      * @return
      * @throws Exception
      */
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     public @ResponseBody HashMap<String, Object> register(@RequestBody RegisterForm form,
-                                                          @RequestAttribute ServerNotice serverNotice)
+                                                          @RequestAttribute ServerNotice serverNotice,
+                                                          HttpServletResponse response)
     {
         try {
             if (form.isComplete()) {
                 userServiceImp.register(form, errorKey->serverNotice.setError(errorKey));
+                if (serverNotice.isRight()) {
+                    LoginForm loginForm = new LoginForm();
+                    loginForm.email = form.email;
+                    loginForm.password = form.password;
+                    return login(loginForm, serverNotice, response);
+                }
             } else {
                 serverNotice.setError("CONT_ERROR");
             }
@@ -64,11 +70,17 @@ public class UserPageController {
     public @ResponseBody HashMap<String, Object> login(@RequestBody LoginForm form,
                                                        @RequestAttribute ServerNotice serverNotice,
                                                        HttpServletResponse response) {
+        HashMap<String, Object> data = new HashMap<>();
         if (form.isComplete()) {
             String session = userServiceImp.login(form, errorKey->serverNotice.setError(errorKey));
             if (serverNotice.isRight()) {
                 EasyCookie.addCookie(response,"sessionId", session, -1);
                 serverNotice.active();
+                User user = userServiceImp.fetchUserInfo(errorKey->serverNotice.setError(errorKey));
+                if (serverNotice.isRight()) {
+                    data.put("user", user);
+                    serverNotice.setData(data);
+                }
             }
         } else {
             serverNotice.setError("CONT_ERROR");

@@ -1,12 +1,10 @@
 package com.qanda.content.service;
 
 import com.qanda.content.model.ErrorHandler;
-import com.qanda.content.model.dataModel.Answer;
 import com.qanda.content.model.dataModel.Course;
 import com.qanda.content.model.dataModel.CourseGroup;
-import com.qanda.content.model.dataModel.Question;
-import com.qanda.content.model.viewModel.AnswerSubmitForm;
-import com.qanda.content.model.viewModel.QuestionSubmitForm;
+import com.qanda.content.model.form.AnswerSubmitForm;
+import com.qanda.content.model.form.QuestionSubmitForm;
 
 import java.util.HashMap;
 import java.util.List;
