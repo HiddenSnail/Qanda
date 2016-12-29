@@ -1,5 +1,7 @@
 package com.qanda.content.service;
 import com.avos.avoscloud.*;
+import com.avos.avoscloud.okio.ByteString;
+import com.avos.avoscloud.utils.Base64;
 import com.qanda.content.functionKit.ModelTransform;
 import com.qanda.content.model.ErrorHandler;
 import com.qanda.content.model.dataModel.Answer;
@@ -255,13 +257,16 @@ public class UserServiceImp implements UserService {
     }
 
     /**用户上传头像**/
-    public void uploadAvatar(byte[] avatarData, ErrorHandler errorHandler) {
+    public void uploadAvatar(String avatarData, ErrorHandler errorHandler) {
         AVUser cAVUser = AVUser.getCurrentUser();
         if (cAVUser == null) {
             errorHandler.catchError("LOG_ERROR");
             return;
         }
-        AVFile avatarFile = new AVFile(cAVUser.getObjectId()+".png", avatarData);
+
+//        AVFile avatarFile = new AVFile(cAVUser.getObjectId()+".png", avatarData);
+        ByteString data = ByteString.decodeBase64(avatarData);
+        AVFile avatarFile = new AVFile(cAVUser.getObjectId()+".png", data.toByteArray());
         try {
             AVFile oldAvatarFile = cAVUser.getAVFile("avatar");
             if (!oldAvatarFile.getObjectId().equals(DEFAULT_AVATAR_ID)) {

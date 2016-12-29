@@ -51,7 +51,7 @@ public interface UserService {
     List<HashMap<String, Object>> getUserAnswersByUid(String uid, ErrorHandler errorHandler);
 
     /**用户上传头像**/
-    void uploadAvatar(byte[] avatarData, ErrorHandler errorHandler);
+    void uploadAvatar(String avatarData, ErrorHandler errorHandler);
 
     /**为回答数据打上是否被当前用户赞的标记**/
     void markAnswers(HashMap<String, Object> answers, ErrorHandler errorHandler);

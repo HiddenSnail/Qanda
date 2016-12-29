@@ -209,7 +209,7 @@ public class UserPageController {
 
 
     @RequestMapping(value = "/avatar", method = RequestMethod.PUT)
-    public @ResponseBody HashMap<String, Object> uploadAvatar(@RequestBody byte[] avatarData,
+    public @ResponseBody HashMap<String, Object> uploadAvatar(@RequestBody String avatarData,
                                                               @RequestAttribute ServerNotice serverNotice)
     {
         if (serverNotice.isActive()) {
