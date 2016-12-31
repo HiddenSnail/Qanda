@@ -14,7 +14,9 @@ import groovy.util.logging.Log4j2;
 import org.springframework.stereotype.Service;
 import sun.misc.BASE64Decoder;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -285,17 +287,28 @@ public class UserServiceImp implements UserService {
     }
 
     /**用户上传头像**/
-    public void uploadAvatar(byte[] avatarData, ErrorHandler errorHandler) {
+    public void uploadAvatar(String avatarData, ErrorHandler errorHandler) {
         AVUser cAVUser = AVUser.getCurrentUser();
         if (cAVUser == null) {
             errorHandler.catchError("LOG_ERROR");
             return;
         }
-
-        AVFile avatarFile = new AVFile(cAVUser.getObjectId()+".png", avatarData);
+        
+        //base64字符串数据处理
+        int pos = avatarData.indexOf(',');
+        String head = avatarData.substring(0, pos);
+        String suffix = head.substring(head.indexOf('/')+1, head.indexOf(';'));
+        String realdata = avatarData.substring(pos+1, avatarData.length());
         try {
-//            byte[] data = new BASE64Decoder().decodeBuffer(avatarData);
-//            AVFile avatarFile = new AVFile(cAVUser.getObjectId()+".png", data);
+            byte[] data = new BASE64Decoder().decodeBuffer(realdata);
+
+            for (int i = 0; i < data.length; ++i) {
+                if (data[i] < 0) {
+                    data[i] += 256;
+                }
+            }
+
+            AVFile avatarFile = new AVFile(cAVUser.getObjectId()+ "." + suffix, data);
             AVFile oldAvatarFile = cAVUser.getAVFile("avatar");
             if (!oldAvatarFile.getObjectId().equals(DEFAULT_AVATAR_ID)) {
                 oldAvatarFile.delete();
@@ -307,9 +320,9 @@ public class UserServiceImp implements UserService {
             e.printStackTrace();
             errorHandler.catchError("SAVE_ERROR");
         }
-//        catch (IOException io) {
-//            errorHandler.catchError("SAVE_ERROR");
-//        }
+        catch (IOException io) {
+            errorHandler.catchError("SAVE_ERROR");
+        }
     }
 
     /**为回答数据打上是否被当前用户赞的标记**/
