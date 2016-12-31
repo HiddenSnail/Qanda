@@ -1,5 +1,7 @@
 package com.qanda.content.service;
 import com.avos.avoscloud.*;
+import com.avos.avoscloud.okio.ByteString;
+import com.avos.avoscloud.utils.Base64;
 import com.qanda.content.functionKit.ModelTransform;
 import com.qanda.content.model.ErrorHandler;
 import com.qanda.content.model.dataModel.Answer;
@@ -8,9 +10,13 @@ import com.qanda.content.model.dataModel.User;
 import com.qanda.content.model.form.LoginForm;
 import com.qanda.content.model.form.ModInfoForm;
 import com.qanda.content.model.form.RegisterForm;
+import groovy.util.logging.Log4j2;
 import org.springframework.stereotype.Service;
+import sun.misc.BASE64Decoder;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -96,7 +102,7 @@ public class UserServiceImp implements UserService {
 
     /**用户所提出的问题获取**/
     @Override
-    public List<Question> fetchUserQuestions(ErrorHandler errorHandler) {
+    public List<HashMap<String, Object>> fetchUserQuestions(ErrorHandler errorHandler) {
         AVUser cAVUser = AVUser.getCurrentUser();
         if (cAVUser == null) {
             errorHandler.catchError("LOG_ERROR");
@@ -104,12 +110,24 @@ public class UserServiceImp implements UserService {
         }
         AVQuery<AVObject> query = new AVQuery<>("Question");
         query.whereEqualTo("targetUser", cAVUser);
+        query.include("targetCourse");
+        query.include("belongGroup");
+
         try {
             List<AVObject> avQuestions = query.find();
-            List<Question> questions = new ArrayList<Question>();
+            List<HashMap<String, Object>> questions = new ArrayList<>();
             for (AVObject avQuestion:avQuestions) {
                 Question question = ModelTransform.transformAVQuestionToQuestion(avQuestion);
-                questions.add(question);
+                HashMap<String, Object> coursePartData = new HashMap<>();
+
+                AVObject avCourse = avQuestion.getAVObject("targetCourse");
+                coursePartData.put("cid", avCourse.getObjectId());
+                coursePartData.put("course", avCourse.getString("name"));
+
+                AVObject avCourseGroup = avQuestion.getAVObject("belongGroup");
+                coursePartData.put("gid", avCourseGroup.getObjectId());
+                coursePartData.put("courseGroup", avCourseGroup.getString("name"));
+                questions.add(question.toHashMap(coursePartData));
             }
             return questions;
         } catch (AVException e) {
@@ -192,7 +210,7 @@ public class UserServiceImp implements UserService {
 
     /**通过用户id获取用户所提出的问题**/
     @Override
-    public List<Question> getUserQuestionsByUid(String uid, ErrorHandler errorHandler) {
+    public List<HashMap<String, Object>> getUserQuestionsByUid(String uid, ErrorHandler errorHandler) {
         AVQuery<AVUser> userAVQuery = new AVQuery<>("_User");
         userAVQuery.whereEqualTo("objectId", uid);
         try {
@@ -204,12 +222,24 @@ public class UserServiceImp implements UserService {
             else {
                 AVQuery<AVObject> query = new AVQuery<>("Question");
                 query.whereEqualTo("targetUser", cAVUser);
+                query.include("targetCourse");
+                query.include("belongGroup");
 
                 List<AVObject> avQuestions = query.find();
-                List<Question> questions = new ArrayList<>();
+                List<HashMap<String, Object>> questions = new ArrayList<>();
                 for (AVObject avQuestion:avQuestions) {
                     Question question = ModelTransform.transformAVQuestionToQuestion(avQuestion);
-                    questions.add(question);
+                    HashMap<String, Object> coursePartData = new HashMap<>();
+
+                    AVObject avCourse = avQuestion.getAVObject("targetCourse");
+                    coursePartData.put("cid", avCourse.getObjectId());
+                    coursePartData.put("course", avCourse.getString("name"));
+
+                    AVObject avCourseGroup = avQuestion.getAVObject("belongGroup");
+                    coursePartData.put("gid", avCourseGroup.getObjectId());
+                    coursePartData.put("courseGroup", avCourseGroup.getString("name"));
+
+                    questions.add(question.toHashMap(coursePartData));
                 }
                 return questions;
             }
@@ -261,8 +291,11 @@ public class UserServiceImp implements UserService {
             errorHandler.catchError("LOG_ERROR");
             return;
         }
+
         AVFile avatarFile = new AVFile(cAVUser.getObjectId()+".png", avatarData);
         try {
+//            byte[] data = new BASE64Decoder().decodeBuffer(avatarData);
+//            AVFile avatarFile = new AVFile(cAVUser.getObjectId()+".png", data);
             AVFile oldAvatarFile = cAVUser.getAVFile("avatar");
             if (!oldAvatarFile.getObjectId().equals(DEFAULT_AVATAR_ID)) {
                 oldAvatarFile.delete();
@@ -274,6 +307,9 @@ public class UserServiceImp implements UserService {
             e.printStackTrace();
             errorHandler.catchError("SAVE_ERROR");
         }
+//        catch (IOException io) {
+//            errorHandler.catchError("SAVE_ERROR");
+//        }
     }
 
     /**为回答数据打上是否被当前用户赞的标记**/

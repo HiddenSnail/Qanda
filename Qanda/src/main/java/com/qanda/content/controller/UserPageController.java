@@ -119,7 +119,7 @@ public class UserPageController {
             User userInfo = userServiceImp.fetchUserInfo(errorKey->serverNotice.setError(errorKey));
             if (serverNotice.isRight()) {
                 profileData.put("user", userInfo);
-                List<Question> userQuestions = userServiceImp.fetchUserQuestions(errorKey->serverNotice.setError(errorKey));
+                List<HashMap<String, Object>> userQuestions = userServiceImp.fetchUserQuestions(errorKey->serverNotice.setError(errorKey));
 
                 if (serverNotice.isRight()) {
                     profileData.put("questionList", userQuestions);
@@ -190,7 +190,7 @@ public class UserPageController {
             User userInfo = userServiceImp.getUserInfoById(uid, errorKey->serverNotice.setError(errorKey));
             if (serverNotice.isRight()) {
                 otherProfileData.put("user", userInfo);
-                List<Question> userQuestions = userServiceImp.getUserQuestionsByUid(uid, errorKey -> serverNotice.setError(errorKey));
+                List<HashMap<String, Object>> userQuestions = userServiceImp.getUserQuestionsByUid(uid, errorKey -> serverNotice.setError(errorKey));
 
                 if (serverNotice.isRight()) {
                     otherProfileData.put("questionList", userQuestions);

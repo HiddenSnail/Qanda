@@ -29,8 +29,8 @@ public interface UserService {
     /**用户详细信息获取**/
     User fetchUserInfo(ErrorHandler errorHandler);
 
-    /**用户所提出的问题获取**/
-    List<Question> fetchUserQuestions(ErrorHandler errorHandler);
+    /**用户所提出的问题以及对应课程信息的获取**/
+    List<HashMap<String, Object>> fetchUserQuestions(ErrorHandler errorHandler);
 
     /**用户所发表的回答以及对应问题信息的获取**/
     List<HashMap<String, Object>> fetchUserAnswers(ErrorHandler errorHandler);
@@ -44,8 +44,8 @@ public interface UserService {
     /**通过用户id获取用户详细信息**/
     User getUserInfoById(String uid, ErrorHandler errorHandler);
 
-    /**通过用户id获取用户所提出的问题**/
-    List<Question> getUserQuestionsByUid(String uid, ErrorHandler errorHandler);
+    /**通过用户id获取用户所提出的问题以及对应课程信息的获取**/
+    List<HashMap<String, Object>> getUserQuestionsByUid(String uid, ErrorHandler errorHandler);
 
     /**通过用户id获取用户所发表的回答以及对应问题的信息**/
     List<HashMap<String, Object>> getUserAnswersByUid(String uid, ErrorHandler errorHandler);
