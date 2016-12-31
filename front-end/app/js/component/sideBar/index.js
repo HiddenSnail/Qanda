@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
 import PageList from './pageList';
 import FooterList from './footerList';
+import ActionHome from 'material-ui/svg-icons/action/home'
+import {Link} from 'react-router';
 
 class SideBar extends Component {
   constructor(props) {
@@ -11,6 +13,11 @@ class SideBar extends Component {
     return (
       <div style={style.sideBarBgImg}>
         <div style={style.sideBarBg} className="flex-col">
+          <div className="m-t-xl">
+            <Link to="/">
+              <ActionHome color="#d7d7d9" style={style.iconStyle}/>
+            </Link>
+          </div>
           <div style={style.pageListStyle}>
             <PageList/>
           </div>
@@ -41,7 +48,12 @@ const style = {
   pageListStyle: {
     display: 'flex',
     flex: 1,
-  }
+  },
+  iconStyle: {
+    width: '66px',
+    height: '44px',
+    cursor: 'pointer'
+  },
 };
 
 export default SideBar

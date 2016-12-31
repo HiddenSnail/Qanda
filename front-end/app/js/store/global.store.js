@@ -18,6 +18,14 @@ class Global {
   setSettingState(state) {
     this.settingState = state;
   }
+
+  resetPageNumber() {
+    this.pageNumber = 1;
+  }
+
+  addPageNumber() {
+    this.pageNumber += 1;
+  }
 }
 
 let global = new Global();

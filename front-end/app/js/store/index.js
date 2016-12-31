@@ -9,6 +9,7 @@ import Answer from './answerItem.store';
 import answerList from './answerList.store';
 import avatar from './avatar.store';
 import briefInfo from './briefInfo.store';
+import search from './search.store';
 
 let store = {
   questions,
@@ -21,7 +22,8 @@ let store = {
   Answer,
   answerList,
   avatar,
-  briefInfo
+  briefInfo,
+  search
 };
 
 export default store;

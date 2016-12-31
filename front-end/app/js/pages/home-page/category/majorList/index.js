@@ -18,12 +18,14 @@ class MarjorList extends Component {
 
     this.majorList = this.props.courseList.majorList;
     this.getTag = this.props.courseList.getTag;
+    this.setMajorId = this.props.questions.setMajorId;
     this.setQuestionList = this.props.questions.setQuestionList;
   }
 
   handleClick(index, mid) {
     this.param.clickIndex = index;
     getMajorQuestions(1,mid).then(data=>{
+      this.setMajorId(mid);
       this.getTag(data.courseList);
       this.setQuestionList(data);
     })

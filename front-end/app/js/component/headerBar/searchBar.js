@@ -5,7 +5,12 @@ import ActionSearch from 'material-ui/svg-icons/action/search';
 class SearchBar extends Component {
   constructor(props) {
     super(props);
+
+    // this.clickSearch = this.clickSearch.bind(this);
+    // this.enterSearch = this.enterSearch.bind(this);
   }
+
+
 
   render() {
     const {style} = this.props;
@@ -15,7 +20,7 @@ class SearchBar extends Component {
           hintText="课程/便签"
           floatingLabelText="搜索你感兴趣的事情..."
         />
-        <ActionSearch/>
+        <ActionSearch onClick=""/>
       </div>
     );
   }

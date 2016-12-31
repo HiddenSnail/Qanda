@@ -14,8 +14,8 @@ class AnswerList {
 
   getDetail(qid) {
     let self = this;
-    this.answerList = [];
     getAnswerDetail(qid, this.pageNumber).then(data=>{
+      this.answerList.splice(0, this.answerList.length);
       data.answerList.forEach(item => {
         let answer = new Answer(item, qid);
         self.answerList.push(answer);

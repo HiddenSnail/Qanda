@@ -7,21 +7,18 @@ import RaisedButton from 'material-ui/RaisedButton';
 
 import AvatarGetter from '../../component/avatar-croper';
 
-@inject('global', 'modal') @observer
+@inject('modal') @observer
 class SettingPage extends Component {
   constructor(props) {
     super(props);
 
-    this.global = this.props.global;
     this.modal = this.props.modal;
 
     this.setUserInfo = this.modal.setUserInfo;
     this.getSetting = this.modal.getSetting;
-    this.setSettingState = this.global.setSettingState.bind(this.global);
   }
 
   componentWillMount() {
-    this.setSettingState(true);
     this.getSetting();
   }
 

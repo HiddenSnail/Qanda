@@ -1,3 +1,12 @@
+p {
+    margin: 0;
+    padding: 0;
+}
+
+.text-indent {
+    text-indent: 2em;
+}
+
 .avatar-photo {
     position: relative;
     background-color: #666;
