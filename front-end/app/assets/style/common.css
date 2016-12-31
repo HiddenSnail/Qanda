@@ -1,6 +1,81 @@
+.avatar-photo {
+    position: relative;
+    background-color: #666;
+    border-radius: 50%;
+    overflow: hidden;
+    box-shadow: 0 0 0 3px #fff, 0 0 0 4px #ccc;
+    z-index: 3;
+}
+
+.avatar-photo-size {
+    height: 80px;
+    width: 80px;
+}
+
+.avatar-edit span {
+    -webkit-transition: all 0.3s ease;
+    -moz-transition: all 0.3s ease;
+    -o-transition: all 0.3s ease;
+    transition: all 0.3s ease;
+    width: 100%;
+    font-size: 16px;
+    font-weight: 900;
+    text-align: center;
+    position: absolute;
+    z-index: 5;
+    bottom: 5px;
+    right: 5px;
+    color: white;
+}
+
+.avatar-photo input[type=file] {
+    position: absolute;
+    top:0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    -moz-opacity:0 ;
+    filter:alpha(opacity: 0);
+    opacity: 0;
+    z-index: 9;
+}
+
+.avatar-edit {
+    text-align: center;
+}
+.avatar-edit i {
+    text-align: center;
+    -webkit-transition: all 0.3s ease;
+    -moz-transition: all 0.3s ease;
+    -o-transition: all 0.3s ease;
+    transition: all 0.3s ease;
+    position: absolute;
+    z-index: 5;
+    right: 10px;
+    top: -10px;
+    font-size: 92px;
+    opacity: .2;
+}
+.avatar-photo:hover {
+    cursor: pointer;
+}
+.avatar-photo:hover .avatar-edit i {
+    opacity: 0.8;
+    font-size: 100px;
+}
+
 html, body {
     margin: 0;
     padding: 0;
+}
+
+.list-none li{
+    margin:0;
+    padding:0;
+    list-style:none;
 }
 
 .pointer {
@@ -190,6 +265,10 @@ html, body {
 
 .react-w-sm {
     width: 20vw;
+}
+
+.react-w-xsm {
+    width: 10vw;
 }
 
 .align-center {

@@ -7,6 +7,8 @@ import modalAsk from './modal-ask.store';
 import modalAnswer from './modal-answer.store';
 import Answer from './answerItem.store';
 import answerList from './answerList.store';
+import avatar from './avatar.store';
+import briefInfo from './briefInfo.store';
 
 let store = {
   questions,
@@ -17,7 +19,9 @@ let store = {
   modalAsk,
   modalAnswer,
   Answer,
-  answerList
+  answerList,
+  avatar,
+  briefInfo
 };
 
 export default store;

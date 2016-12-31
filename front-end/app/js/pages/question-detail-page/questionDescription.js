@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {inject, observer} from 'mobx-react';
+import {observer} from 'mobx-react';
 import Avatar from 'material-ui/Avatar';
 import Divider from 'material-ui/Divider';
 

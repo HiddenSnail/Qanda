@@ -29,6 +29,7 @@ let http = method => (...options) => {
     }, error => console.error(error))
 };
 
+
 export let httpPost = http('POST');
 export let httpGet = http('GET');
 export let httpDelete = http('DELETE');

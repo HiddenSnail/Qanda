@@ -24,9 +24,11 @@ class FooterList extends Component {
     return (
       <div className="m-b">
         {
-          this.global.loginState ? (
+          this.modal.userInfo.loginState ? (
             <div>
-              <FooterListItem iconType={<ActionAccountCircle/>}/>
+              <Link to="/person/profile">
+                <FooterListItem iconType={<ActionAccountCircle/>}/>
+              </Link>
               <Link to="/person/settings">
                 <FooterListItem iconType={<ActionSettings/>}/>
               </Link>

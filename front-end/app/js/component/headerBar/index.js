@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import {Link} from 'react-router';
 import Avatar from 'material-ui/Avatar';
 import Divider from 'material-ui/Divider';
 import IconMenu from 'material-ui/IconMenu';
@@ -22,7 +23,6 @@ class HeaderBar extends Component {
     super(props);
 
     this.modal = this.props.modal;
-    this.userInfo = this.modal.userInfo;
     this.openModal = this.modal.openModal;
     this.logout = this.modal.logout;
 
@@ -33,8 +33,8 @@ class HeaderBar extends Component {
     return (
       <div style={style.wrapHead}>
         <div className="flex-row align-center justise-end m-b">
-          <SearchBar style={style.searchBar}/>
-          {this.global.loginState ? (
+          {this.global.settingState ? (<div/>) : (<SearchBar style={style.searchBar}/>)}
+          {this.modal.userInfo.loginState ? (
             <div className="flex-row align-center justise-end">
               <Avatar src={this.modal.userInfo.avatar}/>
               <IconMenu style={style.headBeside}
@@ -42,8 +42,12 @@ class HeaderBar extends Component {
                         anchorOrigin={{horizontal: 'right', vertical: 'top'}}
                         targetOrigin={{horizontal: 'right', vertical: 'top'}}
               >
-                <MenuItem primaryText="个人主页" leftIcon={<ActionHome/>}/>
-                <MenuItem primaryText="个人设置" leftIcon={<ActionSettings/>}/>
+                <Link to="/person/profile">
+                  <MenuItem primaryText="个人主页" leftIcon={<ActionHome/>}/>
+                </Link>
+                <Link to="/person/settings">
+                  <MenuItem primaryText="个人设置" leftIcon={<ActionSettings/>}/>
+                </Link>
                 <MenuItem primaryText="登出" leftIcon={<HardwareKeyboardTab/>} onClick={this.logout}/>
               </IconMenu>
             </div>
@@ -59,7 +63,6 @@ class HeaderBar extends Component {
         </div>
         <Divider style={style.divider}/>
       </div>
-
     );
   }
 }

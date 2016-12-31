@@ -13,6 +13,7 @@ import App from './js/app';
 import HomePage from './js/pages/home-page';
 import QuestionDetailPage from './js/pages/question-detail-page';
 import SettingPage from './js/pages/setting-page';
+import PersonInfoPage from './js/pages/person-info-page';
 
 import PersonInfo from './js/component/personInfo';
 
@@ -24,7 +25,7 @@ ReactDOM.render((
         <Route path="question/:qid" component={QuestionDetailPage}/>
         <Route path="person" component={PersonInfo}>
           <Route path="settings" component={SettingPage}/>
-          <Route path="profile"/>
+          <Route path="profile" component={PersonInfoPage}/>
         </Route>
       </Route>
     </Router>
