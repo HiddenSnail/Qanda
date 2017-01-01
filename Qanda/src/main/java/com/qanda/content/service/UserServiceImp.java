@@ -293,7 +293,7 @@ public class UserServiceImp implements UserService {
             errorHandler.catchError("LOG_ERROR");
             return;
         }
-        
+
         //base64字符串数据处理
         int pos = avatarData.indexOf(',');
         String head = avatarData.substring(0, pos);

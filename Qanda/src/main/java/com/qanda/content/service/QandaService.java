@@ -14,7 +14,7 @@ import java.util.List;
  */
 public interface QandaService {
     /**提出一个问题**/
-    boolean askQuestion(QuestionSubmitForm form, ErrorHandler errorHandler);
+    String askQuestion(QuestionSubmitForm form, ErrorHandler errorHandler);
 
     /**回答一个问题**/
     boolean answerQuestion(AnswerSubmitForm form, ErrorHandler errorHandler);
