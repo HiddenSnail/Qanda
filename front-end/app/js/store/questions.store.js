@@ -16,7 +16,6 @@ questions.setTagQuestion = (gid, cid) => {
 };
 
 questions.setQuestionList = data =>{
-  console.log(data)
   questions.questionList.splice(0, questions.questionList.length);
   data.questionList.forEach(item => questions.questionList.push(item));
 };

@@ -1,5 +1,7 @@
 import {observable} from 'mobx';
 
+import {modifyAvatar} from '../requests/userHttp';
+
 class Avatar {
   @observable cropperOpen;
   @observable imgUrl;
@@ -20,6 +22,9 @@ class Avatar {
     this.imgUrl = null;
     this.croppedImgUrl = dataURI;
     this.cropperOpen = false;
+
+    modifyAvatar({avatar: dataURI})
+      .then(()=>localStorage.avatar=dataURI)
   }
 
   handleRequestHide() {

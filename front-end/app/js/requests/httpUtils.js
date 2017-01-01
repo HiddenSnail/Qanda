@@ -2,12 +2,17 @@ import qs from 'querystring';
 
 import global from '../store/global.store';
 
+const contentType = [
+  'application/json; charset=utf-8',
+  'application/x-www-form-urlencoded; charset=utf-8'
+];
+
 let http = method => (...options) => {
   let [url, params, body] = options;
   let fetchConfig = {
     method,
     headers: {
-      'Content-type': 'application/json; charset=utf-8'
+      'Content-type': contentType[0]
     },
     credentials: 'include'
   };
@@ -15,8 +20,12 @@ let http = method => (...options) => {
   if (Object.keys(params).length !== 0)
     url += `?${qs.stringify(params)}`;
 
-  if (method !== 'GET')
+  if (!hasAvatar(url) && method !== 'GET')
     fetchConfig.body = JSON.stringify(body);
+  else if (hasAvatar(url)) {
+      fetchConfig.headers['Content-type'] = contentType[1];
+    fetchConfig.body = qs.stringify(body);
+  }
 
   return fetch(url, fetchConfig)
     .then(res => res.json(),
@@ -27,6 +36,10 @@ let http = method => (...options) => {
         return obj.data;
       }
     }, error => console.error(error))
+};
+
+let hasAvatar = (url) => {
+  return url.indexOf('avatar') !== -1
 };
 
 

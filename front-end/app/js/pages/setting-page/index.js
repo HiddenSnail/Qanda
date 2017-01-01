@@ -16,6 +16,7 @@ class SettingPage extends Component {
 
     this.setUserInfo = this.modal.setUserInfo;
     this.getSetting = this.modal.getSetting;
+    this.sendSettings = this.modal.sendSettings;
   }
 
   componentWillMount() {
@@ -92,13 +93,10 @@ class SettingPage extends Component {
           label="保存修改"
           primary={true}
           className="react-w-xsm m-t-lg m-b-lg"
+          onClick={this.sendSettings}
         />
       </div>
     );
-  }
-
-  componentWillUnmount() {
-    this.setSettingState(false);
   }
 }
 

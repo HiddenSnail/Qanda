@@ -16,7 +16,7 @@ class RaiseQuestion extends Component {
     this.getMenuList = this.getMenuList.bind(this);
 
     this.modalAsk = this.props.modalAsk;
-    this.addMajor = this.modalAsk.addMajor.bind(this.modalAsk);
+    this.addTag = this.modalAsk.addTag.bind(this.modalAsk);
     this.addContent = this.modalAsk.addContent.bind(this.modalAsk);
     this.openModal = this.modalAsk.openModal.bind(this.modalAsk);
     this.closeModal = this.modalAsk.closeModal.bind(this.modalAsk);
@@ -25,8 +25,10 @@ class RaiseQuestion extends Component {
   }
 
   getMenuList(rawList) {
-    return rawList.map((item, index) =>
-      <MenuItem value={item} primaryText={item} key={index}/>
+    return rawList.map((item, index) => {
+        let tagName = Object.keys(item)[0];
+        return <MenuItem value={item[tagName]} primaryText={tagName} key={index}/>
+      }
     )
   }
 
@@ -74,9 +76,9 @@ class RaiseQuestion extends Component {
               onEditorStateChange={(v) => this.addContent(v)}
             />
             <SelectField
-              floatingLabelText="选择专业方向"
-              value={this.modalAsk.major}
-              onChange={(e, i, v) => this.addMajor(v)}
+              floatingLabelText="选择课程方向"
+              value={this.modalAsk.tag}
+              onChange={(e, i, v) => this.addTag(v)}
             >
               {this.getMenuList(this.modalAsk.majorList)}
             </SelectField>

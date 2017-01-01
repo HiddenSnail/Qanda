@@ -1,6 +1,6 @@
 import {observable} from 'mobx';
 
-import {getUserInfo} from '../requests/userHttp';
+import {getUserInfo, modifyUserInfo} from '../requests/userHttp';
 import global from './global.store';
 
 import {userRegister, userLogin, userLogout} from '../requests/userHttp';
@@ -69,7 +69,7 @@ modal.setUserInfo = (type, value) => {
 };
 
 modal.sendSettings = () => {
-
+  modifyUserInfo(modal.userInfo)
 };
 
 modal.getSetting = () => {
