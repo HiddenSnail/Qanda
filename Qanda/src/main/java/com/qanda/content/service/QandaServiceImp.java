@@ -21,7 +21,7 @@ public class QandaServiceImp implements QandaService {
     static private final Integer EPQN = 10;  //every page question number
 
     /**提出一个问题**/
-    public boolean askQuestion(QuestionSubmitForm form, ErrorHandler errorHandler) {
+    public String askQuestion(QuestionSubmitForm form, ErrorHandler errorHandler) {
         try {
             AVObject avCourse = AVObject.createWithoutData("Course", form.cid);
             avCourse.fetch();
@@ -35,11 +35,11 @@ public class QandaServiceImp implements QandaService {
             avQuestion.save();
             cAVUser.increment("questionNumber");
             cAVUser.save();
-            return true;
+            return avQuestion.getObjectId();
         } catch (AVException e) {
             e.printStackTrace();
             errorHandler.catchError("CID_ERROR");
-            return false;
+            return null;
         }
     }
 

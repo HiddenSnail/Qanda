@@ -178,7 +178,12 @@ public class QandaPageController {
     {
         if (serverNotice.isActive()) {
             if (form.isComplete()) {
-                qandaServiceImp.askQuestion(form, errorKey->serverNotice.setError(errorKey));
+                String qid = qandaServiceImp.askQuestion(form, errorKey->serverNotice.setError(errorKey));
+                if (serverNotice.isRight()) {
+                    HashMap<String, Object> data = new HashMap<>();
+                    data.put("qid", qid);
+                    serverNotice.setData(data);
+                }
             }
             else serverNotice.setError("CONT_ERROR");
         }
