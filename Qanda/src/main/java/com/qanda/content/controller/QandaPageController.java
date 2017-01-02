@@ -252,7 +252,9 @@ public class QandaPageController {
         HashMap<String, Object> questionsDataMap = new HashMap<>();
         List<HashMap<String, Object>> questionList = qandaServiceImp.searchQuestions(keyValue, pageNumber,errorKey->serverNotice.setError(errorKey));
         if (serverNotice.isRight()) {
+            HashMap<String, Object> resultNumber = questionList.remove(0);
             questionsDataMap.put("questionList", questionList);
+            questionsDataMap.putAll(resultNumber);
             serverNotice.setData(questionsDataMap);
         }
         return serverNotice.toHashMap();

@@ -18,7 +18,7 @@ import java.util.List;
 
 @Service
 public class QandaServiceImp implements QandaService {
-    static private final Integer EPQN = 10;  //every page question number
+    static private final Integer EPQN = 30;  //every page question number
 
     /**提出一个问题**/
     public String askQuestion(QuestionSubmitForm form, ErrorHandler errorHandler) {
@@ -344,9 +344,12 @@ public class QandaServiceImp implements QandaService {
         query.limit(EPQN);
         if (null != pageNumber && pageNumber > 0) query.skip((pageNumber-1)*EPQN);
         try {
-            List<AVObject> avQuestions = query.find();
+            List<HashMap<String, Object>> fusionMapList = new ArrayList<>();
+            HashMap<String, Object> resultNumber = new HashMap<>();
+            resultNumber.put("resultNumber", String.valueOf(query.count()));
+            fusionMapList.add(resultNumber);
 
-         List<HashMap<String, Object>> fusionMapList = new ArrayList<>();
+            List<AVObject> avQuestions = query.find();
             for (AVObject avQuestion:avQuestions) {
                 Question question = ModelTransform.transformAVQuestionToQuestion(avQuestion);
                 AVUser baseAVUser = avQuestion.getAVUser("targetUser");
