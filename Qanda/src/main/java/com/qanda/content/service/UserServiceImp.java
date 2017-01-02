@@ -342,6 +342,57 @@ public class UserServiceImp implements UserService {
         }
     }
 
+    /**用户删除一条问题**/
+    public boolean deleteQuestion(final String qid, ErrorHandler errorHandler) {
+        AVUser cAVUser = AVUser.getCurrentUser();
+        AVQuery<AVObject> queryQue = new AVQuery<>("Question");
+        queryQue.whereEqualTo("targetUser", cAVUser)
+                .whereEqualTo("objectId", qid);
+        try {
+            AVObject avQuestion = queryQue.getFirst();
+            if (avQuestion == null) {
+                errorHandler.catchError("USR_QID_NTC");
+                return false;
+            }
+            cAVUser.increment("questionNumber", -1);
+            avQuestion.delete();
+            cAVUser.save();
+            return true;
+
+        } catch (AVException e) {
+            errorHandler.catchError("DEL_ERROR");
+            return false;
+        }
+    }
+
+    /**用户删除一条回答**/
+    public boolean deleteAnswer(final String aid, ErrorHandler errorHandler) {
+        AVUser cAVUser = AVUser.getCurrentUser();
+        AVQuery<AVObject> queryAns = new AVQuery<>("Answer");
+        queryAns.whereEqualTo("targetUser", cAVUser)
+                .include("targetQuestion");
+        try {
+            AVObject avAnswer = queryAns.getFirst();
+            if (avAnswer == null) {
+                errorHandler.catchError("USR_AID_NTC");
+                return false;
+            }
+            AVObject avQuestion = avAnswer.getAVObject("targetQuestion");
+            avQuestion.increment("answerNumber", -1);
+            cAVUser.increment("answerNumber", -1);
+
+            Integer supportNumber = avAnswer.getInt("supportNumber");
+            cAVUser.increment("supportNumber", -supportNumber);
+            avAnswer.delete();
+            cAVUser.save();
+            avQuestion.save();
+            return true;
+        } catch (AVException e) {
+            errorHandler.catchError("DEL_ERROR");
+            return false;
+        }
+    }
+
 //    /**用户删除所有问题**/
 //    @Override
 //    public boolean deleteAllQuestions() {

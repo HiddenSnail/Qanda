@@ -81,6 +81,8 @@ public class UserPageController {
                     data.put("user", user);
                     serverNotice.setData(data);
                 }
+            } else {
+                serverNotice.inactive();
             }
         } else {
             serverNotice.setError("CONT_ERROR");
@@ -218,6 +220,45 @@ public class UserPageController {
         else serverNotice.setError("LOG_ERROR");
         return serverNotice.toHashMap();
     }
+
+    /**
+     * 方法说明：用户删除问题
+     * @param qid
+     * @param serverNotice
+     * @return
+     */
+    @RequestMapping(value = "/profile/question/{qid}", method = RequestMethod.DELETE)
+    public @ResponseBody HashMap<String, Object> deleteQuestion(@PathVariable(value = "qid") String qid,
+                                                                @RequestAttribute ServerNotice serverNotice)
+    {
+        if (serverNotice.isActive()) {
+            userServiceImp.deleteQuestion(qid, errorKey->serverNotice.setError(errorKey));
+            return serverNotice.toHashMap();
+        } else {
+            serverNotice.setError("LOG_ERROR");
+            return serverNotice.toHashMap();
+        }
+    }
+
+    /**
+     * 方法说明：用户删除回答
+     * @param aid
+     * @param serverNotice
+     * @return
+     */
+    @RequestMapping(value = "/profile/answer/{aid}", method = RequestMethod.DELETE)
+    public @ResponseBody HashMap<String, Object> deleteAnswer(@PathVariable(value = "aid") String aid,
+                                                              @RequestAttribute ServerNotice serverNotice)
+    {
+        if (serverNotice.isActive()) {
+            userServiceImp.deleteAnswer(aid, errorKey->serverNotice.setError(errorKey));
+            return serverNotice.toHashMap();
+        } else {
+            serverNotice.setError("LOG_ERROR");
+            return serverNotice.toHashMap();
+        }
+    }
+
 //    /**
 //     * 方法说明：用户删除所有问题
 //     * @return

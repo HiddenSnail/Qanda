@@ -17,10 +17,12 @@ public interface ErrorHandler {
 
             put("GID_ERROR", new Error(410, "gid错误,找不到对应课程群"));
             put("CID_ERROR", new Error(411, "cid错误,找不到对应课程"));
-            put("QID_ERROR", new Error(412, "qid错误,找不到对应问题"));
-            put("AID_ERROR", new Error(413, "aid错误,找不到对应回答"));
+            put("QID_ERROR", new Error(412, "qid错误,找不到对应问题或已被删除"));
+            put("AID_ERROR", new Error(413, "aid错误,找不到对应回答或已被删除"));
             put("UID_ERROR", new Error(414, "uid错误,找不到对应用户"));
             put("GCID_ERROR", new Error(415, "gid&cid不匹配,找不到对应数据"));
+            put("USR_QID_NTC", new Error(416, "qid错误或当前用户未持有该qid"));
+            put("USR_AID_NTC", new Error(417, "aid错误或当前用户未持有该aid"));
 
             put("SUPP_ERROR", new Error(420, "你已赞过该回答,无法重复点赞"));
             put("INSUPP_ERROR", new Error(421, "你未赞过该回答,无法取消点赞"));

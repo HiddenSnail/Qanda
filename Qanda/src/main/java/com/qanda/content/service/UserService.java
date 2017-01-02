@@ -57,6 +57,13 @@ public interface UserService {
     /**为回答数据打上是否被当前用户赞的标记**/
     void markAnswers(HashMap<String, Object> answers, ErrorHandler errorHandler);
 
+    /**用户删除一条问题**/
+    boolean deleteQuestion(final String qid, ErrorHandler errorHandler);
+
+    /**用户删除一条回答**/
+    boolean deleteAnswer(final String aid, ErrorHandler errorHandler);
+
+
 //    /**用户删除所有问题**/
 //    boolean deleteAllQuestions(ErrorHandler errorHandler);
 //
