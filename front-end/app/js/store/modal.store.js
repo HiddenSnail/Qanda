@@ -31,7 +31,7 @@ modal.changeToRegister = () => {
   modal.isLogin = false;
 };
 
-let userInfoStore = (data) => {
+modal.userInfoStore = (data) => {
   let user = data.user;
   Object.keys(user).forEach(item => {
     localStorage[item] = user[item];
@@ -42,7 +42,7 @@ let userInfoStore = (data) => {
 
 modal.register = () => {
   userRegister(modal.userInfo)
-    .then((data) => userInfoStore(data));
+    .then((data) => modal.userInfoStore(data));
   modal.closeModal();
 };
 
@@ -54,7 +54,7 @@ modal.login = () => {
   userLogin(userInfo)
     .then((data) => {
       if (data)
-        userInfoStore(data)
+        modal.userInfoStore(data)
     });
   modal.closeModal();
 };
@@ -78,7 +78,7 @@ modal.sendSettings = () => {
 modal.getSetting = () => {
   getUserInfo()
     .then(data => {
-      userInfoStore(data)
+      modal.userInfoStore(data)
     })
 };
 

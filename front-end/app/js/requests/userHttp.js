@@ -15,7 +15,7 @@ export let userRegister = options => httpPost(registerUrl, {}, options);
 const userInfoUrl = userUrl + '/profile';
 export let modifyUserInfo = options => httpPut(userInfoUrl, {}, options);
 export let getUserInfo = options => httpGet(userInfoUrl, {}, options);
-export let deleteQuestion = (options, qid) => httpDelete(`${userInfoUrl}/question/${qid}`, {}, {});
+export let deleteQuestion = qid => httpDelete(`${userInfoUrl}/question/${qid}`, {}, {});
 export let deleteAnswer = aid => httpDelete(`${userInfoUrl}/answer/${aid}`, {}, {});
 
 const avatarUrl = userUrl + "/avatar";

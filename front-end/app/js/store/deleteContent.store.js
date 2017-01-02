@@ -4,33 +4,48 @@ import {deleteQuestion, deleteAnswer} from '../requests/userHttp';
 import briefInfo from './briefInfo.store';
 
 class DeleteContent {
-  @observable modalState;
+  @observable qModalState;
+  @observable aModalState;
   @observable contentId;
 
   constructor() {
     this.contentId = 0;
-    this.modalState = false;
+    this.qModalState = false;
+    this.aModalState = false;
   }
 
   deleteQuestion() {
-
+    deleteQuestion(this.contentId)
+      .then(() => {
+        briefInfo.getBriefInfo();
+        this.closeQModal();
+      });
   }
 
   deleteAnswer() {
     deleteAnswer(this.contentId)
       .then(() => {
         briefInfo.getBriefInfo();
-        this.closeModal();
+        this.closeAModal();
       });
   }
 
-  openModal(cid) {
-    this.modalState = true;
+  openQModal(cid) {
+    this.qModalState = true;
     this.contentId = cid;
   }
 
-  closeModal() {
-    this.modalState = false;
+  closeQModal() {
+    this.qModalState = false;
+  }
+
+  openAModal(cid) {
+    this.aModalState = true;
+    this.contentId = cid;
+  }
+
+  closeAModal() {
+    this.aModalState = false;
   }
 }
 

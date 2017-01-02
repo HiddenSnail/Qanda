@@ -1,5 +1,8 @@
 import {observable} from 'mobx';
+
 import {getUserInfo} from '../requests/userHttp';
+import modal from './modal.store';
+
 
 class BriefInfo {
   @observable answerList;
@@ -15,6 +18,8 @@ class BriefInfo {
       .then(data => {
         this.answerList = data.answerList;
         this.questionList = data.questionList;
+        data.user['loginState'] = true;
+        modal.userInfo = data.user;
       })
   }
 }

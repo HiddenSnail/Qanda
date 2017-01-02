@@ -16,8 +16,12 @@ class PersonInfoPage extends Component {
     this.briefInfo = this.props.briefInfo;
     this.deleteContent = this.props.deleteContent;
 
-    this.openModal = this.deleteContent.openModal.bind(this.deleteContent);
-    this.closeModal = this.deleteContent.closeModal.bind(this.deleteContent);
+    this.openQModal = this.deleteContent.openQModal.bind(this.deleteContent);
+    this.closeQModal = this.deleteContent.closeQModal.bind(this.deleteContent);
+
+    this.openAModal = this.deleteContent.openAModal.bind(this.deleteContent);
+    this.closeAModal = this.deleteContent.closeAModal.bind(this.deleteContent);
+
     this.deleteAnswer = this.deleteContent.deleteAnswer.bind(this.deleteContent);
     this.deleteQuestion = this.deleteContent.deleteQuestion.bind(this.deleteContent);
 
@@ -33,9 +37,14 @@ class PersonInfoPage extends Component {
 
   getQuestionList(questionList) {
     return questionList.map(item => (
-      <Link to={"/question/" + item.qid} key={item.qid}>
-        <QuestionRecord question={item}/>
-      </Link>
+      <div className="flex-row" key={item.qid}>
+        <Link to={"/question/" + item.qid} className="flex-grow-one">
+          <QuestionRecord question={item}/>
+        </Link>
+        <div className="m-t-md pointer" onClick={() => this.openQModal(item.qid)}>
+          <AvNotInterested color="#f44336" style={{width: '18px', height: '18px'}}/>
+        </div>
+      </div>
     ))
   }
 
@@ -45,7 +54,7 @@ class PersonInfoPage extends Component {
         <Link to={"/question/" + item.qid} className="flex-grow-one">
           <AnswerRecord answer={item}/>
         </Link>
-        <div className="m-t-md pointer" onClick={()=>this.openModal(item.aid)}>
+        <div className="m-t-md pointer" onClick={() => this.openAModal(item.aid)}>
           <AvNotInterested color="#f44336" style={{width: '18px', height: '18px'}}/>
         </div>
       </div>
@@ -58,14 +67,14 @@ class PersonInfoPage extends Component {
       <div style={style.pageState} className="flex-col align-center">
         <Tabs style={style.tabContent} inkBarStyle={style.inkStyle}>
           <Tab label="我的问题" style={style.tabLabel}>
-            <DeleteModal closeModal={this.closeModal} state={this.deleteContent.modalState}
+            <DeleteModal closeModal={this.closeQModal} state={this.deleteContent.qModalState}
                          deleteQandA={this.deleteQuestion} type="问题"/>
             <div className="p-t-lg">
               {this.getQuestionList(this.briefInfo.questionList)}
             </div>
           </Tab>
           <Tab label="我的回答" style={style.tabLabel}>
-            <DeleteModal closeModal={this.closeModal} state={this.deleteContent.modalState}
+            <DeleteModal closeModal={this.closeAModal} state={this.deleteContent.aModalState}
                          deleteQandA={this.deleteAnswer} type="回答"/>
             <div className="p-t-lg">
               {this.getAnswerList(this.briefInfo.answerList)}
