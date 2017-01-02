@@ -52,7 +52,10 @@ modal.login = () => {
     password: modal.userInfo.password
   };
   userLogin(userInfo)
-    .then((data) => userInfoStore(data));
+    .then((data) => {
+      if (data)
+        userInfoStore(data)
+    });
   modal.closeModal();
 };
 

@@ -19,9 +19,9 @@ class SettingPage extends Component {
     this.sendSettings = this.modal.sendSettings;
   }
 
-  componentWillMount() {
-    this.getSetting();
-  }
+  // componentWillMount() {
+  //   this.getSetting();
+  // }
 
   render() {
     return(
@@ -40,7 +40,7 @@ class SettingPage extends Component {
                   hintText="请输入你的昵称"
                   floatingLabelText="昵称"
                   type="text"
-                  defaultValue={localStorage.name}
+                  defaultValue={this.modal.userInfo.name}
                   onChange={(e, v)=>this.setUserInfo('name', v)}
                 />
               </li>
@@ -49,7 +49,7 @@ class SettingPage extends Component {
                   hintText="请输入你的学号"
                   floatingLabelText="学号"
                   type="number"
-                  defaultValue={Number(localStorage.stuNumber) || 0}
+                  defaultValue={Number(this.modal.userInfo.stuNumber) || 0}
                   onChange={(e, v)=>this.setUserInfo('stuNumber', v)}
                 />
               </li>
@@ -58,7 +58,7 @@ class SettingPage extends Component {
                   hintText="请输入你的Email"
                   floatingLabelText="Email"
                   type="email"
-                  defaultValue={localStorage.email}
+                  defaultValue={this.modal.userInfo.email}
                   onChange={(e, v)=>this.setUserInfo('email', v)}
                 />
               </li>
@@ -76,7 +76,7 @@ class SettingPage extends Component {
               hintText="写一些介绍吧"
               floatingLabelText="个人介绍"
               type="text"
-              defaultValue={localStorage.brief}
+              defaultValue={this.modal.userInfo.brief}
               onChange={(e, v)=>this.setUserInfo('brief', v)}
             />
           </div>

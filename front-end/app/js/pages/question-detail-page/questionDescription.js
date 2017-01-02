@@ -55,7 +55,7 @@ class QuestionDescription extends Component {
           </div>
         </div>
         <Divider/>
-        <div style={style.contentStyle}>{curQuestion.content}</div>
+        <div style={style.contentStyle} dangerouslySetInnerHTML={{__html: curQuestion.content}}/>
         <div className="c-deep-grey m-b-sm">
           <span className="m-l m-r">{curQuestion.answerNumber}</span>
           回答

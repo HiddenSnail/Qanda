@@ -1,5 +1,6 @@
-import {observable} from 'mobx';
+import {observable, reaction} from 'mobx';
 
+import modal from './modal.store'
 import {modifyAvatar} from '../requests/userHttp';
 
 class Avatar {
@@ -10,7 +11,12 @@ class Avatar {
   constructor() {
     this.cropperOpen = false;
     this.imgUrl = null;
-    this.croppedImgUrl = localStorage.avatar;
+    reaction(this.getAvatar);
+  }
+
+  //TODO
+  getAvatar() {
+    // this.croppedImgUrl = modal.userInfo.avatar || localStorage.avatar
   }
 
   handleFileChange(dataURI) {
