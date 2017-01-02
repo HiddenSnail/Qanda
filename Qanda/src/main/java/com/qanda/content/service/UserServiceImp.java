@@ -370,6 +370,7 @@ public class UserServiceImp implements UserService {
         AVUser cAVUser = AVUser.getCurrentUser();
         AVQuery<AVObject> queryAns = new AVQuery<>("Answer");
         queryAns.whereEqualTo("targetUser", cAVUser)
+                .whereEqualTo("objectId", aid)
                 .include("targetQuestion");
         try {
             AVObject avAnswer = queryAns.getFirst();
