@@ -10,6 +10,7 @@ import answerList from './answerList.store';
 import avatar from './avatar.store';
 import briefInfo from './briefInfo.store';
 import search from './search.store';
+import deleteContent from './deleteContent.store';
 
 let store = {
   questions,
@@ -23,7 +24,8 @@ let store = {
   answerList,
   avatar,
   briefInfo,
-  search
+  search,
+  deleteContent
 };
 
 export default store;

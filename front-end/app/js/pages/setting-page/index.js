@@ -19,9 +19,9 @@ class SettingPage extends Component {
     this.sendSettings = this.modal.sendSettings;
   }
 
-  // componentWillMount() {
-  //   this.getSetting();
-  // }
+  componentWillMount() {
+    this.getSetting();
+  }
 
   render() {
     return(

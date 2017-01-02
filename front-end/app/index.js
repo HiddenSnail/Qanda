@@ -14,6 +14,7 @@ import HomePage from './js/pages/home-page';
 import QuestionDetailPage from './js/pages/question-detail-page';
 import SettingPage from './js/pages/setting-page';
 import PersonInfoPage from './js/pages/person-info-page';
+import SearchResultPage from './js/pages/search-result-page';
 
 import PersonInfo from './js/component/personInfo';
 
@@ -27,6 +28,7 @@ ReactDOM.render((
           <Route path="settings" component={SettingPage}/>
           <Route path="profile" component={PersonInfoPage}/>
         </Route>
+        <Route path="search" component={SearchResultPage}/>
       </Route>
     </Router>
   </Provider>

@@ -11,12 +11,7 @@ class Avatar {
   constructor() {
     this.cropperOpen = false;
     this.imgUrl = null;
-    reaction(this.getAvatar);
-  }
-
-  //TODO
-  getAvatar() {
-    // this.croppedImgUrl = modal.userInfo.avatar || localStorage.avatar
+    this.croppedImgUrl = localStorage.avatar;
   }
 
   handleFileChange(dataURI) {
