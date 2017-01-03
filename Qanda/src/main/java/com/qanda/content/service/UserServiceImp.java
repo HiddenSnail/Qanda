@@ -157,9 +157,11 @@ public class UserServiceImp implements UserService {
                 Answer answer = ModelTransform.transformAVAnswerToAnswer(avAnswer);
                 HashMap<String, Object> questionPartData = new HashMap<>();
                 AVObject avQuestion = avAnswer.getAVObject("targetQuestion");
-                questionPartData.put("qid", avQuestion.getObjectId());
-                questionPartData.put("qtitle", avQuestion.getString("title"));
-                answers.add(answer.toHashMap(questionPartData));
+                if (avQuestion != null) {
+                    questionPartData.put("qid", avQuestion.getObjectId());
+                    questionPartData.put("qtitle", avQuestion.getString("title"));
+                    answers.add(answer.toHashMap(questionPartData));
+                }
             }
             return answers;
         } catch (AVException e) {
@@ -272,10 +274,12 @@ public class UserServiceImp implements UserService {
                 for (AVObject avAnswer:avAnswers) {
                     Answer answer = ModelTransform.transformAVAnswerToAnswer(avAnswer);
                     AVObject avQuestion = avAnswer.getAVObject("targetQuestion");
-                    HashMap<String, Object> questionPartData = new HashMap<>();
-                    questionPartData.put("qid", avQuestion.getObjectId());
-                    questionPartData.put("qtitle", avQuestion.getString("title"));
-                    answers.add(answer.toHashMap(questionPartData));
+                    if (avQuestion != null) {
+                        HashMap<String, Object> questionPartData = new HashMap<>();
+                        questionPartData.put("qid", avQuestion.getObjectId());
+                        questionPartData.put("qtitle", avQuestion.getString("title"));
+                        answers.add(answer.toHashMap(questionPartData));
+                    }
                 }
                 return answers;
             }
